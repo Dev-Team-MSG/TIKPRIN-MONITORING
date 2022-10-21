@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Comment;
@@ -31,5 +32,45 @@ class CommentController extends Controller
         return response()->json(
             $data
         );
+    }
+
+    public function attachfile()
+    {
+        $comment = Comment::with(["files"])->get();
+        return response()->json($comment);
+    }
+    public function storeFile(Request $request) {
+        $comment = Comment::find(1);
+        if (!$request->hasFile("fileName")) {
+            return response()->json(['upload_file_not_found'], 400);
+        }
+        // dd($request->filename);
+        $allowedfileExtension = ['pdf', 'jpg', 'png'];
+        $files = $request->file('fileName');
+        // dd($files);
+        $errors = [];
+        foreach ($files as $file) {
+
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension, $allowedfileExtension);
+
+            if ($check) {
+                foreach ($request->fileName as $mediaFiles) {
+
+                    $path = $mediaFiles->store('public/images');
+                    $name = $mediaFiles->getClientOriginalName();
+
+                    //store image file into directory and db
+                    $save = new File();
+                    $save->filename = $name;
+                    $save->path = $path;
+                    $comment->files()->save($save);
+                }
+            } else {
+                return response()->json(['invalid_file_format'], 422);
+            }
+        }
+        return response()->json(['file_uploaded'], 200);
     }
 }

@@ -49,4 +49,8 @@ class Ticket extends Model
     public function comments() {
         return $this->hasMany(Comment::class, "no_ticket", "no_ticket");
     }
+
+    public function files() {
+        return $this->morphMany(File::class, "fileable");
+    }
 }

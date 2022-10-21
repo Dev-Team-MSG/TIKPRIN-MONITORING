@@ -26,3 +26,7 @@ Route::post("/ticket/{id}/ambil", [TicketController::class, "take"]);
 Route::post("/ticket/{id}/close", [TicketController::class, "close"]);
 Route::post("/ticket/{no_ticket}/comment", [CommentController::class, "storeComment"]);
 Route::get("/tickets", [TicketController::class, "index"]);
+Route::get("/file", [TicketController::class, "attachfile"]);
+Route::post("/file", [TicketController::class, "storeFile"]);
+Route::get("/file-comment", [CommentController::class, "attachfile"]);
+Route::post("/file-comment", [CommentController::class, "storeFile"]);

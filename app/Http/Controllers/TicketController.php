@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TicketResource;
 use App\Models\CategoryTicket;
 use App\Models\Comment;
+use App\Models\File;
 use App\Models\Severity;
 use App\Models\Ticket;
 use Carbon\Carbon;
@@ -13,9 +14,10 @@ use Illuminate\Http\Request;
 class TicketController extends Controller
 {
     //
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $status = $request->query("status");
-        if($request->query("status")) {
+        if ($request->query("status")) {
             $ticket = Ticket::with(["category", "severity", "assign_to", "owner"])->where("status", $status)->get();
             return response()->json(
                 $ticket
@@ -26,17 +28,19 @@ class TicketController extends Controller
             $ticket
         );
     }
-    public function getOne($id) {
+    public function getOne($id)
+    {
         $ticket = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->find($id);
         return response()->json(
             $ticket
         );
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $ticket = new Ticket();
         $ticket->owner = $request->user_id;
-        $ticket->no_ticket = "tiket". $ticket->id;
+        $ticket->no_ticket = "tiket" . $ticket->id;
         $ticket->assign_to = $request->assign_to;
         $ticket->category_ticket_id = $request->category_ticket_id;
         $ticket->severity_id = $request->severity_id;
@@ -50,7 +54,8 @@ class TicketController extends Controller
         return request()->json("data berhasil ditambahkan");
     }
 
-    public function take($id, Request $request) {
+    public function take($id, Request $request)
+    {
         $ticket = Ticket::with(["category", "comments"])->find($id);
         $ticket->status = "progress";
         $ticket->save();
@@ -65,7 +70,8 @@ class TicketController extends Controller
         );
     }
 
-    public function close($id, Request $request) {
+    public function close($id, Request $request)
+    {
         $ticket = Ticket::find($id);
         $ticket->status = "close";
         $ticket->close_datetime = Carbon::now();
@@ -79,5 +85,47 @@ class TicketController extends Controller
         return response()->json(
             $ticket
         );
+    }
+
+    public function attachfile()
+    {
+        $ticket = Ticket::find(1);
+        // dd($ticket->files);
+    }
+
+    public function storeFile(Request $request)
+    {
+        $ticket = Ticket::find(1);
+        if (!$request->hasFile("fileName")) {
+            return response()->json(['upload_file_not_found'], 400);
+        }
+        // dd($request->filename);
+        $allowedfileExtension = ['pdf', 'jpg', 'png'];
+        $files = $request->file('fileName');
+        // dd($files);
+        $errors = [];
+        foreach ($files as $file) {
+
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension, $allowedfileExtension);
+
+            if ($check) {
+                foreach ($request->fileName as $mediaFiles) {
+
+                    $path = $mediaFiles->store('public/images');
+                    $name = $mediaFiles->getClientOriginalName();
+
+                    //store image file into directory and db
+                    $save = new File();
+                    $save->filename = $name;
+                    $save->path = $path;
+                    $ticket->files()->save($save);
+                }
+            } else {
+                return response()->json(['invalid_file_format'], 422);
+            }
+        }
+        return response()->json(['file_uploaded'], 200);
     }
 }
