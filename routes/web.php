@@ -19,5 +19,11 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");
+
 Route::get('crud', [CrudController::class, 'index']);
 Route::get('crud/tambah', [CrudController::class, 'tambah']);
+Route::get("/tiket/{no_ticket}",[TicketController::class, "detailTicket"])->name("detail-ticket");
+Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
+Route::get("/tikets/progress", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
+Route::get("/tikets/close", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");

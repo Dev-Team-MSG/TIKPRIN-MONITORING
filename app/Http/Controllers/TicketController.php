@@ -10,9 +10,111 @@ use App\Models\Severity;
 use App\Models\Ticket;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class TicketController extends Controller
 {
+
+    public function detailTicket($no_ticket) {
+        $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
+        // dd($data);
+        return view("tiket.detail", compact("data"));
+    }
+    public function showOpenTicket(Request $request)
+    {
+        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner", "title", "status", "description", "category_ticket_id")->where("status", "progress")->get();
+        // dd($data);
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
+                    $cat = $ticket->category->category;
+                    $span = '';
+                    if ($cat == "Request ink/print-head") {
+                        $span = '<span class="badge badge-primary">' . strtoupper($cat) . '</span>';
+                    } else {
+                        $span = '<span class="badge badge-secondary">' . strtoupper($cat) . '</span>';
+                    }
+                    return $span;
+                })
+                ->addColumn("pelapor", function (Ticket $ticket) {
+                    return $ticket->owner;
+                })
+                ->addColumn("permasalahan", function (Ticket $ticket) {
+                    if (strlen($ticket->description) > 50) {
+                        $str = substr($ticket->description, 0, 7) . '...';
+                        return $str;
+                    }
+                    return $ticket->description;
+                })
+                ->addColumn("luarbiasa", function (Ticket $ticket) {
+                    $status = $ticket->status;
+                    $span = '';
+                    if ($status == "open") {
+                        $span = '<span class="badge badge-success">' .strtoupper($status)  . '</span>';
+                    } else if ($status == "progress") {
+                        $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
+                        
+                    }else {
+                        $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
+                        
+                    }
+                    return $span;
+                })->escapeColumns([])
+                ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
+                    return $ticket->created_at->format('d/m/y h:m:s');
+                })
+                ->addColumn('action', function ($row) {
+                    // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    return '<a href="'. route("detail-ticket", [$row->no_ticket]). '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    // return $btn;
+                })
+                ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
+                ->make(true);
+        }
+        return view("tiket.open");
+    }
+    public function showProgressTicket(Request $request)
+    {
+        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
+        // dd($data);
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
+                    return $ticket->category->category;
+                })
+                ->addColumn("owner", function (Ticket $ticket) {
+                    return $ticket->owner->name;
+                })
+                ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
+                    return $ticket->created_at->format('d/m/y h:m:s');
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger">Delete</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
+                ->make(true);
+        }
+        return view("tiket.progress");
+    }
+
+    public function showAllTicket(Request $request)
+    {
+        $data = Ticket::select("id", "no_ticket", "owner", "title", "status");
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger">Delete</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view("tiket.show");
+    }
     //
     public function index(Request $request)
     {
@@ -90,7 +192,7 @@ class TicketController extends Controller
     public function attachfile()
     {
         $ticket = Ticket::find(1);
-        // dd($ticket->files);
+        dd($ticket->files);
     }
 
     public function storeFile(Request $request)
@@ -113,19 +215,33 @@ class TicketController extends Controller
             if ($check) {
                 foreach ($request->fileName as $mediaFiles) {
 
-                    $path = $mediaFiles->store('public/images');
                     $name = $mediaFiles->getClientOriginalName();
+                    $path = $mediaFiles->store('public/images');
+                    $filepath = str_replace("public","storage",$path);
+                    // $filePath = $request->file('image')->storeAs('uploads', $name);
+
 
                     //store image file into directory and db
                     $save = new File();
                     $save->filename = $name;
-                    $save->path = $path;
+                    $save->path = $filepath ;
                     $ticket->files()->save($save);
                 }
             } else {
                 return response()->json(['invalid_file_format'], 422);
             }
         }
-        return response()->json(['file_uploaded'], 200);
+        return response()->json($ticket->files, 200);
+    }
+
+    public function updateTicket( Request $request) {
+        $ticket = Ticket::where("no_ticket",$request->id)->first();
+        // dd($ticket);
+        if ($request->ajax()) {
+            var_dump($request->status);
+            $ticket->status = $request->status;
+            $ticket->save();
+            return response()->json($request["update_data"], 200);
+        }
     }
 }

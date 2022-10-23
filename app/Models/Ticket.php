@@ -15,7 +15,7 @@ class Ticket extends Model
         "severity",
         "title",
         "description",
-        "status_id",
+        "status",
     ];
     protected $hidden = [
         'category_ticket_id',
@@ -39,11 +39,11 @@ class Ticket extends Model
         return $this->belongsTo(Severity::class, "severity_id");
     }
     public function assign_to() {
-        return $this->belongsTo(AssignTiket::class, "assign_to");
+        return $this->belongsTo(AssignTiket::class, "assign_id");
     }
 
     public function owner() {
-        return $this->belongsTo(User::class, "owner");
+        return $this->belongsTo(User::class, "owner_id");
     }
 
     public function comments() {

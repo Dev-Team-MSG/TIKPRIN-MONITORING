@@ -12,6 +12,7 @@ class CommentController extends Controller
 {
     //
     public function storeComment($no_ticket, Request $request) {
+        dd($request);
         $comment = new Comment();
         $comment->user_id = $request->user_id;
         $comment->no_ticket = $no_ticket;

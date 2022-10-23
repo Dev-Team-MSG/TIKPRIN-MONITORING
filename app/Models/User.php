@@ -43,7 +43,7 @@ class User extends Authenticatable
     ];
 
     public function ticket() {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Ticket::class, "owner");
     }
 
     public function comments() {
