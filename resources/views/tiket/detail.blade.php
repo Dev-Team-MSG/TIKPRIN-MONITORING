@@ -39,14 +39,16 @@
                                         {{ $data->description }}
                                     </p>
                                     @foreach ($data->files as $item)
-                                        <a href="{{ asset("$item->path") }}">{{ $item->filename }}</a>
+                                        <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
                                     @endforeach
 
                                     @if ($data->status == 'open')
-                                        <div class="row">
+                                        <div class="row mt-5">
                                             <div class="col-md">
-                                                <form action="" method="post">
-                                                    <button type="submit">Ambil</button>
+                                                <form action="{{ route('ambil-tiket', $data->no_ticket) }}" method="post">
+                                                    @csrf
+                                                    <input type="text" hidden value="1" name="user_id" />
+                                                    <button class="btn btn-warning"type="submit">Ambil</button>
                                                 </form>
                                             </div>
 
@@ -70,8 +72,15 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <p class="mb-0">
-                                                            {{ $comment->body }}
+                                                            {!! $comment->body !!}
                                                         </p>
+                                                        @foreach ($comment->files as $item)
+                                                            <a href="{{ asset("$item->path") }}" target="_blank" rel="noopener noreferrer">{{ $item->filename }}</a>
+                                                        @endforeach
+
+                                                        {{-- <a --}}
+                                                            {{-- href="{{ asset("$comment->path") }}">{{ $comment->filename }}</a> --}}
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,8 +95,11 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <p class="mb-0">
-                                                            {{ $comment->body }}
+                                                            {!! $comment->body !!}
                                                         </p>
+                                                        @foreach ($comment->files as $item)
+                                                            <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,12 +113,14 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="section-title">Tinggalkan Pesan</div>
-                                        <form action="{{ route('store-comment', $data->no_ticket) }}" method="post">
+                                        <form action="{{ route('store-comment', $data->no_ticket) }}" method="post" enctype="multipart/form-data">
                                             @csrf
-                                            <textarea class="form-control" id="summary-ckeditor" name="summary-ckeditor"></textarea>
+                                            <input type="hidden" name="user_id" value="1" />
+                                            <textarea class="form-control" id="summary-ckeditor" name="body"></textarea>
                                             <div class="section-title">File Browser</div>
                                             <div class="custom-file mb-4">
-                                                <input type="file" class="custom-file-input" id="customFile">
+                                                <input type="file" class="custom-file-input" id="customFile"
+                                                    name="fileName[]" multiple>
                                                 <label class="custom-file-label" for="customFile">Choose file</label>
                                             </div>
 
@@ -232,8 +246,9 @@
             // let type = parseInt($(this).attr("data-type"));
             let data = {
                 _token: '{{ csrf_token() }}',
-                    id: ticket_id,
-                
+                id: ticket_id,
+                message: message,
+
                 //     // meta: {
                 //     //     ticket_no,
                 //     //     message,
@@ -275,8 +290,8 @@
                 //   );
                 // },
                 success: function(response) {
-                    console.log("success");
-                    console.log(data)
+                    window.location.reload()
+
                     // if (JSON.parse(response)["data"]["result"]) {
                     //     showNotification("success", data.meta.message, {}, () =>
                     //         window.location.reload()

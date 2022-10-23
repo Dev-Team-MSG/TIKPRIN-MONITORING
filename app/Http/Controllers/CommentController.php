@@ -12,27 +12,56 @@ class CommentController extends Controller
 {
     //
     public function storeComment($no_ticket, Request $request) {
-        dd($request);
+        // dd($request);
         $comment = new Comment();
         $comment->user_id = $request->user_id;
         $comment->no_ticket = $no_ticket;
         $comment->body = $request->body;
         $comment->save();
-        $ticket = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", "=", $no_ticket)->firstOrFail();
-        $comment = Comment::with(['user'])->where("no_ticket", "=", $ticket->no_ticket)->get();
-        $data = [
-            "message" => "Comment berhasil dibuat",
-            "ticket" => $ticket,
-            "comments" => $comment];
+        if (!$request->hasFile("fileName")) {
+            dd("error");
+            return response()->json(['upload_file_not_found'], 400);
+        }
+        $allowedfileExtension = ['pdf', 'jpg', 'png'];
+        $files = $request->file('fileName');
+        // dd($files);
+        $errors = [];
+        foreach ($files as $file) {
+
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension, $allowedfileExtension);
+
+            if ($check) {
+                foreach ($request->fileName as $mediaFiles) {
+
+                    $path = $mediaFiles->store('public/images');
+                    $filepath = str_replace("public","storage",$path);
+                    $name = $mediaFiles->getClientOriginalName();
+
+                    //store image file into directory and db
+                    $save = new File();
+                    $save->filename = $name;
+                    $save->path = $filepath;
+                    $comment->files()->save($save);
+                }
+            }
+        }
+        // dd($comment->id);
+        // $ticket = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", "=", $no_ticket)->firstOrFail();
+        // $comment = Comment::with(['user'])->where("no_ticket", "=", $ticket->no_ticket)->get();
+        // $this->storeFile($request, $comment->id);
+        // $this->storeFile($request, $comment->id){};                                                    {{ $comment->body  }}
+        
+
 
         // $user = User::with(["comments"])->get();
         // dd($comments);
-        foreach($ticket->comments as $comment) {
-            var_dump( $comment->user_id);
-        }
-        return response()->json(
-            $data
-        );
+       
+        return redirect()->back();
+        // return response()->json(
+        //     $data
+        // );
     }
 
     public function attachfile()
@@ -40,9 +69,11 @@ class CommentController extends Controller
         $comment = Comment::with(["files"])->get();
         return response()->json($comment);
     }
-    public function storeFile(Request $request) {
-        $comment = Comment::find(1);
+    public function storeFile(Request $request, $id) {
+        $comment = Comment::find($id);
+        // dd($request->file());
         if (!$request->hasFile("fileName")) {
+            dd("error");
             return response()->json(['upload_file_not_found'], 400);
         }
         // dd($request->filename);
@@ -59,7 +90,7 @@ class CommentController extends Controller
             if ($check) {
                 foreach ($request->fileName as $mediaFiles) {
 
-                    $path = $mediaFiles->store('public/images');
+                    $path = $mediaFiles->store('storage/images');
                     $name = $mediaFiles->getClientOriginalName();
 
                     //store image file into directory and db
@@ -69,9 +100,10 @@ class CommentController extends Controller
                     $comment->files()->save($save);
                 }
             } else {
+                dd("invalid format");
                 return response()->json(['invalid_file_format'], 422);
             }
         }
-        return response()->json(['file_uploaded'], 200);
+        // return response()->json(['file_uploaded'], 200);
     }
 }

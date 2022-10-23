@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('title', 'Semua Tiket')
 @section('content')
@@ -8,7 +9,7 @@
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Tiket</a></div>
                 <div class="breadcrumb-item"><a href="#">Semua Tiket</a></div>
-                <div class="breadcrumb-item"><a href="#">Open</a></div>
+                <div class="breadcrumb-item"><a href="#">Close</a></div>
             </div>
         </div>
 
@@ -36,7 +37,6 @@
                         </table>
                     </div>
                 </div>
-                
             </div>
         </div>
     </section>
@@ -51,12 +51,11 @@
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 
     <script type="text/javascript">
-        
         $(function() {
             var table = $('#yajra-dt').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('list-open-ticket') }}",
+                ajax: "{{ route('list-close-ticket') }}",
                 columns: [{
                         data: 'Tanggal Pengaduan',
                         name: 'Tanggal Penhaduan'
