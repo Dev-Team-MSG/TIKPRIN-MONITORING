@@ -22,41 +22,48 @@
                     <li>
                         <div class="row">
                             <div class="col-md-6">
-                                <a class="nav-link" href="{{route("list-open-ticket")}}">
+                                <a class="nav-link" href="{{ route('list-open-ticket') }}">
                                     Open
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <span class="badge badge-success">{{$count_open}}</span>
+                                <span class="badge badge-success">{{ $count_open }}</span>
                             </div>
                         </div>
                     </li>
                     <li>
                         <div class="row">
                             <div class="col-md-6">
-                                <a class="nav-link" href="{{route("list-progress-ticket")}}">
+                                <a class="nav-link" href="{{ route('list-progress-ticket') }}">
                                     Progress
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <span class="badge badge-warning">{{$count_progress}}</span>
+                                <span class="badge badge-warning">{{ $count_progress }}</span>
                             </div>
                         </div>
                     </li>
-                    <li><div class="row">
-                      <div class="col-md-6">
-                          <a class="nav-link" href="{{route("list-close-ticket")}}">
-                              close
-                          </a>
-                      </div>
-                      <div class="col-md-4">
-                          <span class="badge badge-danger">{{$count_close}}</span>
-                      </div>
-                  </div></li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="nav-link" href="{{ route('list-close-ticket') }}">
+                                    close
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge badge-danger">{{ $count_close }}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route("view-create-ticket")}}">
+                            Buat Tiket
+                        </a>
+                    </li>
 
                 </ul>
             </li>
-            
+
             <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Report</span></a>
             </li>
         </ul>

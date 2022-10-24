@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\TicketController;
+use App\Models\Ticket;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,8 @@ Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-ti
 
 Route::get('crud', [CrudController::class, 'index']);
 Route::get('crud/tambah', [CrudController::class, 'tambah']);
+Route::get("/tiket", [TicketController::class, "buatTiket"])->name("view-create-ticket");
+Route::post("/tiket", [TicketController::class, "simpanTiket"])->name("store-create-ticket");
 Route::get("/tiket/{no_ticket}",[TicketController::class, "detailTicket"])->name("detail-ticket");
 Route::post("/ticket/{no_ticket}/ambil", [TicketController::class, "take"])->name("ambil-tiket");
 Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");

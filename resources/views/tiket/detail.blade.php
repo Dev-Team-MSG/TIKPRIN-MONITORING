@@ -36,7 +36,7 @@
                                         {{ $data->title }}
                                     </h4>
                                     <p>
-                                        {{ $data->description }}
+                                        {!! $data->description !!}
                                     </p>
                                     @foreach ($data->files as $item)
                                         <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
@@ -75,11 +75,12 @@
                                                             {!! $comment->body !!}
                                                         </p>
                                                         @foreach ($comment->files as $item)
-                                                            <a href="{{ asset("$item->path") }}" target="_blank" rel="noopener noreferrer">{{ $item->filename }}</a>
+                                                            <a href="{{ asset("$item->path") }}" target="_blank"
+                                                                rel="noopener noreferrer">{{ $item->filename }}</a>
                                                         @endforeach
 
                                                         {{-- <a --}}
-                                                            {{-- href="{{ asset("$comment->path") }}">{{ $comment->filename }}</a> --}}
+                                                        {{-- href="{{ asset("$comment->path") }}">{{ $comment->filename }}</a> --}}
 
                                                     </div>
                                                 </div>
@@ -98,7 +99,8 @@
                                                             {!! $comment->body !!}
                                                         </p>
                                                         @foreach ($comment->files as $item)
-                                                            <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
+                                                            <a href="{{ asset("$item->path") }}"
+                                                                target="_blank">{{ $item->filename }}</a>
                                                         @endforeach
                                                     </div>
                                                 </div>
@@ -113,7 +115,8 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="section-title">Tinggalkan Pesan</div>
-                                        <form action="{{ route('store-comment', $data->no_ticket) }}" method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('store-comment', $data->no_ticket) }}" method="post"
+                                            enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="user_id" value="1" />
                                             <textarea class="form-control" id="summary-ckeditor" name="body"></textarea>
@@ -168,7 +171,8 @@
                                         <td>
                                             <select name="status" id="status_id" data-id="{{ $data->no_ticket }}"
                                                 class="form-control" style="width: 10rem !important;">
-                                                <option value="open" {{ $data->status == 'open' ? 'selected' : '' }}>Open
+                                                <option value="open" {{ $data->status == 'open' ? 'selected' : '' }}>
+                                                    Open
                                                 </option>
                                                 <option value="progress"
                                                     {{ $data->status == 'progress' ? 'selected' : '' }}>Progress</option>
@@ -180,8 +184,8 @@
                                     <tr>
                                         <th>Prioritas</th>
                                         <td>
-                                            <select name="priority" id="priority" data-id="dsadasdas" class="form-control"
-                                                style="width: 10rem !important;" disabled>
+                                            <select name="priority" id="priority" data-id="dsadasdas"
+                                                class="form-control" style="width: 10rem !important;" disabled>
                                                 <option value="rendah"
                                                     {{ $data->severity->severity == 'rendah' ? 'selected' : '' }}>Rendah
                                                 </option>
@@ -198,7 +202,14 @@
                                         <td>
                                             <select name="assign_to" id="assign_to_dd" data-id="dsadasdas"
                                                 class="form-control" style="width: 10rem !important;">
-                                                <option value="{{ $data->assign_to->name }}">{{ $data->assign_to->name }}
+                                                @if (!$data->assign_to)
+                                                    <option value="1">Choose..</option>
+                                                    <option value="1" >2</option>
+                                                    <option value="1" >3</option>
+                                                @else
+                                                    <option value="{{ $data->assign_to->name }}">
+                                                        {{ $data->assign_to->name }}
+                                                @endif
                                                 </option>
                                             </select>
                                         </td>
@@ -235,40 +246,15 @@
         $("#status_id").on("change", function() {
             console.log("berubah")
             let field = $(this).attr("name");
-            console.log(field)
             let value = this.value;
-            console.log(value)
             let ticket_id = $(this).attr("data-id");
-            console.log(ticket_id);
             let message = `Changed ${field} to ${value}`;
-            console.log(message);
-            // let plain_txt_message = "Changed " + field + " to " + value + ".";
-            // let type = parseInt($(this).attr("data-type"));
             let data = {
                 _token: '{{ csrf_token() }}',
                 id: ticket_id,
                 message: message,
-
-                //     // meta: {
-                //     //     ticket_no,
-                //     //     message,
-                //     //     type,
-                //     //     plain_txt_message,
-                //     // },
             };
             data["status"] = value;
-            // console.log(data);
-            // // Handle if field assign to is change, so send only id from agent
-            // // if (field === "assign_to") {
-            // //     // Get text from select2 dropdown
-            // //     const text = $("select.form-control").select2("data")[0].text;
-            // //     data["update_data"][field] = value;
-            // //     data.meta.message =
-            // //         `Changed assigned to <span class="user-label" data-value="${text}" data-username="${text}"></span>`;
-            // //     data.meta.plain_txt_message = `Changed assigned to ${text}.`;
-            // //     data["update_data"]["assign_on"] = Date.now();
-            // //     data["update_data"]["status"] = 50; //hardcoded assigned status;
-            // // }
 
             $.ajaxSetup({
                 headers: {
@@ -282,23 +268,9 @@
                 url: "{{ route('update-tiket') }}",
                 // dataType: "text",
                 dataType: 'json',
-                // headers: { 'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')},
                 data: data,
-                // beforeSend: function () {
-                //   $("#au_result").html(
-                //     '<img src="../../../assets/img/loader.gif" class="pull-right" style="width: 30px;">'
-                //   );
-                // },
                 success: function(response) {
                     window.location.reload()
-
-                    // if (JSON.parse(response)["data"]["result"]) {
-                    //     showNotification("success", data.meta.message, {}, () =>
-                    //         window.location.reload()
-                    //     );
-                    // } else {
-                    //     showNotification("error", "Some error occured.");
-                    // }
                 },
             });
         });

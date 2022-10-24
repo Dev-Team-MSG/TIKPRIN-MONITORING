@@ -238,12 +238,69 @@ class TicketController extends Controller
         );
     }
 
+    public function buatTiket() {
+        $count_open = Ticket::where("status", "open")->count();
+        $count_progress = Ticket::where("status", "progress")->count();
+        $count_close = Ticket::where("status", "close")->count();
+        $category = CategoryTicket::all();
+        $severity = Severity::all();
+        return view("tiket.create", compact("count_open", "count_progress", "count_close", "category", "severity"));
+    }
+
+    public function simpanTiket(Request $request) {
+        $ticket = new Ticket();
+        $ticket->owner_id = $request->user_id;
+        $ticket->no_ticket = "tiket" . $ticket->id;
+        // $ticket->assign_to = $request->assign_to;
+        $ticket->category_ticket_id = $request->category_ticket_id;
+        $ticket->severity_id = $request->severity_id;
+        $ticket->title = $request->title;
+        $ticket->description = $request->description;
+        $ticket->status = "open";
+        $result = date('d.m.Y', strtotime('+7 day', time()));
+        $ticket->due_datetime = $result;
+        // $ticket->close_datetime = $result;
+        $ticket->save();
+        if (!$request->hasFile("fileName")) {
+            return response()->json(['upload_file_not_found'], 400);
+        }
+        // dd($request->filename);
+        $allowedfileExtension = ['pdf', 'jpg', 'png'];
+        $files = $request->file('fileName');
+        // dd($files);
+        $errors = [];
+        foreach ($files as $file) {
+
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension, $allowedfileExtension);
+
+            if ($check) {
+                foreach ($request->fileName as $mediaFiles) {
+
+                    $name = $mediaFiles->getClientOriginalName();
+                    $path = $mediaFiles->store('public/images');
+                    $filepath = str_replace("public","storage",$path);
+                    // $filePath = $request->file('image')->storeAs('uploads', $name);
+
+
+                    //store image file into directory and db
+                    $save = new File();
+                    $save->filename = $name;
+                    $save->path = $filepath ;
+                    $ticket->files()->save($save);
+                }
+            }
+        }
+        return redirect(route("list-open-ticket"));
+    }
+
     public function store(Request $request)
     {
         $ticket = new Ticket();
         $ticket->owner = $request->user_id;
         $ticket->no_ticket = "tiket" . $ticket->id;
-        $ticket->assign_to = $request->assign_to;
+        // $ticket->assign_to = $request->assign_to;
         $ticket->category_ticket_id = $request->category_ticket_id;
         $ticket->severity_id = $request->severity_id;
         $ticket->title = $request->title;
