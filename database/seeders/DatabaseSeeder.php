@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Database\Seeders\SeveritySeeder;
+use Database\Seeders\CategoryTicketSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -42,5 +44,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CreateRoleSeeder::class);
         $this->call(CreateMenuSeeder::class);
         $this->call(CreateUserAccessSeeder::class);
+        $this->call(CategoryTicketSeeder::class);
+        $this->call(SeveritySeeder::class);
     }
 }
