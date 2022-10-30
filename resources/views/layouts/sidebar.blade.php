@@ -23,11 +23,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <a class="nav-link" href="{{ route('list-open-ticket') }}">
+                                
                                     Open
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <span class="badge badge-success">{{ $count_open }}</span>
+                                <span class="badge badge-success">{{ $count_ticket[0] }}</span>
                             </div>
                         </div>
                     </li>
@@ -39,7 +40,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <span class="badge badge-warning">{{ $count_progress }}</span>
+                                <span class="badge badge-warning">{{ $count_ticket[1] }}</span>
                             </div>
                         </div>
                     </li>
@@ -51,7 +52,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <span class="badge badge-danger">{{ $count_close }}</span>
+                                <span class="badge badge-danger">{{ $count_ticket[2] }}</span>
                             </div>
                         </div>
                     </li>
@@ -65,6 +66,12 @@
             </li>
 
             <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Report</span></a>
+            </li>
+            <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Role</span></a>
+            </li>
+            <li><a class="nav-link" href={{route("kategori.index")}}><i class="fas fa-pencil-ruler"></i> <span>Kategori</span></a>
+            </li>
+            <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Severity</span></a>
             </li>
         </ul>
 

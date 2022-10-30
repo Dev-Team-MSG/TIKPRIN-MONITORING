@@ -41,9 +41,7 @@ class DatabaseSeeder extends Seeder
         // Role::create([
         //     "role" => "admin_kanim"
         // ]);
-        $this->call(CreateRoleSeeder::class);
         $this->call(CreateMenuSeeder::class);
-        $this->call(CreateUserAccessSeeder::class);
         $this->call(CategoryTicketSeeder::class);
         $this->call(SeveritySeeder::class);
     }

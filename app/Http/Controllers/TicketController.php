@@ -17,9 +17,7 @@ class TicketController extends Controller
 
     public function detailTicket($no_ticket) {
         $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        
         // dd($data);
         return view("tiket.detail", compact("data", "count_open", "count_progress", "count_close"));
     }
@@ -77,10 +75,8 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.close",compact( "count_open", "count_progress", "count_close"));
+        
+        return view("tiket.close");
     }
 
     public function showProgressTicket(Request $request)
@@ -135,10 +131,8 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.progress",compact( "count_open", "count_progress", "count_close"));
+        
+        return view("tiket.progress");
     }
 
     public function showOpenTicket(Request $request)
@@ -193,24 +187,61 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.open",compact( "count_open", "count_progress", "count_close"));
+        
+        return view("tiket.open");
     }
 
 
     public function showAllTicket(Request $request)
     {
-        $data = Ticket::select("id", "no_ticket", "owner", "title", "status");
+        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->get();
+        // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger">Delete</a>';
-                    return $btn;
+                ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
+                    $cat = $ticket->category->category;
+                    $span = '';
+                    if ($cat == "Request ink/print-head") {
+                        $span = '<span class="badge badge-primary">' . strtoupper($cat) . '</span>';
+                    } else {
+                        $span = '<span class="badge badge-secondary">' . strtoupper($cat) . '</span>';
+                    }
+                    return $span;
                 })
-                ->rawColumns(['action'])
+                ->addColumn("pelapor", function (Ticket $ticket) {
+                    return $ticket->owner;
+                })
+                ->addColumn("permasalahan", function (Ticket $ticket) {
+                    if (strlen($ticket->description) > 50) {
+                        $str = substr($ticket->description, 0, 7) . '...';
+                        return $str;
+                    }
+                    return $ticket->description;
+                })
+                ->addColumn("luarbiasa", function (Ticket $ticket) {
+                    $status = $ticket->status;
+                    $span = '';
+                    if ($status == "open") {
+                        $span = '<span class="badge badge-success">' .strtoupper($status)  . '</span>';
+                    } else if ($status == "progress") {
+                        $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
+                        
+                    }else {
+                        $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
+                        
+                    }
+                    return $span;
+                })->escapeColumns([])
+                ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
+                    return $ticket->created_at->format('d/m/y h:m:s');
+                })
+                ->addColumn('action', function ($row) {
+                    // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    return '<a href="'. route("detail-ticket", [$row->no_ticket]). '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    // return $btn;
+                })
+                ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
         return view("tiket.show");
@@ -239,12 +270,10 @@ class TicketController extends Controller
     }
 
     public function buatTiket() {
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        
         $category = CategoryTicket::all();
         $severity = Severity::all();
-        return view("tiket.create", compact("count_open", "count_progress", "count_close", "category", "severity"));
+        return view("tiket.create", compact("category", "severity"));
     }
 
     public function simpanTiket(Request $request) {

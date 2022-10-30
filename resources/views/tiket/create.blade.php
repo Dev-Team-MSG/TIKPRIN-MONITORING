@@ -28,9 +28,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputState">Kategori</label>
+                            <label for="inputState"></label>
                             <select id="inputState" class="form-control" name="category_ticket_id">
                                 <option selected>Choose...</option>
+                                {{$category}}
                                 @foreach ($category as $item)
                                     <option value="{{$item->id}}">{{$item->category}}</option>
                                     

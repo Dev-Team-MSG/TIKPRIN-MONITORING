@@ -9,12 +9,12 @@ class Role extends Model
 {
     protected $table = "roles";
     use HasFactory;
-    protected $fillable = [
-        "role"
-    ];
+    // protected $fillable = [
+    //     "role"
+    // ];
 
-    public function menus()
-    {
-        return $this->belongsToMany(Menu::class, "user_access", "role_id", "menu_id");
-    }
+    // public function menus()
+    // {
+    //     return $this->belongsToMany(Menu::class, "user_access", "role_id", "menu_id");
+    // }
 }
