@@ -7,10 +7,10 @@
         <div class="section-body">
             <div class="card">
                 <div class="card-header">
-                    <h4>Kategori</h4>
+                    <h4>Permission</h4>
                     <div class="card-header-action">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#formModal">
-                            Tambah Kategori
+                            Tambah Permission
                         </button>
                     </div>
                 </div>
@@ -20,32 +20,32 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Kategori</th>
+                                    <th scope="col">Permission</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id='category-list' name="category-list">
-                                @empty($category)
+                            <tbody id='permission-list' name="permission-list">
+                                @empty($permission)
                                     <tr>
                                         <td valign="top" colspan="3" class="dataTables_empty text-center">No data available
                                             in table</td>
                                     </tr>
                                 @endempty
-                                @foreach ($category as $item)
-                                    <tr id="todo{{ $item->id }}" data-iter={{$loop->iteration}}>
+                                @foreach ($permission as $item)
+                                    <tr id="permission{{ $item->id }}" data-iter={{$loop->iteration}}>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->category }}</td>
+                                        <td>{{ $item->name }}</td>
                                         <td>
                                             {{-- <form method="post">
                                                 @csrf
                                                 {{ method_field('delete') }} --}}
                                             {{-- <input value="delete"> --}}
-                                            <a href="javascript:void(0)" class="btn btn-warning edit-kategori"
+                                            <a href="javascript:void(0)" class="btn btn-warning edit-permission"
                                                 data-toggle="modal" {{-- data-target="#formEditModal"  --}}
-                                                data-url="{{ route('kategori.show', $item->id) }}">Edit</a>
-                                            <a href="javascript:void(0)" id="delete-kategori"
-                                                data-url="{{ route('kategori.destroy', $item->id) }}"
-                                                class="btn btn-danger delete-kategori">Delete</a>
+                                                data-url="{{ route('permission.show', $item->id) }}">Edit</a>
+                                            <a href="javascript:void(0)" id="edit-kategori"
+                                                data-url="{{ route('permission.destroy', $item->id) }}"
+                                                class="btn btn-danger edit-kategori">Delete</a>
                                             {{-- <input type="hidden" id="categoryId" name="categoryId" value="{{$item->id}}" />
                                                 <button class="btn btn-danger" type="button" id="btn-delete">Delete</button>
                                             </form> --}}
@@ -66,7 +66,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabel">Tambah Kategori</h5>
+                    <h5 class="modal-title" id="formModalLabel">Tambah Permission</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -76,9 +76,9 @@
                         @csrf
                         <div class="form-group
                         col-md">
-                            <label for="inputKategori">Kategori</label>
-                            <input type="text" class="form-control" id="inputKategori" placeholder="kategori"
-                                name="kategori" required />
+                            <label for="inputPermission">Permission</label>
+                            <input type="text" class="form-control" id="inputPermission" placeholder="permission"
+                                name="permission" required value="{{old("permission")}}"/>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -95,7 +95,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabel">Tambah Kategori</h5>
+                    <h5 class="modal-title" id="formModalLabel">Edit Kategori</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -105,10 +105,10 @@
                         @csrf
                         <div class="form-group
                     col-md">
-                            <label for="inputEditKategori">Kategori</label>
-                            <input type="text" class="form-control" id="inputEditKategori" placeholder="kategori"
-                                name="kategori" required />
-                            <input type="hidden" name="idCategory" class="editId">
+                            <label for="inputEditPermission">Permission</label>
+                            <input type="text" class="form-control" id="inputEditPermission" placeholder="permission"
+                                name="permission" required />
+                            <input type="hidden" name="idPermission" class="editId">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -123,7 +123,7 @@
 @push('page-scripts')
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(".edit-kategori").click(function(e) {
+        $(".edit-permission").click(function(e) {
             var type = "GET";
             var ajaxurl = $(this).data('url');
             console.log(ajaxurl)
@@ -134,8 +134,8 @@
                 success: function(data) {
                     console.log(data)
                     $('#formEditModal').modal('show');
-                    $("#inputEditKategori").val(data.category)
-                    $("input[name=idCategory]").val(data.id)
+                    $("#inputEditPermission").val(data.name)
+                    $("input[name=idPermission]").val(data.id)
                 },
                 error: function(data) {
 
@@ -145,7 +145,7 @@
         })
 
 
-        $(".delete-kategori").click(function(e) {
+        $(".edit-kategori").click(function(e) {
             var trObj = $(this);
             var ajaxurl = $(this).data('url');
             e.preventDefault()
@@ -202,13 +202,13 @@
             });
             e.preventDefault();
             var formData = {
-                kategori: jQuery('#inputKategori').val(),
+                name: jQuery('#inputPermission').val(),
             };
             console.log(formData);
             var state = $('#btn-save').val();
             var type = "POST";
-            var ajaxurl = "kategori";
-            var table = $("#category-list")
+            var ajaxurl = "permission";
+            var table = $("#permission-list")
             console.log(state == "add")
 
             $.ajax({
@@ -217,7 +217,7 @@
                 data: formData,
                 dataType: 'json',
                 success: function(data) {
-                    console.log()
+                    console.log(data)
                     Swal.fire({
                         icon: 'success',
                         title: "Data berhasil ditambahkan",
@@ -225,36 +225,38 @@
                         showCancelButton: false,
                         confirmButtonText: 'Yes'
                     }).then((_) => {
+                        console.log("success : "+data)
                         // console.log("result : " + result.kategori)
                         // window.location.reload()
 
-                        var category = `
+                        var permission = `
                                      <tr>
                                         <td>${data.id}</td>
-                                        <td>${data.category}</td>
+                                        <td>${data.name}</td>
                                         <td>
                                             {{-- <form method="post">
                                                 @csrf
                                                 {{ method_field('delete') }} --}}
                                             {{-- <input value="delete"> --}}
                                             <a href="" class="btn btn-warning">Edit</a>
-                                            <a href="javascript:void(0)" id="delete-kategori"
+                                            <a href="javascript:void(0)" id="edit-kategori"
                                                 data-url=""
                                                 class="btn btn-danger">Delete</a>
-                                            {{-- <input type="hidden" id="categoryId" name="categoryId" value="{{$item->id}}" />
+                                            {{-- <input type="hidden" id="permissionId" name="permissionId" value="{{$item->id}}" />
                                                 <button class="btn btn-danger" type="button" id="btn-delete">Delete</button>
                                             </form> --}}
                                         </td>
                                     </tr>
                                      `
-                        table.append(category)
+                        table.append(permission)
                     })
 
                 },
                 error: function(data) {
+                    console.log("error")
                     Swal.fire({
                         icon: 'warning',
-                        title: data.responseJSON.message,
+                        // title: data.responseJSON.message,
                         showCancelButton: true,
                     })
 
@@ -263,11 +265,11 @@
         });
 
         $("#btn-edit").click(function(e) {
-            var ajaxurl = "kategori";
+            var ajaxurl = "permission";
 
-            var id = $("input[name=idCategory]").val()
-            var index = $("#todo"+id).data('iter')
-            console.log(index)
+            var id = $("input[name=idPermission]").val()
+            var index = $("#permission"+id).data('iter')
+            console.log("index" + index)
             console.log(id)
             $.ajaxSetup({
                 headers: {
@@ -277,10 +279,10 @@
             e.preventDefault();
             var formData = {
                 _method: 'PUT',
-                kategori: jQuery('#inputEditKategori').val(),
+                name: jQuery('#inputEditPermission').val(),
             };
             console.log(formData);
-            // var table = $("#category-list")
+            // var table = $("#permission-list")
             $.ajax({
                 type: "PUT",
                 url: `${ajaxurl}/${id}`,
@@ -298,17 +300,17 @@
                         console.log("data success : "+ data.id)
                         // console.log("result : " + result.kategori)
                         // window.location.reload()
-                        var category = `
+                        var permission = `
                                      <tr>
                                         <td>${index}</td>
-                                        <td>${data.kategori}</td>
+                                        <td>${data.name}</td>
                                         <td>
                                             {{-- <form method="post">
                                                 @csrf
                                                 {{ method_field('delete') }} --}}
                                             {{-- <input value="delete"> --}}
                                             <a href="" class="btn btn-warning">Edit</a>
-                                            <a href="javascript:void(0)" id="delete-kategori"
+                                            <a href="javascript:void(0)" id="edit-kategori"
                                                 data-url=""
                                                 class="btn btn-danger">Delete</a>
                                             {{-- <input type="hidden" id="categoryId" name="categoryId" value="{{$item->id}}" />
@@ -317,7 +319,7 @@
                                         </td>
                                     </tr>
                                      `
-                        $("#todo" + id).replaceWith(category)
+                        $("#permission" + id).replaceWith(permission)
                     })
 
                 },

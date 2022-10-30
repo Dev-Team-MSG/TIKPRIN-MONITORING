@@ -15,6 +15,11 @@ use Yajra\DataTables\DataTables;
 class TicketController extends Controller
 {
 
+    public function __construct() 
+    {
+        $this->middleware("can:create tiket")->only("buatTiket", "simpanTiket");
+    }
+
     public function detailTicket($no_ticket) {
         $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
         

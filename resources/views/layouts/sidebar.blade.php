@@ -56,19 +56,25 @@
                             </div>
                         </div>
                     </li>
+                    @can('create tiket')
                     <li>
                         <a class="nav-link" href="{{route("view-create-ticket")}}">
                             Buat Tiket
                         </a>
                     </li>
+                    @endcan
+                    
 
                 </ul>
             </li>
-
-            <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Report</span></a>
+            @can('access permission')
+            <li><a class="nav-link" href={{route("permission.index")}}><i class="fas fa-pencil-ruler"></i> <span>Permission</span></a>
             </li>
-            <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Role</span></a>
+            @endcan
+            @can('access role')
+            <li><a class="nav-link" href="{{route("roles.index")}}"><i class="fas fa-pencil-ruler"></i> <span>Role</span></a>
             </li>
+            @endcan  
             <li><a class="nav-link" href={{route("kategori.index")}}><i class="fas fa-pencil-ruler"></i> <span>Kategori</span></a>
             </li>
             <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Severity</span></a>

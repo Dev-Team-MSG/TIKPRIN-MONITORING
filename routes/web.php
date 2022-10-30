@@ -3,6 +3,8 @@
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Models\Ticket;
 
 /*
@@ -35,4 +37,6 @@ Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("l
 Route::get("/tikets/progress", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
 Route::get("/tikets/close", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
 Route::resource("kategori",CategoryController::class);
+Route::resource("permission",PermissionController::class);
+Route::resource("roles",RoleController::class);
 require __DIR__.'/auth.php';
