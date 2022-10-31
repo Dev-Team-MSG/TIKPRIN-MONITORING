@@ -2,14 +2,6 @@
 @section('title', 'Semua Tiket')
 @section('content')
     <section class="section">
-        <div class="section-header">
-            <h1>Tambah Ticket</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Tiket</a></div>
-                <div class="breadcrumb-item"><a href="#">Tambah Tiket</a></div>
-            </div>
-        </div>
-
         <div class="section-body">
             <div class="card">
                 <div class="card-header">
@@ -19,12 +11,13 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{route("store-create-ticket")}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('store-create-ticket') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <label for="inputEmail4">Pengaduan</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder="pengaduan" name="title">
+                                <input type="text" class="form-control" id="inputEmail4" placeholder="pengaduan"
+                                    name="title">
                             </div>
                         </div>
                         <div class="form-group">
@@ -32,8 +25,7 @@
                             <select id="inputState" class="form-control" name="category_ticket_id">
                                 <option selected>Choose...</option>
                                 @foreach ($category as $item)
-                                    <option value="{{$item->id}}">{{$item->category}}</option>
-                                    
+                                    <option value="{{ $item->id }}">{{ $item->category }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -42,13 +34,12 @@
                             <select id="inputState" class="form-control" name="severity_id">
                                 <option selected>Choose...</option>
                                 @foreach ($severity as $item)
-                                    <option value="{{$item->id}}">{{$item->severity}}</option>
-                                    
+                                    <option value="{{ $item->id }}">{{ $item->severity }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="hidden" name="user_id" value="1" />
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
                             <label for="">Deskripsi Pengaduan</label>
                             <textarea class="form-control" id="summary-ckeditor" name="description"></textarea>
                             <label class="mt-4">File Browser</label>

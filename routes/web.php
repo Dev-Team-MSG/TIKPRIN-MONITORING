@@ -8,6 +8,8 @@ use App\Http\Controllers\PrinterController;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 use App\Models\Ticket;
 
 /*
@@ -57,5 +59,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
     Route::get("/tikets/progress", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
     Route::get("/tikets/close", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
+    Route::resource("permission",PermissionController::class);
+    Route::resource("roles",RoleController::class);
 });
+
+
 

@@ -6,13 +6,7 @@
 @section('content')
 
     <section class="section">
-        <div class="section-header">
-            <h1>Semua Ticket</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Tiket</a></div>
-                <div class="breadcrumb-item"><a href="#">Semua Tiket</a></div>
-            </div>
-        </div>
+       
         <div class="section-body">
             <div class="row">
                 <div class="col-md-8">
@@ -41,19 +35,21 @@
                                     @foreach ($data->files as $item)
                                         <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
                                     @endforeach
+                                    @can('ambil tiket')
+                                        @if ($data->status == 'open')
+                                            <div class="row mt-5">
+                                                <div class="col-md">
+                                                    <form action="{{ route('ambil-tiket', $data->no_ticket) }}" method="post">
+                                                        @csrf
+                                                        <input type="text" hidden value="{{Auth::user()->id}}" name="user_id" />
+                                                        <button class="btn btn-warning"type="submit">Ambil</button>
+                                                    </form>
+                                                </div>
 
-                                    @if ($data->status == 'open')
-                                        <div class="row mt-5">
-                                            <div class="col-md">
-                                                <form action="{{ route('ambil-tiket', $data->no_ticket) }}" method="post">
-                                                    @csrf
-                                                    <input type="text" hidden value="1" name="user_id" />
-                                                    <button class="btn btn-warning"type="submit">Ambil</button>
-                                                </form>
                                             </div>
+                                        @endif
+                                    @endcan
 
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -61,6 +57,7 @@
                             <div class="container py-5 mx-auto">
                                 <div class="main-timeline">
                                     @foreach ($data->comments as $comment)
+                                    {{-- {{$comment}} --}}
                                         @if ($comment->user_id == $data->owner_id)
                                             <div class="timeline left">
                                                 <div class="card">
@@ -118,7 +115,7 @@
                                         <form action="{{ route('store-comment', $data->no_ticket) }}" method="post"
                                             enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" name="user_id" value="1" />
+                                            <input type="hidden" name="user_id" value="{{Auth::user()->id}}" />
                                             <textarea class="form-control" id="summary-ckeditor" name="body"></textarea>
                                             <div class="section-title">File Browser</div>
                                             <div class="custom-file mb-4">
@@ -204,8 +201,8 @@
                                                 class="form-control" style="width: 10rem !important;">
                                                 @if (!$data->assign_to)
                                                     <option value="1">Choose..</option>
-                                                    <option value="1" >2</option>
-                                                    <option value="1" >3</option>
+                                                    <option value="1">2</option>
+                                                    <option value="1">3</option>
                                                 @else
                                                     <option value="{{ $data->assign_to->name }}">
                                                         {{ $data->assign_to->name }}

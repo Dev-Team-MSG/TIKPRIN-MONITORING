@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\File;
 use App\Models\Severity;
 use App\Models\Ticket;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -15,13 +16,15 @@ use Yajra\DataTables\DataTables;
 class TicketController extends Controller
 {
 
-    public function detailTicket($no_ticket) {
-        $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
-        // dd($data);
-        return view("tiket.detail", compact("data", "count_open", "count_progress", "count_close"));
+    public function detailTicket($no_ticket)
+    {
+        try {
+            //code...
+            $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
+            return view("tiket.detail", compact("data"));
+        } catch (\Throwable $th) {
+            return abort(404);
+        }
     }
 
 
@@ -56,13 +59,11 @@ class TicketController extends Controller
                     $status = $ticket->status;
                     $span = '';
                     if ($status == "open") {
-                        $span = '<span class="badge badge-success">' .strtoupper($status)  . '</span>';
+                        $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
                     } else if ($status == "progress") {
                         $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        
-                    }else {
+                    } else {
                         $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        
                     }
                     return $span;
                 })->escapeColumns([])
@@ -71,7 +72,7 @@ class TicketController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                    return '<a href="'. route("detail-ticket", [$row->no_ticket]). '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
                     // return $btn;
                 })
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
@@ -80,7 +81,7 @@ class TicketController extends Controller
         $count_open = Ticket::where("status", "open")->count();
         $count_progress = Ticket::where("status", "progress")->count();
         $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.close",compact( "count_open", "count_progress", "count_close"));
+        return view("tiket.close", compact("count_open", "count_progress", "count_close"));
     }
 
     public function showProgressTicket(Request $request)
@@ -114,13 +115,11 @@ class TicketController extends Controller
                     $status = $ticket->status;
                     $span = '';
                     if ($status == "open") {
-                        $span = '<span class="badge badge-success">' .strtoupper($status)  . '</span>';
+                        $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
                     } else if ($status == "progress") {
                         $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        
-                    }else {
+                    } else {
                         $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        
                     }
                     return $span;
                 })->escapeColumns([])
@@ -129,7 +128,7 @@ class TicketController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                    return '<a href="'. route("detail-ticket", [$row->no_ticket]). '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
                     // return $btn;
                 })
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
@@ -138,7 +137,7 @@ class TicketController extends Controller
         $count_open = Ticket::where("status", "open")->count();
         $count_progress = Ticket::where("status", "progress")->count();
         $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.progress",compact( "count_open", "count_progress", "count_close"));
+        return view("tiket.progress", compact("count_open", "count_progress", "count_close"));
     }
 
     public function showOpenTicket(Request $request)
@@ -172,13 +171,11 @@ class TicketController extends Controller
                     $status = $ticket->status;
                     $span = '';
                     if ($status == "open") {
-                        $span = '<span class="badge badge-success">' .strtoupper($status)  . '</span>';
+                        $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
                     } else if ($status == "progress") {
                         $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        
-                    }else {
+                    } else {
                         $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        
                     }
                     return $span;
                 })->escapeColumns([])
@@ -187,7 +184,7 @@ class TicketController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                    return '<a href="'. route("detail-ticket", [$row->no_ticket]). '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+                    return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
                     // return $btn;
                 })
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
@@ -196,7 +193,7 @@ class TicketController extends Controller
         $count_open = Ticket::where("status", "open")->count();
         $count_progress = Ticket::where("status", "progress")->count();
         $count_close = Ticket::where("status", "close")->count();
-        return view("tiket.open",compact( "count_open", "count_progress", "count_close"));
+        return view("tiket.open", compact("count_open", "count_progress", "count_close"));
     }
 
 
@@ -238,7 +235,8 @@ class TicketController extends Controller
         );
     }
 
-    public function buatTiket() {
+    public function buatTiket()
+    {
         $count_open = Ticket::where("status", "open")->count();
         $count_progress = Ticket::where("status", "progress")->count();
         $count_close = Ticket::where("status", "close")->count();
@@ -247,7 +245,8 @@ class TicketController extends Controller
         return view("tiket.create", compact("count_open", "count_progress", "count_close", "category", "severity"));
     }
 
-    public function simpanTiket(Request $request) {
+    public function simpanTiket(Request $request)
+    {
         $ticket = new Ticket();
         $ticket->owner_id = $request->user_id;
         $ticket->no_ticket = "tiket" . $ticket->id;
@@ -261,37 +260,38 @@ class TicketController extends Controller
         $ticket->due_datetime = $result;
         // $ticket->close_datetime = $result;
         $ticket->save();
-        if (!$request->hasFile("fileName")) {
-            return response()->json(['upload_file_not_found'], 400);
-        }
-        // dd($request->filename);
-        $allowedfileExtension = ['pdf', 'jpg', 'png'];
-        $files = $request->file('fileName');
-        // dd($files);
-        $errors = [];
-        foreach ($files as $file) {
+        if ($request->hasFile("fileName")) {
+            // return response()->json(['upload_file_not_found'], 400);
+            $allowedfileExtension = ['pdf', 'jpg', 'png'];
+            $files = $request->file('fileName');
+            // dd($files);
+            $errors = [];
+            foreach ($files as $file) {
 
-            $extension = $file->getClientOriginalExtension();
+                $extension = $file->getClientOriginalExtension();
 
-            $check = in_array($extension, $allowedfileExtension);
+                $check = in_array($extension, $allowedfileExtension);
 
-            if ($check) {
-                foreach ($request->fileName as $mediaFiles) {
+                if ($check) {
+                    foreach ($request->fileName as $mediaFiles) {
 
-                    $name = $mediaFiles->getClientOriginalName();
-                    $path = $mediaFiles->store('public/images');
-                    $filepath = str_replace("public","storage",$path);
-                    // $filePath = $request->file('image')->storeAs('uploads', $name);
+                        $name = $mediaFiles->getClientOriginalName();
+                        $path = $mediaFiles->store('public/images');
+                        $filepath = str_replace("public", "storage", $path);
+                        // $filePath = $request->file('image')->storeAs('uploads', $name);
 
 
-                    //store image file into directory and db
-                    $save = new File();
-                    $save->filename = $name;
-                    $save->path = $filepath ;
-                    $ticket->files()->save($save);
+                        //store image file into directory and db
+                        $save = new File();
+                        $save->filename = $name;
+                        $save->path = $filepath;
+                        $ticket->files()->save($save);
+                    }
                 }
             }
         }
+        // dd($request->filename);
+
         return redirect(route("list-open-ticket"));
     }
 
@@ -375,14 +375,14 @@ class TicketController extends Controller
 
                     $name = $mediaFiles->getClientOriginalName();
                     $path = $mediaFiles->store('public/images');
-                    $filepath = str_replace("public","storage",$path);
+                    $filepath = str_replace("public", "storage", $path);
                     // $filePath = $request->file('image')->storeAs('uploads', $name);
 
 
                     //store image file into directory and db
                     $save = new File();
                     $save->filename = $name;
-                    $save->path = $filepath ;
+                    $save->path = $filepath;
                     $ticket->files()->save($save);
                 }
             } else {
@@ -392,11 +392,12 @@ class TicketController extends Controller
         return response()->json($ticket->files, 200);
     }
 
-    public function updateTicket( Request $request) {
-        $ticket = Ticket::where("no_ticket",$request->id)->first();
+    public function updateTicket(Request $request)
+    {
+        $ticket = Ticket::where("no_ticket", $request->id)->first();
         // dd($ticket);
         if ($request->ajax()) {
-            $user_id = rand(1,2);
+            $user_id = rand(1, 2);
             $comment = new Comment();
             $comment->user_id = $user_id;
             $comment->no_ticket = $ticket->no_ticket;
@@ -404,8 +405,8 @@ class TicketController extends Controller
             $comment->save();
             $ticket->status = $request->status;
             $ticket->save();
-            
-            if($request->status == "close") {
+
+            if ($request->status == "close") {
                 $ticket->close_datetime = Carbon::now();
                 $ticket->save();
                 $comment = new Comment();

@@ -30,7 +30,7 @@ class UserController extends Controller
             }
            }
            
-        return view('users', ['users' => $users]);
+        return view('users.index', ['users' => $users]);
     }
     
     //Method Import Excel
