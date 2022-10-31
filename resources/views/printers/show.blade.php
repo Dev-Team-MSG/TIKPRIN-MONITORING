@@ -33,7 +33,7 @@
                                 {{ $printer->mac_address }}
                                 <br><br>
                                 <b>Ditambahkan Oleh</b> <br>
-                                {{ $printer->creator->name }}
+                                {{ old('creator->name',  isset($printer->editor->name) ? $printer->creator->name : null) }}
                                 <br><br>
                                 <b>Diperbaharui Oleh</b> <br>
                                 {{ old('editor->name',  isset($printer->editor->name) ? $printer->editor->name : null) }}

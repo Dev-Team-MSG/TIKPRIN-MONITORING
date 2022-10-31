@@ -27,7 +27,7 @@
         </ul>
     </li>
     <li class="dropdown">
-        <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i>
+        <a href="#" class="nav-link has-dropdown"><i class="fas fa-ticket"></i>
             <span>Pengaduan</span></a>
         <ul class="dropdown-menu">
             <li>
