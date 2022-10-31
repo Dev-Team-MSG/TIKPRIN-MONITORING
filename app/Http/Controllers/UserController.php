@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 
+
 class UserController extends Controller
 {
     //tampilkan data
@@ -60,10 +61,12 @@ class UserController extends Controller
 
         if ($import) {
             //redirect
+
             return redirect()->route('users')->with(['message' => 'Data User Berhasil Diimport!']);
         } else {
             //redirect
             return redirect()->route('users')->with(['message' => 'Data User Gagal Diimport!']);
+
         }
     }
     //Method Validation

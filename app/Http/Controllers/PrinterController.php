@@ -41,6 +41,7 @@ class PrinterController extends Controller
         $path = $file->storeAs('public/excel/', $nama_file);
 
         // import data
+
         $import = Excel::import(new PrintersImport(), storage_path('app/public/excel/' . $nama_file));
 
         //remove from server
@@ -52,6 +53,7 @@ class PrinterController extends Controller
         } else {
             //redirect
             return redirect()->route('printers.index')->with(['message' => 'Data Gagal Diimport!']);
+
         }
     }
 
