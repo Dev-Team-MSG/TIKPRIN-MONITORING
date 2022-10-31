@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
+
 
 class UserController extends Controller
 {
@@ -57,10 +61,12 @@ class UserController extends Controller
 
         if ($import) {
             //redirect
-            return redirect()->route('users')->with(['success' => 'Data Berhasil Diimport!']);
+
+            return redirect()->route('users')->with(['message' => 'Data User Berhasil Diimport!']);
         } else {
             //redirect
-            return redirect()->route('users')->with(['error' => 'Data Gagal Diimport!']);
+            return redirect()->route('users')->with(['message' => 'Data User Gagal Diimport!']);
+
         }
     }
     //Method Validation
