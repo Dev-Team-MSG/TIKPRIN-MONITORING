@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -23,9 +25,25 @@ class RoleController extends Controller
     public function index()
     {
         //
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         $role = Role::latest()->get();
         $permissions = Permission::with("roles")->get();
-        return view("role.index", compact("role", "permissions"));
+        return view("role.index", compact("role", "permissions", "count_open", "count_progress", "count_close"));
 
     }
 
@@ -78,9 +96,25 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $permission = Permission::get();
+        $permissions = Permission::get();
         $role = Role::find($id);
-       return view('role.edit',['role'=>$role,'permissions' => $permission]);
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
+       return view('role.edit',compact("role", "permissions", "count_open", "count_progress", "count_close"));
     }
 
     /**

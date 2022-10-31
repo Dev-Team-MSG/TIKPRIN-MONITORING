@@ -6,42 +6,43 @@
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">St</a>
         </div>
-        
+
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="active">
                 <a href="{{ url('dashboard') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
             </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i> <span>User</span></a>
-                <ul class="dropdown-menu">
-                    @can('access user')
+            @can('access user')
+                <li class="dropdown">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i> <span>User</span></a>
+                    <ul class="dropdown-menu">
                         <li><a href="{{ route('users') }}">Lihat User</a></li>
-                    @endcan
-                    <li><a class="nav-link" href="{{ route('users.tambah') }}">Tambah User</a></li>
-                </ul>
-            </li>
+                        @can('create user')
+                            <li><a class="nav-link" href="{{ route('users.tambah') }}">Tambah User</a></li>
+                        @endcan
+                    </ul>
+                </li>
+            @endcan
             @can('access printer')
-            <li class="dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-plug"></i> <span>Printer</span></a>
-                <ul class="dropdown-menu">
-                    
-                        <li><a href="{{ route('printers.index') }}">Lihat Printer</a></li>
-                    @can('create printer')
-                    <li><a class="nav-link" href="{{ route('printers.create') }}">Tambah Printer</a></li>
-                    @endcan
+                <li class="dropdown">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-plug"></i> <span>Printer</span></a>
+                    <ul class="dropdown-menu">
 
-                    @can('relokasi printer')
-                    <li><a href="#">Relokasi Printer</a></li>
-                        
-                    @endcan
-                </ul>
-            </li>
+                        <li><a href="{{ route('printers.index') }}">Lihat Printer</a></li>
+                        @can('create printer')
+                            <li><a class="nav-link" href="{{ route('printers.create') }}">Tambah Printer</a></li>
+                        @endcan
+
+                        @can('relokasi printer')
+                            <li><a href="#">Relokasi Printer</a></li>
+                        @endcan
+                    </ul>
+                </li>
             @endcan
 
             @can('access tiket')
                 <li class="dropdown">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i>
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-ticket"></i>
                         <span>Pengaduan</span></a>
                     <ul class="dropdown-menu">
                         <li>
@@ -52,7 +53,7 @@
                                     </a>
                                 </div>
                                 <div class="col-md-4">
-                                    <span class="badge badge-success">{{ $count_ticket[0] }}</span>
+                                    <span class="badge badge-success">{{ $count_open }}</span>
                                 </div>
                             </div>
                         </li>
@@ -64,7 +65,7 @@
                                     </a>
                                 </div>
                                 <div class="col-md-4">
-                                    <span class="badge badge-warning">{{ $count_ticket[1] }}</span>
+                                    <span class="badge badge-warning">{{ $count_progress }}</span>
                                 </div>
                             </div>
                         </li>
@@ -76,15 +77,17 @@
                                     </a>
                                 </div>
                                 <div class="col-md-4">
-                                    <span class="badge badge-danger">{{ $count_ticket[2] }}</span>
+                                    <span class="badge badge-danger">{{ $count_close }}</span>
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <a class="nav-link" href="{{ route('view-create-ticket') }}">
-                                Buat Tiket
-                            </a>
-                        </li>
+                        @can('create tiket')
+                            <li>
+                                <a class="nav-link" href="{{ route('view-create-ticket') }}">
+                                    Buat Tiket
+                                </a>
+                            </li>
+                        @endcan
 
                     </ul>
 
@@ -99,7 +102,7 @@
 
             @can('access role')
                 <li><a class="nav-link" href="{{ route('roles.index') }}"><i class="fas fa-pencil-ruler"></i>
-                        <span>Role</span></a>
+                        <span>Access</span></a>
                 </li>
             @endcan
     </aside>

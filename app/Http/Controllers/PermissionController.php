@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Ticket;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("can:access permission")->only("index");
+        $this->middleware("can:create permission")->only(["create", "store"]);
+        $this->middleware("can:edit permission")->only(["take", "update"]);
+        $this->middleware("can:delete permission")->only("destroy");
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +24,24 @@ class PermissionController extends Controller
     public function index()
     {
         //
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         $permission = Permission::latest()->get();
-        return view("permission.index", compact("permission"));
+        return view("permission.index", compact("permission", "count_open", "count_progress", "count_close"));
     }
 
     /**

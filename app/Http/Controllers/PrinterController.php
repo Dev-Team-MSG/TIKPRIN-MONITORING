@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PrintersImport;
 
 class PrinterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("can:access printer")->only("index");
+        $this->middleware("can:create printer")->only(["create", "store", "import"]);
+        $this->middleware("can:edit printer")->only(["edit", "update"]);
+        $this->middleware("can:delete printer")->only("destroy");
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,17 +48,19 @@ class PrinterController extends Controller
         $path = $file->storeAs('public/excel/', $nama_file);
 
         // import data
-        $import = Excel::import(new UsersImport(), storage_path('app/public/excel/' . $nama_file));
+
+        $import = Excel::import(new PrintersImport(), storage_path('app/public/excel/' . $nama_file));
 
         //remove from server
         Storage::delete($path);
 
         if ($import) {
             //redirect
-            return redirect()->route('users')->with(['success' => 'Data Berhasil Diimport!']);
+            return redirect()->route('printers.index')->with(['message' => 'Data Berhasil Diimport!']);
         } else {
             //redirect
-            return redirect()->route('users')->with(['error' => 'Data Gagal Diimport!']);
+            return redirect()->route('printers.index')->with(['message' => 'Data Gagal Diimport!']);
+
         }
     }
 

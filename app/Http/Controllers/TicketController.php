@@ -11,17 +11,37 @@ use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class TicketController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("can:access tiket")->only("index");
+        $this->middleware("can:create tiket")->only(["buatTiket", "create", "store"]);
+        $this->middleware("can:edit tiket")->only(["take", "updateTicket"]);
+        $this->middleware("can:delete tiket")->only("destroy");
+    }
 
     public function detailTicket($no_ticket)
     {
         try {
-            //code...
             $data = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", $no_ticket)->first();
-            return view("tiket.detail", compact("data"));
+            if (Auth::user()->roles[0]->name == "engineer") {
+                $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+                $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+                $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+            } else if (Auth::user()->roles[0]->name == "kanim") {
+                $count_open = Ticket::where("status", "open")->where("owner_id", Auth::user()->id)->count();
+                $count_progress = Ticket::where("status", "progress")->where("owner_id", Auth::user()->id)->count();
+                $count_close = Ticket::where("status", "close")->where("owner_id", Auth::user()->id)->count();
+            } else {
+                $count_open = Ticket::where("status", "open")->count();
+                $count_progress = Ticket::where("status", "progress")->count();
+                $count_close = Ticket::where("status", "close")->count();
+            }
+            return view("tiket.detail", compact("data", "count_open", "count_progress", "count_close"));
         } catch (\Throwable $th) {
             return abort(404);
         }
@@ -30,7 +50,15 @@ class TicketController extends Controller
 
     public function showCloseTicket(Request $request)
     {
-        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
+        // dd(Auth::user()->roles[0]->name);
+        if (Auth::user()->roles[0]->name == "engineer") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("assign_id", Auth::user()->id)->get();
+        } else if (Auth::user()->roles[0]->name == "kanim") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("owner_id", Auth::user()->id)->get();
+        } else {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
+        }
+        // $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -78,15 +106,33 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        if (Auth::user()->roles[0]->name == "engineer") {
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+        } else if (Auth::user()->roles[0]->name == "kanim") {
+            $count_open = Ticket::where("status", "open")->where("owner_id", Auth::user()->id)->count();
+            dd(Ticket::where("status", "progress")->where("owner_id", Auth::user()->id).toSql());
+            $count_progress = Ticket::where("status", "progress")->where("owner_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("owner_id", Auth::user()->id)->count();
+        } else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         return view("tiket.close", compact("count_open", "count_progress", "count_close"));
     }
 
     public function showProgressTicket(Request $request)
     {
-        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->get();
+        // dd(Auth::user()->roles[0]->name);
+        if (Auth::user()->roles[0]->name == "engineer") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->where("assign_id", Auth::user()->id)->get();
+        } else if (Auth::user()->roles[0]->name == "kanim") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->where("owner_id", Auth::user()->id)->get();
+        } else {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->get();
+        }
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -134,15 +180,34 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("owner_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("owner_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("owner_id", Auth::user()->id)->count();
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         return view("tiket.progress", compact("count_open", "count_progress", "count_close"));
     }
 
     public function showOpenTicket(Request $request)
     {
-        $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
+
+        if (Auth::user()->roles[0]->name == "engineer") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
+        } else if (Auth::user()->roles[0]->name == "kanim") {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->where("owner_id", Auth::user()->id)->get();
+        } else {
+            $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
+        }
+        // $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -190,9 +255,22 @@ class TicketController extends Controller
                 ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
                 ->make(true);
         }
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("owner_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("owner_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("owner_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         return view("tiket.open", compact("count_open", "count_progress", "count_close"));
     }
 
@@ -237,9 +315,22 @@ class TicketController extends Controller
 
     public function buatTiket()
     {
-        $count_open = Ticket::where("status", "open")->count();
-        $count_progress = Ticket::where("status", "progress")->count();
-        $count_close = Ticket::where("status", "close")->count();
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("owner_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("owner_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("owner_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
         $category = CategoryTicket::all();
         $severity = Severity::all();
         return view("tiket.create", compact("count_open", "count_progress", "count_close", "category", "severity"));
@@ -292,7 +383,7 @@ class TicketController extends Controller
         }
         // dd($request->filename);
 
-        return redirect(route("list-open-ticket"));
+        return redirect(route("detail-ticket", $ticket->no_ticket));
     }
 
     public function store(Request $request)
@@ -315,8 +406,9 @@ class TicketController extends Controller
 
     public function take($no_ticket, Request $request)
     {
-        $ticket = Ticket::with(["category", "comments"])->where("no_ticket", $no_ticket)->first();
+        $ticket = Ticket::with(["category", "comments", "assign_to"])->where("no_ticket", $no_ticket)->first();
         $ticket->status = "progress";
+        $ticket->assign_id = $request->user_id;
         $ticket->save();
         $comment = new Comment();
         $comment->user_id = $request->user_id;
@@ -394,10 +486,11 @@ class TicketController extends Controller
 
     public function updateTicket(Request $request)
     {
+
         $ticket = Ticket::where("no_ticket", $request->id)->first();
         // dd($ticket);
         if ($request->ajax()) {
-            $user_id = rand(1, 2);
+            $user_id = $request->user_id;
             $comment = new Comment();
             $comment->user_id = $user_id;
             $comment->no_ticket = $ticket->no_ticket;

@@ -74,7 +74,7 @@
                         {{ $message }}
                     @enderror</label>
                     <input onchange="collapseKanim()" type="radio" name="roles" value="1" @if(isset($post->roles) && $post->roles == '1') checked @endif > Admin<br>
-                    <input onchange="collapseKanim()" type="radio" name="roles" value="2" @if(isset($post->roles) && $post->roles == '2') checked @endif > Kanim<br>
+                    <input onchange="collapseKanim()" type="radio" name="roles" value="2" @if(isset($post->roles) && $post->roles == '2') checked @endif > 1<br>
                     <input onchange="collapseKanim()" type="radio" name="roles" value="3" @if(isset($post->roles) && $post->roles == '3') checked @endif > EOS<br>
                   </div>
                   {{-- <div class="form-group">

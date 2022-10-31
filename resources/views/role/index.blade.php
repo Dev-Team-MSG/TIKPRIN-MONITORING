@@ -44,10 +44,10 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            <a href="{{ route('roles.edit', $item->id) }}" class="btn btn-warning edit-role"
-                                                {{-- data-target="#formEditModal"  --}}>Edit</a>
                                             <form action="{{ route('roles.destroy', $item->id) }}" method="POST"
                                                 class="inline">
+                                                <a href="{{ route('roles.edit', $item->id) }}"
+                                                    class="btn btn-warning edit-role" {{-- data-target="#formEditModal"  --}}>Edit</a>
                                                 @csrf
                                                 @method('delete')
                                                 <button class="btn btn-danger">Delete</button>

@@ -68,17 +68,16 @@
                 <th>Action</th>
             </tr>
             @foreach ($users as $no => $data)
-            {{$data}}
                 <tr>
                     <td>{{ $users->firstItem() + $no }}</td>
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->email }}</td>
                     <td>
-                        @if ($data->roles[0]->name == 'Admin')
+                        @if ($data->roles[0]->name == 'admin')
                             <span class="badge badge-primary">
                                 {{ $data->roles[0]->name }}
                             </span>
-                        @elseif ($data->roles[0]->name == 'Kanim')
+                        @elseif ($data->roles[0]->name == 'kanim')
                             <span class="badge badge-secondary">
                                 {{ $data->roles[0]->name }}
                             </span>

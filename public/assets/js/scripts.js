@@ -451,6 +451,7 @@ $(function() {
     me.css({
       backgroundImage: 'url(' + me.data('background') + ')'
     });
+    console.log(me);
   });
 
   // Custom Tab

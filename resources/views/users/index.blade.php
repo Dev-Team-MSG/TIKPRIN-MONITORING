@@ -73,11 +73,11 @@
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->email }}</td>
                     <td>
-                        @if ($data->roles[0]->name == 'Admin')
+                        @if ($data->roles[0]->name == 'admin')
                             <span class="badge badge-primary">
                                 {{ $data->roles[0]->name }}
                             </span>
-                        @elseif ($data->roles[0]->name == 'Kanim')
+                        @elseif ($data->roles[0]->name == 'kanim')
                             <span class="badge badge-secondary">
                                 {{ $data->roles[0]->name }}
                             </span>
@@ -100,7 +100,7 @@
                 </tr>
             @endforeach
         </table>
-        {{$users->appends(Request::all())->links()}}
+        {{ $users->appends(Request::all())->links() }}
     </div>
     </div>
     </div>
