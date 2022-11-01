@@ -8,7 +8,11 @@ use App\Http\Controllers\PrinterController;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +32,24 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 
 // Route::group(['middleware' => 'CekLoginMiddleware'], function(){
 Route::group(['middleware' => 'auth'], function(){
-    Route::get('dashboard', function () {return view('index');});
+    Route::get('dashboard', function () {
+        if(Auth::user()->roles[0]->name == "engineer"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        }else if(Auth::user()->roles[0]->name == "kanim"){
+            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
+            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+
+        }else {
+            $count_open = Ticket::where("status", "open")->count();
+            $count_progress = Ticket::where("status", "progress")->count();
+            $count_close = Ticket::where("status", "close")->count();
+        }
+        return view('index', compact("count_open", "count_progress", "count_close"));});
 
     //Route User
     Route::get('users', [UserController::class, 'index'])->name('users');
@@ -57,5 +78,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
     Route::get("/tikets/progress", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
     Route::get("/tikets/close", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
+    Route::resource("permission",PermissionController::class);
+    Route::resource("roles",RoleController::class);
 });
+
+
 
