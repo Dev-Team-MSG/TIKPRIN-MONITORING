@@ -10,6 +10,13 @@ use App\Imports\PrintersImport;
 
 class PrinterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("can:access printer")->only("index");
+        $this->middleware("can:create printer")->only(["create", "store", "import"]);
+        $this->middleware("can:edit printer")->only(["edit", "update"]);
+        $this->middleware("can:delete printer")->only("destroy");
+    }
     /**
      * Display a listing of the resource.
      *

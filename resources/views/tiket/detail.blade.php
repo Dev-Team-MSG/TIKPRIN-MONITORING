@@ -6,13 +6,7 @@
 @section('content')
 
     <section class="section">
-        <div class="section-header">
-            <h1>Semua Ticket</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Tiket</a></div>
-                <div class="breadcrumb-item"><a href="#">Semua Tiket</a></div>
-            </div>
-        </div>
+
         <div class="section-body">
             <div class="row">
                 <div class="col-md-8">
@@ -41,27 +35,31 @@
                                     @foreach ($data->files as $item)
                                         <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
                                     @endforeach
+                                    @can('ambil tiket')
+                                        @if ($data->status == 'open')
+                                            <div class="row mt-5">
+                                                <div class="col-md">
+                                                    <form action="{{ route('ambil-tiket', $data->no_ticket) }}" method="post">
+                                                        @csrf
+                                                        <input type="text" hidden value="{{ Auth::user()->id }}"
+                                                            name="user_id" />
+                                                        <button class="btn btn-warning"type="submit">Ambil</button>
+                                                    </form>
+                                                </div>
 
-                                    @if ($data->status == 'open')
-                                        <div class="row mt-5">
-                                            <div class="col-md">
-                                                <form action="{{ route('ambil-tiket', $data->no_ticket) }}" method="post">
-                                                    @csrf
-                                                    <input type="text" hidden value="1" name="user_id" />
-                                                    <button class="btn btn-warning"type="submit">Ambil</button>
-                                                </form>
                                             </div>
+                                        @endif
+                                    @endcan
 
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="container py-5 mx-auto">
                                 <div class="main-timeline">
+
                                     @foreach ($data->comments as $comment)
-                                        @if ($comment->user_id == $data->owner_id)
+                                        @if ($comment->user_id != Auth::user()->id)
                                             <div class="timeline left">
                                                 <div class="card">
                                                     <div class="card-header d-flex justify-content-between p-3">
@@ -118,16 +116,25 @@
                                         <form action="{{ route('store-comment', $data->no_ticket) }}" method="post"
                                             enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" name="user_id" value="1" />
-                                            <textarea class="form-control" id="summary-ckeditor" name="body"></textarea>
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                            <textarea class="form-control" id="summary-ckeditor" name="body"
+                                                @cannot("edit tiket")
+                                                @disabled(true)
+                                                @endcannot></textarea>
                                             <div class="section-title">File Browser</div>
                                             <div class="custom-file mb-4">
                                                 <input type="file" class="custom-file-input" id="customFile"
-                                                    name="fileName[]" multiple>
+                                                    name="fileName[]" multiple
+                                                    @cannot("edit tiket")
+                                                    @disabled(true)
+                                                    @endcannot>
                                                 <label class="custom-file-label" for="customFile">Choose file</label>
                                             </div>
-
-                                            <button class="btn btn-success" type="submit">Submit</button>
+                                            {{-- {{Auth::user()->role}} --}}
+                                            <button class="btn btn-success" type="submit"
+                                            @cannot("edit tiket")
+                                            hidden
+                                            @endcannot >Submit</button>
                                         </form>
                                     </div>
                                 </div>
@@ -170,7 +177,9 @@
                                         <th>Status</th>
                                         <td>
                                             <select name="status" id="status_id" data-id="{{ $data->no_ticket }}"
-                                                class="form-control" style="width: 10rem !important;">
+                                                class="form-control" style="width: 10rem !important;" @cannot("edit tiket")
+                                                @disabled(true)
+                                                @endcannot>
                                                 <option value="open" {{ $data->status == 'open' ? 'selected' : '' }}>
                                                     Open
                                                 </option>
@@ -199,20 +208,13 @@
 
                                     <tr>
                                         <th>Ditugaskan Kepada</th>
-                                        <td>
-                                            <select name="assign_to" id="assign_to_dd" data-id="dsadasdas"
-                                                class="form-control" style="width: 10rem !important;">
-                                                @if (!$data->assign_to)
-                                                    <option value="1">Choose..</option>
-                                                    <option value="1" >2</option>
-                                                    <option value="1" >3</option>
-                                                @else
-                                                    <option value="{{ $data->assign_to->name }}">
-                                                        {{ $data->assign_to->name }}
-                                                @endif
-                                                </option>
-                                            </select>
-                                        </td>
+
+                                        <td class="border-0">
+                                            @if ($data->assign_to != null)
+                                            {{ $data->assign_to->name }}
+                                            @endif</td>
+
+                                        
                                     </tr>
                                     <tr>
                                         <th>Tenggat Waktu</th>
@@ -236,7 +238,9 @@
 
 @endsection
 @push('page-scripts')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
     <script>
         $.ajaxSetup({
             headers: {
@@ -252,27 +256,50 @@
             let data = {
                 _token: '{{ csrf_token() }}',
                 id: ticket_id,
+                user_id: {{ Auth::user()->id }},
                 message: message,
             };
             data["status"] = value;
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                }
-            });
+
+            Swal.fire({
+                icon: 'warning',
+                title: "Anda yakin ingin mengubah status tiket ?",
+                showCancelButton: true,
+                showDenyButton: false,
+                confirmButtonText: 'Yes'
+            }).then((res) => {
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "{{ route('update-tiket') }}",
+                    dataType: 'json',
+                    success: function(result) {
+                        console.log(result)
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Status tiket berhasil di ubah menjadi ${data["status"]}`,
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'Yes'
+                        }).then(() => {
+                            window.location.reload()
+                        })
+
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: data.responseJSON.message,
+                            showCancelButton: true,
+                        })
+
+                    }
+                });
+            })
 
             // // Send data using ajax
-            $.ajax({
-                type: "POST",
-                url: "{{ route('update-tiket') }}",
-                // dataType: "text",
-                dataType: 'json',
-                data: data,
-                success: function(response) {
-                    window.location.reload()
-                },
-            });
+
         });
         CKEDITOR.replace('summary-ckeditor', {
             filebrowserUploadMethod: 'form',
