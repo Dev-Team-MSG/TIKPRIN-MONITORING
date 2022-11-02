@@ -25,7 +25,29 @@ class PrinterController extends Controller
         return view('printers.index', ['printers' => $printers]);
 
     }
+    private function _validation(Request $request)
+    {
+        $validation = \Validator::make($request->all(),[
+            "serial_number" => "required|min:5|max:35|unique:printers",
+            "mac_address" => "required|min:17|max:17|unique:printers"
+            
+        ],
+        [
+            //message nama
+            'serial_number.required' => 'Serial Number harus diisi',
+            'serial_number.max' => 'Maximal 35 Digit',
+            'serial_number.min' => 'Minimal 5 Digit',
+            'serial_number.unique' => 'Serial Number Sudah terdaftar, ganti dengan yang lain',
+            //message username
+            'mac_address.required' => 'MAC Address harus diisi',
+            'mac_address.max' => 'Harus 17 Digit',
+            'mac_address.min' => 'Harus 17 Digit',
+            'mac_address.unique' => 'MAC Address sudah terdaftar, ganti dengan yang lain'
+             
+        ]
+        )->validate();
 
+    }
     public function import(Request $request)
     {
         $this->validate($request, [
@@ -76,6 +98,8 @@ class PrinterController extends Controller
      */
     public function store(Request $request)
     {
+
+        $this->_validation($request);
         $new_printer = new \App\Models\Printer;
         $new_printer->serial_number = $request->get('serial_number');
         $new_printer->mac_address = $request->get('mac_address');
@@ -121,6 +145,26 @@ class PrinterController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validation = \Validator::make($request->all(),[
+            "serial_number" => "required|min:5|max:35",
+            "mac_address" => "required|min:17|max:17"
+            
+        ],
+        [
+            //message nama
+            'serial_number.required' => 'Serial Number harus diisi',
+            'serial_number.max' => 'Maximal 35 Digit',
+            'serial_number.min' => 'Minimal 5 Digit',
+            
+            //message username
+            'mac_address.required' => 'MAC Address harus diisi',
+            'mac_address.max' => 'Harus 17 Digit',
+            'mac_address.min' => 'Harus 17 Digit'
+            
+             
+        ]
+        )->validate();
+
         $serial_number = $request->get('serial_number');
         $mac_address = $request->get('mac_address');
         $printer = \App\Models\Printer::findOrFail($id);
