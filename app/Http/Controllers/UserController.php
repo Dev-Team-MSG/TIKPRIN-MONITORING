@@ -10,16 +10,26 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+use function App\Helpers\cek_akses_user;
 use function App\Helpers\main_menu;
 use function App\Helpers\sub_menu;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
     
     //tampilkan data
     public function index(Request $request)
-    {
-        
+    {        
         $users = \App\Models\User::paginate(5);
         $filterKeyword = $request->get('keyword');
            
@@ -108,6 +118,9 @@ class UserController extends Controller
     //action untuk menampilkan form tambah data 
     public function tambah()
     {
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         
         $kanims = \App\Models\Kanim::get();
         $roles = Role::get();
@@ -139,6 +152,9 @@ class UserController extends Controller
     //method untuk edit data 
     public function edit($id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $user = \App\Models\User::findOrFail($id);
         $kanims = \App\Models\Kanim::get();
         
@@ -149,6 +165,9 @@ class UserController extends Controller
 
     public function hapus($id)
     {
+        if($this->cek->hapus != 1) {
+            abort(403);
+        }
         // DB::table('users')->where('id',$id)->delete();
         $user = \App\Models\User::findOrFail($id);
         $user->delete();
@@ -159,6 +178,9 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         //$this->_validation($request);
 
         $user = \App\Models\User::findOrFail($id);

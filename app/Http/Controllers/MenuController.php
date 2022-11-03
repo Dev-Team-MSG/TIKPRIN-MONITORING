@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use function App\Helpers\cek_akses_user;
 
 class MenuController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *

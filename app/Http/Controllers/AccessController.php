@@ -23,13 +23,13 @@ class AccessController extends Controller
     protected $cek;
     public function __construct()
     {
-        // $this->middleware(function ($request, $next) {
-        //     if (Auth::check()) {
-        //         $this->cek = cek_akses_user();
-        //     }
-        //     //     // $this->sub_menu = sub_menu();
-        //     return $next($request);
-        // });
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -130,9 +130,9 @@ class AccessController extends Controller
     public function edit($role_id)
     {
         //
-        // if($this->cek->edit != 1) {
-        //     abort(403);
-        // }
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $list_menu = $this->list_menu($role_id);
         $role = Role::findById($role_id);
         return view("akses.edit", compact("list_menu", "role"));
@@ -148,9 +148,9 @@ class AccessController extends Controller
     public function update(Request $request, $role_id)
     {
         //
-        // if($this->cek->edit != 1) {
-        //     abort(403);
-        // }
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $access = Access::where("role_id", "=", $role_id)->get();
         $list = $this->list_akses($role_id);
         $no = 1;

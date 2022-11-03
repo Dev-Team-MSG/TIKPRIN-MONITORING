@@ -14,14 +14,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
+use function App\Helpers\cek_akses_user;
+
 class TicketController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware("can:access tiket")->only("index");
-        // $this->middleware("can:create tiket")->only(["buatTiket", "create", "store"]);
-        // $this->middleware("can:edit tiket")->only(["take", "updateTicket"]);
-        // $this->middleware("can:delete tiket")->only("destroy");
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
     }
 
     public function detailTicket($no_ticket)
@@ -302,6 +307,9 @@ class TicketController extends Controller
 
     public function simpanTiket(Request $request)
     {
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         $ticket = new Ticket();
         $ticket->owner_id = $request->user_id;
         $ticket->no_ticket = "tiket" . $ticket->id;
@@ -352,6 +360,9 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         $ticket = new Ticket();
         $ticket->owner = $request->user_id;
         $ticket->no_ticket = "tiket" . $ticket->id;
@@ -370,6 +381,9 @@ class TicketController extends Controller
 
     public function take($no_ticket, Request $request)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $ticket = Ticket::with(["category", "comments", "assign_to"])->where("no_ticket", $no_ticket)->first();
         $ticket->status = "progress";
         $ticket->assign_id = $request->user_id;
@@ -388,6 +402,9 @@ class TicketController extends Controller
 
     public function close($id, Request $request)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $ticket = Ticket::find($id);
         $ticket->status = "close";
         $ticket->close_datetime = Carbon::now();
@@ -450,7 +467,9 @@ class TicketController extends Controller
 
     public function updateTicket(Request $request)
     {
-
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $ticket = Ticket::where("no_ticket", $request->id)->first();
         // dd($ticket);
         if ($request->ajax()) {
