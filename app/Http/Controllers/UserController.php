@@ -44,17 +44,62 @@ class UserController extends Controller
            }
            if($filterKeyword){
             if($roles){
-            $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
-                ->where('roles', $roles)
-                ->paginate(5);
+            $users = User::role($roles)->where('email', 'LIKE', "%$filterKeyword%")->paginate(5);
             } else {
             $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
                 ->paginate(5);
             }
         }
         
-        
         return view('users.index', compact("users"));
+
+    }
+
+    //Method Validation
+
+    private function _validation(Request $request)
+    {
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100",
+            "username" => "required|min:5|max:20|unique:users",
+            "email" => "required|email|unique:users",
+            "phone" => "required|digits_between:10,12|unique:users",
+            "password" => "required",
+            "password_confirmation" => "required|same:password",
+            "roles" => "required",
+            "image" => "mimes:jpg,png,jpeg"
+            
+        ],
+        [
+            //message nama
+            'name.required' => 'Nama harus diisi',
+            'name.max' => 'Maximal 100 Digit',
+            'name.min' => 'Minimal 5 Digit',
+            // 'name.unique' => 'Minimal 5 Digit',
+            //message username
+            'username.required' => 'username harus diisi',
+            'username.max' => 'Maksimal 20 Digit',
+            'username.min' => 'Minimal 5 Digit',
+            'username.unique' => 'Username sudah terdaftar, ganti dengan yang lain',
+             //message email
+             'email.required' => 'Email harus diisi',
+             'email.email' => 'Gunakan Format Email yang benar',
+             'email.unique' => 'Email sudah terdaftar, ganti dengan yang lain',
+             //message password
+             'phone.required' => 'Telephone Harus diisi',
+             'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
+             'phone.unique' => 'Nomer Telephone sudah terdaftar, gunakan nomer yang lain',
+             //message password
+             'password.required' => 'password harus diisi',
+             'password_confirmation.required' => 'password harus diisi',
+             'password_confirmation.same' => 'Konfirmasi Password tidak cocok',
+             //message roles
+             'roles.required' => 'Roles Wajib dipilih',
+             //message image
+             'image.mimes' => 'Jenis File harus JPG atau PNG'
+
+        ]
+        )->validate();
     }
     
     //Method Import Excel
@@ -89,31 +134,7 @@ class UserController extends Controller
 
         }
     }
-    //Method Validation
-
-    private function _validation(Request $request)
-    {
-        $validation = $request->validate(
-            [
-                'name' => 'required|max:35|min:3',
-                'email' => 'required|email|max:255|unique:users',
-                'phone' => 'required|numeric',
-                'password' => 'required',
-                'roles' => 'required'
-            ],
-            [
-                //message kode barang
-                // 'kode_barang.required' => 'Tidak boleh kosong',
-                // 'kode_barang.max' => 'Maximal 10 Digit',
-                // 'kode_barang.min' => 'Minimal 3 Digit',
-
-                // //message nama barang
-                // 'nama_barang.required' => 'Tidak boleh kosong',
-                // 'nama_barang.max' => 'Maximal 100 Digit',
-                // 'nama_barang.min' => 'Minimal 3 Digit'
-            ]
-        );
-    }
+    
 
     //action untuk menampilkan form tambah data 
     public function tambah()
@@ -131,6 +152,9 @@ class UserController extends Controller
 
     public function simpan(Request $request)
     {
+
+        $this->_validation($request);
+
         $new_user = new \App\Models\User;
         $new_user->name = $request->get('name');
         $new_user->username = $request->get('username');
@@ -182,6 +206,34 @@ class UserController extends Controller
             abort(403);
         }
         //$this->_validation($request);
+        $validation = \Validator::make($request->all(),[
+            "name" => "required|min:5|max:100",
+            // "username" => "required|min:5|max:20|",
+            // "email" => "required|email|unique:users",
+            "phone" => "required|digits_between:10,12",
+            // "password" => "required",
+            // "password_confirmation" => "required|same:password",
+            "roles" => "required",
+            "image" => "mimes:jpg,png,jpeg"
+            
+        ],
+        [
+            //message nama
+            'name.required' => 'Nama harus diisi',
+            'name.max' => 'Maximal 100 Digit',
+            'name.min' => 'Minimal 5 Digit',
+             
+             //message password
+             'phone.required' => 'Telephone Harus diisi',
+             'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
+             
+             //message password
+             'roles.required' => 'Roles Wajib dipilih',
+             //message image
+             'image.mimes' => 'Jenis File harus JPG atau PNG'
+
+        ]
+        )->validate();
 
         $user = \App\Models\User::findOrFail($id);
         $user->name = $request->get('name');

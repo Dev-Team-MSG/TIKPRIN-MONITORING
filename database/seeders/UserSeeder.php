@@ -25,14 +25,17 @@ class UserSeeder extends Seeder
         ];
 
         $kanim = User::create(array_merge([
+            "username" => "kanim1",
             "email" => "kanim@gmail.com",
             "name" => "kanim"
         ], $default_user_value));
         $admin = User::create(array_merge([
+            "username" => "admin",
             "email" => "admin@gmail.com",
             "name" => "admin"
         ], $default_user_value));
         $engineer = User::create(array_merge([
+            "username" => "eos",
             "email" => "engineer@gmail.com",
             "name" => "engineer"
         ], $default_user_value));
