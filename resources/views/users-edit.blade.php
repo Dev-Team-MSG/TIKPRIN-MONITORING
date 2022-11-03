@@ -19,36 +19,24 @@
                 <div class="row">
                   <div class="col-md-6">
                       <div class="form-group">
-                          <label
-                              @error('name')
-            class="text-danger"
-        @enderror>Nama
-                              @error('nama')
-                                  {{ $message }}
-                              @enderror
-                          </label>
-                          <input type="text" class="form-control" placeholder="Name Lengkap" name="name"
-                              value="{{ $user->name }}">
+                          <label>Nama</label>
+                          <input type="text" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" placeholder="Name Lengkap" name="name"
+                              value="{{ old('name') ? old('name') : $user->name }}">
+                              <div class="invalid-feedback">
+                                {{ $errors->first('name') }}
+                            </div>
                       </div>
                   </div>
                   <div class="col-md-6">
                       <div class="form-group">
-                          <label
-                              @error('username')
-            class="text-danger"
-        @enderror>Username
-                              @error('username')
-                                  {{ $message }}
-                              @enderror
-                          </label>
+                          <label>Username</label>
                           <input type="text" class="form-control" name="username"
                               value="{{ $user->username }}" disabled>
                       </div>
                   </div>
                   <div class="col-md-6">
                       <div class="form-group">
-                          <label>E-mail
-                          </label>
+                          <label>E-mail</label>
                           <div class="input-group mb-2">
                               <div class="input-group-prepend">
                                   <div class="input-group-text">@</div>
@@ -60,22 +48,18 @@
                   </div>
                   <div class="col-md-6">
                       <div class="form-group">
-                          <label
-                              @error('phone')
-            class="text-danger"
-        @enderror>Nomer
-                              Telepon @error('phone')
-                                  {{ $message }}
-                              @enderror
-                          </label>
+                          <label>Nomer Telepon</label>
                           <div class="input-group">
                               <div class="input-group-prepend">
                                   <div class="input-group-text">
                                       <i class="fas fa-phone"></i>
                                   </div>
                               </div>
-                              <input type="text" class="form-control phone-number" name="phone"
-                                  value="{{ $user->phone }}">
+                              <input type="text" class="form-control phone-number {{$errors->first('phone') ? "is-invalid" : ""}}" name="phone"
+                                  value="{{ old('phone') ? old('phone') : $user->phone }}">
+                                  <div class="invalid-feedback">
+                                    {{ $errors->first('phone') }}
+                                </div>
                           </div>
                       </div>
                   </div>
@@ -118,7 +102,10 @@
                          No Image                         
                         @endif
                         <br>
-                        <input id="image" name="image" type="file" class="form-control">
+                        <input id="image" name="image" type="file" class="form-control {{$errors->first('image') ? "is-invalid" : ""}}"">
+                        <div class="invalid-feedback">
+                            {{ $errors->first('image') }}
+                        </div>
                         <small class="text-muted">Kosongkan jika tidak ingin mengubah Foto</small>
                         <hr class="my-3">
                     </div>

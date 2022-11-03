@@ -3,8 +3,6 @@
     Edit Printer
 @endsection
 @section('content')
-
-
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
@@ -29,33 +27,24 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label
-                                            @error('serial_number')
-                      class="text-danger"
-                  @enderror>Serial
-                                            Number
-                                            @error('serial_number')
-                                                {{ $message }}
-                                            @enderror
-                                        </label>
-                                        <input type="text" class="form-control" placeholder="Serial Number"
-                                            name="serial_number" value="{{ $printer->serial_number }}">
+                                        <label>Serial Number</label>
+                                        <input type="text" class="form-control {{$errors->first('serial_number') ? "is-invalid" : ""}}" placeholder="Serial Number"
+                                            name="serial_number"
+                                            value="{{ old('serial_number') ? old('serial_number') : $printer->serial_number }}">
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('serial_number') }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label
-                                            @error('mac_address')
-                      class="text-danger"
-                  @enderror>MAC
-                                            Address
-                                            @error('mac_address')
-                                                {{ $message }}
-                                            @enderror
-                                        </label>
-                                        <input type="text" id="mac" class="form-control"
+                                        <label>MAC Address</label>
+                                        <input type="text" id="mac" class="form-control {{$errors->first('serial_number') ? "is-invalid" : ""}}"
                                             placeholder="00:AA:11:BB:22:CC" name="mac_address"
-                                            value="{{ $printer->mac_address }}">
+                                            value="{{ old('mac_address') ? old('mac_address') : $printer->mac_address }}">
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('mac_address') }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -70,9 +59,6 @@
         </div>
     </div>
     </div>
-
-
-
 @endsection
 @push('page-scripts')
 @endpush
