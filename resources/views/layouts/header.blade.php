@@ -197,8 +197,11 @@
         <img alt="image" src="{{asset('assets/img/avatar/avatar.jpg')}}" class="rounded-circle mr-1">
         <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->name}}</div></a>
         <div class="dropdown-menu dropdown-menu-right">
-          <div class="dropdown-title">Logged in 5 min ago</div>
-          <a href="features-profile.html" class="dropdown-item has-icon">
+          <div class="dropdown-title">Terakhir Login pada jam
+            {{Carbon\Carbon::parse(Auth::user()->last_login)->formatLocalized('%H:%m')}}
+            {{-- {{ Carbon\Carbon::createFromTimeStamp(strtotime(Auth::user()->last_login))->diffForHumans() }} --}}
+        </div>
+          {{-- <a href="features-profile.html" class="dropdown-item has-icon">
             <i class="far fa-user"></i> Profile
           </a>
           <a href="features-activities.html" class="dropdown-item has-icon">
@@ -206,7 +209,7 @@
           </a>
           <a href="features-settings.html" class="dropdown-item has-icon">
             <i class="fas fa-cog"></i> Settings
-          </a>
+          </a> --}}
           <div class="dropdown-divider"></div>
           <a href="{{ route('logout')}}" class="dropdown-item has-icon text-danger">
             <i class="fas fa-sign-out-alt"></i> Logout

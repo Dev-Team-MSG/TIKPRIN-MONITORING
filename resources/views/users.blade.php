@@ -38,7 +38,7 @@
                                     type="radio" class="form-group" id="kanim">
                                 <label for="kanim">Kanim</label>
 
-                                <input {{ Request::get('roles') == 'eos' ? 'checked' : '' }} value="eos" name="roles"
+                                <input {{ Request::get('roles') == 'eos' ? 'checked' : '' }} value="engineer" name="roles"
                                     type="radio" class="form-group" id="eos">
                                 <label for="eos">EOS</label>
                                 <input type="submit" value="Filter" class="btn btn-primary">

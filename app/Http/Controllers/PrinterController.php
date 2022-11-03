@@ -7,15 +7,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PrintersImport;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Ticket;
 
 class PrinterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware("can:access printer")->only("index");
-        $this->middleware("can:create printer")->only(["create", "store", "import"]);
-        $this->middleware("can:edit printer")->only(["edit", "update"]);
-        $this->middleware("can:delete printer")->only("destroy");
+        // $this->middleware("can:access printer")->only("index");
+        // $this->middleware("can:create printer")->only(["create", "store", "import"]);
+        // $this->middleware("can:edit printer")->only(["edit", "update"]);
+        // $this->middleware("can:delete printer")->only("destroy");
     }
     /**
      * Display a listing of the resource.
@@ -24,6 +27,22 @@ class PrinterController extends Controller
      */
     public function index(Request $request)
     {
+        // if(Auth::user()->roles[0]->name == "engineer"){
+        //     $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
+        //     $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+        //     $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+        // }else if(Auth::user()->roles[0]->name == "kanim"){
+        //     $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
+        //     $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
+        //     $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
+
+
+        // }else {
+        //     $count_open = Ticket::where("status", "open")->count();
+        //     $count_progress = Ticket::where("status", "progress")->count();
+        //     $count_close = Ticket::where("status", "close")->count();
+        // }
         $printers = \App\Models\Printer::paginate(10);
         $filterKeyword = $request->get('keyword');
         if($filterKeyword){

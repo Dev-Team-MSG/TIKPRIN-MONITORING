@@ -17,6 +17,7 @@ class UserController extends Controller
     //tampilkan data
     public function index(Request $request)
     {
+        $sort = $request->input('sort', 'asc');
         if(Auth::user()->roles[0]->name == "engineer"){
             $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
             $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
@@ -33,15 +34,16 @@ class UserController extends Controller
             $count_progress = Ticket::where("status", "progress")->count();
             $count_close = Ticket::where("status", "close")->count();
         }
-        $users = \App\Models\User::paginate(5);
+        // $users = \App\Models\User::paginate(5);
         $filterKeyword = $request->get('keyword');
            
-        // $users = DB::table('users')->paginate(5);
+        
         $roles = $request->get('roles');
         if($roles){
-            $users = \App\Models\User::where('roles', $roles)->paginate(5);
+            $users = \App\Models\User::role($roles)->paginate(10);
+            //$users = \App\Models\User::where('role', $roles)->paginate(10);
            } else {
-            $users = \App\Models\User::paginate(5);
+            $users = \App\Models\User::orderBy('created_at', 'desc')->paginate(10);
            }
            if($filterKeyword){
             if($roles){
@@ -168,7 +170,7 @@ class UserController extends Controller
     {
 
         $this->_validation($request);
-
+        
         $new_user = new \App\Models\User;
         $new_user->name = $request->get('name');
         $new_user->username = $request->get('username');
