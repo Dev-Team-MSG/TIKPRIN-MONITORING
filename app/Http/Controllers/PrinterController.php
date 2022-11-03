@@ -51,7 +51,7 @@ class PrinterController extends Controller
 
         // import data
 
-        $import = Excel::import(new PrintersImport(), storage_path('app/public/excel/' . $nama_file));
+        $import = Excel::import(new PrinterImport(), storage_path('app/public/excel/' . $nama_file));
 
         //remove from server
         Storage::delete($path);
