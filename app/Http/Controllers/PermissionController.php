@@ -11,10 +11,10 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware("can:access permission")->only("index");
-        $this->middleware("can:create permission")->only(["create", "store"]);
-        $this->middleware("can:edit permission")->only(["take", "update"]);
-        $this->middleware("can:delete permission")->only("destroy");
+        // $this->middleware("can:access permission")->only("index");
+        // $this->middleware("can:create permission")->only(["create", "store"]);
+        // $this->middleware("can:edit permission")->only(["take", "update"]);
+        // $this->middleware("can:delete permission")->only("destroy");
     }
     /**
      * Display a listing of the resource.

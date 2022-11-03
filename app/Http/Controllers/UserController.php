@@ -8,39 +8,27 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Ticket;
+use App\Models\User;
 
-
-
+use function App\Helpers\main_menu;
+use function App\Helpers\sub_menu;
 
 class UserController extends Controller
 {
+    
     //tampilkan data
     public function index(Request $request)
     {
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
+        
         $users = \App\Models\User::paginate(5);
         $filterKeyword = $request->get('keyword');
            
         // $users = DB::table('users')->paginate(5);
         $roles = $request->get('roles');
         if($roles){
-            $users = \App\Models\User::where('roles', $roles)->paginate(5);
+            $users = User::role($roles)->paginate(5);
+            
+            // $users = \App\Models\User::where('roles', $roles)->paginate(5);
            } else {
             $users = \App\Models\User::paginate(5);
            }
@@ -53,9 +41,10 @@ class UserController extends Controller
             $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
                 ->paginate(5);
             }
-           }
-           
-        return view('users.index', compact("users", "count_open", "count_progress", "count_close"));
+        }
+        
+        
+        return view('users.index', compact("users"));
     }
     
     //Method Import Excel
@@ -119,25 +108,10 @@ class UserController extends Controller
     //action untuk menampilkan form tambah data 
     public function tambah()
     {
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
+        
         $kanims = \App\Models\Kanim::get();
         $roles = Role::get();
-        return view('users-tambah', compact("kanims", "roles", "count_open", "count_progress", "count_close"));
+        return view('users-tambah', compact("kanims", "roles"));
     }
 
     //method untuk simpan data 
@@ -167,23 +141,8 @@ class UserController extends Controller
     {
         $user = \App\Models\User::findOrFail($id);
         $kanims = \App\Models\Kanim::get();
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        return view('users-edit', compact("user", "kanims", "count_open", "count_progress", "count_close"));
+        
+        return view('users-edit', compact("user", "kanims"));
     }
 
     //method untuk hapus data
@@ -204,7 +163,7 @@ class UserController extends Controller
 
         $user = \App\Models\User::findOrFail($id);
         $user->name = $request->get('name');
-        $user->roles = $request->get('roles');
+        $user->syncRoles($request->get('roles'));
         $user->phone = $request->get('phone');
         // $user->password = $request->get('password');
         if ($request->file('image')) {
@@ -223,22 +182,7 @@ class UserController extends Controller
     public function detail($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        return view('users-detail',compact("user", "count_open", "count_progress", "count_close"));
+        
+        return view('users-detail',compact("user"));
     }
 }

@@ -7,15 +7,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PrintersImport;
+use Illuminate\Support\Facades\Auth;
+
 
 class PrinterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware("can:access printer")->only("index");
-        $this->middleware("can:create printer")->only(["create", "store", "import"]);
-        $this->middleware("can:edit printer")->only(["edit", "update"]);
-        $this->middleware("can:delete printer")->only("destroy");
+        // $this->middleware("can:access printer")->only("index");
+        // $this->middleware("can:create printer")->only(["create", "store", "import"]);
+        // $this->middleware("can:edit printer")->only(["edit", "update"]);
+        // $this->middleware("can:delete printer")->only("destroy");
     }
     /**
      * Display a listing of the resource.
@@ -86,7 +88,7 @@ class PrinterController extends Controller
         $new_printer = new \App\Models\Printer;
         $new_printer->serial_number = $request->get('serial_number');
         $new_printer->mac_address = $request->get('mac_address');
-        $new_printer->created_by = \Auth::user()->id;
+        $new_printer->created_by = Auth::user()->id;
         $new_printer->save();
         return redirect()->route('printers.create')->with('message', 'Printer Berhasil ditambahkan');
         
@@ -134,7 +136,7 @@ class PrinterController extends Controller
 
         $printer->serial_number = $serial_number;
         $printer->mac_address = $mac_address;
-        $printer->updated_by = \Auth::user()->id;
+        $printer->updated_by = Auth::user()->id;
         $printer->save();
 
         return redirect()->route('printers.index', [$id])->with('message', 'Data Printer Berhasil diUpdate');

@@ -4,8 +4,8 @@ namespace App\Imports;
 
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
-use App\Imports\UsersImport;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
 
 class UsersImport implements ToModel
 {
@@ -16,18 +16,30 @@ class UsersImport implements ToModel
     */
     public function model(array $row)
     {
-        return new User([
-            'name'     => $row[1],
-            'email'    => $row[2],
-            'username'    => $row[3],
-            'password' => \Hash::make($row[4]),
-            'roles' => $row[5],
-            'phone' => $row[6],
-            'kanim_id' => $row[7]
+
+        $user = new User(
+            // [
+            // 'name'     => $row[1],
+            // 'email'    => $row[2],
+            // 'username'    => $row[3],
+            // 'password' => \Hash::make($row[4]),
+            // 'roles' => $row[5],
+            // 'phone' => $row[6],
+            // 'kanim_id' => $row[7]
 
             // 'phone'    => $row[2],
             // 'password' => Hash::make($row[3]),
 
-        ]);
+        // ]
+    );
+        $user->name = $row[1];
+        $user->email = $row[2];
+        $user->username = $row[3];
+        $user->password = $row[4];
+        $user->syncRoles($row[5]);
+        $user->phone = $row[6];
+        $user->password = Hash::make($row[6]);
+        return $user;
+
     }
 }

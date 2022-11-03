@@ -36,9 +36,9 @@ class UserSeeder extends Seeder
             "email" => "engineer@gmail.com",
             "name" => "engineer"
         ], $default_user_value));
-        $role_kanim = 11;
-        $role_engineer = 10;
-        $role_admin = 12;
+        $role_kanim = 2;
+        $role_engineer = 3;
+        $role_admin = 1;
 
         $kanim->syncRoles($role_kanim);
         $admin->syncRoles($role_admin);

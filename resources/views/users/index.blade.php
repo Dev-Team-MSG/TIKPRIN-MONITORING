@@ -73,6 +73,7 @@
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->email }}</td>
                     <td>
+                        
                         @if ($data->roles[0]->name == 'admin')
                             <span class="badge badge-primary">
                                 {{ $data->roles[0]->name }}
