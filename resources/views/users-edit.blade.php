@@ -72,12 +72,12 @@
                                 {{ $message }}
                             @enderror
                         </label>
-                        <input onchange="collapseKanim()" type="radio" name="roles" value="admin"
-                            @if (isset($user->roles) && $user->roles == 'admin') checked @endif> Admin<br>
-                        <input onchange="collapseKanim()" type="radio" name="roles" value="kanim"
-                            @if (isset($user->roles) && $user->roles == 'kanim') checked @endif> Kanim<br>
-                        <input onchange="collapseKanim()" type="radio" name="roles" value="eos"
-                            @if (isset($user->roles) && $user->roles == 'eos') checked @endif> EOS<br>
+                        <input onchange="collapseKanim()" type="radio" name="roles" value="1"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'admin') checked @endif> Admin<br>
+                        <input onchange="collapseKanim()" type="radio" name="roles" value="2"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'kanim') checked @endif> Kanim<br>
+                        <input onchange="collapseKanim()" type="radio" name="roles" value="3"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'eos') checked @endif> EOS<br>
                     </div>
                     <div class="form-group" id="kanim">
                         <label for="exampleInputEmail1">Kanim </label>
