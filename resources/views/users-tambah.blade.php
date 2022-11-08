@@ -123,18 +123,17 @@
                                     <div class="form-group">
                                         <label class="d-block">Roles
                                         </label>
-                                        {{-- <input class="form {{$errors->first('roles') ? "is-invalid" : ""}}" onchange="collapseKanim()" type="radio" name="roles" value="1"
-                                            @if (isset($user->roles) && $user->roles == 'admin') checked @endif> Admin<br>
-                                        <input class="form {{$errors->first('roles') ? "is-invalid" : ""}}" onchange="collapseKanim()" type="radio" name="roles" value="2"
-                                            @if (isset($user->roles) && $user->roles == 'kanim') checked @endif> Kanim<br>
-                                        <input class="form {{$errors->first('roles') ? "is-invalid" : ""}}" onchange="collapseKanim()" type="radio" name="roles" value="3"
-                                            @if (isset($user->roles) && $user->roles == 'eos') checked @endif> EOS<br> --}}
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="1"
+                                        @foreach ($roles as $role)
+                                        <input onchange="collapseKanim()" type="radio" name="roles" value="{{$role->id}}"
+                                       > {{$role->name}}<br>
+                                        @endforeach
+                                        
+                                        {{-- <input onchange="collapseKanim()" type="radio" name="roles" value="1"
                                             @if (isset($user->roles[0]) && $user->roles[0]->name == 'admin') checked @endif> Admin<br>
                                         <input onchange="collapseKanim()" type="radio" name="roles" value="2"
                                             @if (isset($user->roles[0]) && $user->roles[0]->name == 'kanim') checked @endif> Kanim<br>
                                         <input onchange="collapseKanim()" type="radio" name="roles" value="3"
-                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'eos') checked @endif> EOS<br>
+                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'eos') checked @endif> EOS<br> --}}
                                         <div class="invalid-feedback">
                                             {{ $errors->first('roles') }}
                                         </div>

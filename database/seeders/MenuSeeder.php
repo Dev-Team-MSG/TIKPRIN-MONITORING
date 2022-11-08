@@ -16,7 +16,7 @@ class MenuSeeder extends Seeder
     public function run()
     {
         //
-        
+        // Menu Dashboard
         DB::table("menus")->insert([
             "kode_menu" => "mn001",
             "nama_menu" => "Dashboard",
@@ -31,6 +31,7 @@ class MenuSeeder extends Seeder
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+        // Menu User
         DB::table("menus")->insert([
             "kode_menu" => "mn002",
             "nama_menu" => "User",
@@ -45,11 +46,13 @@ class MenuSeeder extends Seeder
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+
+        // Menu Tiket
         DB::table("menus")->insert([
             "kode_menu" => "mn003",
             "nama_menu" => "Tiket",
-            "url" => "tiket",
-            "icon" => "",
+            "url" => "",
+            "icon" => "fas fa-ticket",
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
@@ -60,6 +63,78 @@ class MenuSeeder extends Seeder
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
         DB::table("menus")->insert([
+            "kode_menu" => "mn003-sm001",
+            "nama_menu" => "Open",
+            "url" => "open-tiket",
+            "icon" => "",
+            "level" => "sub-menu",
+            "main_menu" =>"mn003",
+            "aktif" => 1,
+            "no_urut" => 4,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+        DB::table("menus")->insert([
+            "kode_menu" => "mn003-sm002",
+            "nama_menu" => "Progress",
+            "url" => "progress-tiket",
+            "icon" => "",
+            "level" => "sub_menu",
+            "main_menu" =>"mn003",
+            "aktif" => 1,
+            "no_urut" => 5,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+        DB::table("menus")->insert([
+            "kode_menu" => "mn003-sm003",
+            "nama_menu" => "Close",
+            "url" => "close-tiket",
+            "icon" => "",
+            "level" => "sub_menu",
+            "main_menu" =>"mn003",
+            "aktif" => 1,
+            "no_urut" => 6,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+        DB::table("menus")->insert([
+            "kode_menu" => "mn003-sm004",
+            "nama_menu" => "Buat Tiket",
+            "url" => "tiket/create",
+            "icon" => "",
+            "level" => "sub_menu",
+            "main_menu" =>"mn003",
+            "aktif" => 1,
+            "no_urut" => 7,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+        DB::table("menus")->insert([
+            "kode_menu" => "mn003-sm005",
+            "nama_menu" => "All Tiket",
+            "url" => "tiket",
+            "icon" => "",
+            "level" => "sub_menu",
+            "main_menu" =>"mn003",
+            "aktif" => 1,
+            "no_urut" => 8,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+       
+        // Menu Printer
+        DB::table("menus")->insert([
             "kode_menu" => "mn004",
             "nama_menu" => "Printer",
             "url" => "",
@@ -67,7 +142,7 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
-            "no_urut" => 4,
+            "no_urut" => 9,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -81,7 +156,7 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
-            "no_urut" => 5,
+            "no_urut" => 10,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -95,7 +170,7 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
-            "no_urut" => 7,
+            "no_urut" => 11,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -109,12 +184,14 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
-            "no_urut" => 8,
+            "no_urut" => 12,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+
+        // Manu Kanim
         DB::table("menus")->insert([
             "kode_menu" => "mn005",
             "nama_menu" => "Kanim",
@@ -123,12 +200,14 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
-            "no_urut" => 9,
+            "no_urut" => 13,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+
+        // Menu Konfigurasi
         DB::table("menus")->insert([
             "kode_menu" => "mn006",
             "nama_menu" => "Konfigurasi",
@@ -137,7 +216,7 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
-            "no_urut" => 10,
+            "no_urut" => 14,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -151,7 +230,7 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn006",
             "aktif" => 1,
-            "no_urut" => 11,
+            "no_urut" => 15,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -160,12 +239,42 @@ class MenuSeeder extends Seeder
         DB::table("menus")->insert([
             "kode_menu" => "mn006-sm002",
             "nama_menu" => "Menu",
-            "url" => "menu",
+            "url" => "menus",
             "icon" => "",
             "level" => "sub_menu",
             "main_menu" =>"mn006",
             "aktif" => 1,
-            "no_urut" => 12,
+            "no_urut" => 16,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+        DB::table("menus")->insert([
+            "kode_menu" => "mn006-sm003",
+            "nama_menu" => "Role",
+            "url" => "roles",
+            "icon" => "",
+            "level" => "sub_menu",
+            "main_menu" =>"mn006",
+            "aktif" => 1,
+            "no_urut" => 17,
+            "created_by" => "admin",
+            "updated_by" => "admin",
+            "created_at" => date("Y:m:d H:i:s"),
+            "updated_by"=> date("Y:m:d H:i:s"),
+        ]);
+
+        // Menu Report
+        DB::table("menus")->insert([
+            "kode_menu" => "mn007",
+            "nama_menu" => "Report",
+            "url" => "reports",
+            "icon" => "",
+            "level" => "main_menu",
+            "main_menu" =>"",
+            "aktif" => 1,
+            "no_urut" => 18,
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),

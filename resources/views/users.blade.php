@@ -67,26 +67,33 @@
                 <th>Role User</th>
                 <th>Action</th>
             </tr>
+            
             @foreach ($users as $no => $data)
                 <tr>
                     <td>{{ $users->firstItem() + $no }}</td>
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->email }}</td>
-                    <td>
-                        @if ($data->roles[0]->name == 'admin')
-                            <span class="badge badge-primary">
-                                {{ $data->roles[0]->name }}
-                            </span>
-                        @elseif ($data->roles[0]->name == 'kanim')
-                            <span class="badge badge-secondary">
-                                {{ $data->roles[0]->name }}
-                            </span>
-                        @else
-                            <span class="badge badge-light">
-                                {{ $data->roles[0]->name }}
-                            </span>
-                        @endif
-                    </td>
+
+                    @if ($data->roles != null)
+                        <td>
+                            @if ($data->roles[0]->name == 'admin')
+                                <span class="badge badge-primary">
+                                    {{ $data->roles[0]->name }}
+                                </span>
+                            @elseif ($data->roles[0]->name == 'kanim')
+                                <span class="badge badge-secondary">
+                                    {{ $data->roles[0]->name }}
+                                </span>
+                            @else
+                                <span class="badge badge-light">
+                                    {{ $data->roles[0]->name }}
+                                </span>
+                            @endif
+                        </td>
+                    @else
+                        <td></td>
+                    @endif
+
                     <td><a href="{{ route('users.edit', $data->id) }}" class="badge badge-success">Edit</a>
                         <a href="#" data-id="{{ $data->id }}" class="badge badge-danger swal-confirm">Delete
                             <form action="{{ route('users.hapus', $data->id) }}" id="hapus{{ $data->id }}"
@@ -100,7 +107,7 @@
                 </tr>
             @endforeach
         </table>
-        {{$users->appends(Request::all())->links()}}
+        {{ $users->appends(Request::all())->links() }}
     </div>
     </div>
     </div>

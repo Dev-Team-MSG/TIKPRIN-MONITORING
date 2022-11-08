@@ -27,7 +27,7 @@
                             <div class="author-box-name">
                                 <a href="#">{{ $user->name }}</a>
                             </div>
-                            <div class="author-box-job">{{$user->roles}}</div>
+                            <div class="author-box-job">{{$user->roles[0]->name}}</div>
                             <div class="author-box-description">
                                 <b>Username:</b><br>
                                 {{ $user->username }}

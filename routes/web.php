@@ -12,6 +12,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportController;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,10 +63,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get("/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
     Route::get("/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
     Route::get("/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
-    Route::resource("permission",PermissionController::class);
+    
     Route::resource("roles",RoleController::class);
-    Route::resource("konfigurasi", AccessController::class);
-    Route::get("konfigurasi/akses", [AccessController::class, "create"]);
+    Route::resource("permission", AccessController::class);
+    Route::resource("reports", ReportController::class);
+    // Route::get("konfigurasi/akses", [AccessController::class, "create"]);
 });
 Route::resource("menus", MenuController::class);
 
