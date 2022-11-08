@@ -142,7 +142,11 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 9,
+=======
+            "no_urut" => 4,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -156,7 +160,11 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 10,
+=======
+            "no_urut" => 5,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -170,7 +178,11 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 11,
+=======
+            "no_urut" => 7,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -184,14 +196,21 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn004",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 12,
+=======
+            "no_urut" => 8,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+<<<<<<< HEAD
 
         // Manu Kanim
+=======
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
         DB::table("menus")->insert([
             "kode_menu" => "mn005",
             "nama_menu" => "Kanim",
@@ -200,14 +219,21 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 13,
+=======
+            "no_urut" => 9,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
             "updated_by"=> date("Y:m:d H:i:s"),
         ]);
+<<<<<<< HEAD
 
         // Menu Konfigurasi
+=======
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
         DB::table("menus")->insert([
             "kode_menu" => "mn006",
             "nama_menu" => "Konfigurasi",
@@ -216,7 +242,11 @@ class MenuSeeder extends Seeder
             "level" => "main_menu",
             "main_menu" =>"",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 14,
+=======
+            "no_urut" => 10,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -230,7 +260,11 @@ class MenuSeeder extends Seeder
             "level" => "sub_menu",
             "main_menu" =>"mn006",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 15,
+=======
+            "no_urut" => 11,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),
@@ -239,11 +273,16 @@ class MenuSeeder extends Seeder
         DB::table("menus")->insert([
             "kode_menu" => "mn006-sm002",
             "nama_menu" => "Menu",
+<<<<<<< HEAD
             "url" => "menus",
+=======
+            "url" => "menu",
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "icon" => "",
             "level" => "sub_menu",
             "main_menu" =>"mn006",
             "aktif" => 1,
+<<<<<<< HEAD
             "no_urut" => 16,
             "created_by" => "admin",
             "updated_by" => "admin",
@@ -275,6 +314,9 @@ class MenuSeeder extends Seeder
             "main_menu" =>"",
             "aktif" => 1,
             "no_urut" => 18,
+=======
+            "no_urut" => 12,
+>>>>>>> 4a5c2bf94f868383c1a0796797dec4ea360feaec
             "created_by" => "admin",
             "updated_by" => "admin",
             "created_at" => date("Y:m:d H:i:s"),

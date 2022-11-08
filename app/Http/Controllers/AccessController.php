@@ -21,16 +21,16 @@ class AccessController extends Controller
     // protected $main_menu;
     // protected $sub_menu;
     protected $cek;
-    // public function __construct()
-    // {
-    //     $this->middleware(function ($request, $next) {
-    //         if (Auth::check()) {
-    //             $this->cek = cek_akses_user();
-    //         }
-            
-    //         return $next($request);
-    //     });
-    // }
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -50,7 +50,7 @@ class AccessController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
@@ -61,7 +61,7 @@ class AccessController extends Controller
      */
     public function store(Request $request)
     {
-
+        //  
     }
 
     /**
@@ -72,7 +72,6 @@ class AccessController extends Controller
      */
     public function show($id)
     {
-
     }
 
     public function list_akses($role_id)
@@ -85,7 +84,7 @@ class AccessController extends Controller
         $insertData = array();
         //
         // $access = DB::table("accesses")->find($id);
-        $menu = DB::table("menus")->get();
+        $menu = DB::table("menus")->where("aktif", 1)->get();
         $ada = false;
         foreach ($menu as $mn) {
             foreach ($this->list_akses($id) as $la) {
@@ -130,9 +129,9 @@ class AccessController extends Controller
     public function edit($role_id)
     {
         //
-        // if($this->cek->edit != 1) {
-        //     abort(403);
-        // }
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $list_menu = $this->list_menu($role_id);
         $role = Role::findById($role_id);
         return view("akses.edit", compact("list_menu", "role"));
@@ -148,9 +147,9 @@ class AccessController extends Controller
     public function update(Request $request, $role_id)
     {
         //
-        // if($this->cek->edit != 1) {
-        //     abort(403);
-        // }
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $access = Access::where("role_id", "=", $role_id)->get();
         $list = $this->list_akses($role_id);
         $no = 1;
@@ -187,7 +186,8 @@ class AccessController extends Controller
     {
         if($this->cek->hapus != 1) {
             abort(403);
-        }        
+        }
+        //
         DB::table("roles")->where("id", $id)->delete();
         return redirect()->back()->with("message", "Berhasil menghapus data");
     }
