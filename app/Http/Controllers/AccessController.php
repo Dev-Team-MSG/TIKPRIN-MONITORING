@@ -108,7 +108,6 @@ class AccessController extends Controller
             }
         }
         if (isset($insertData)) {
-            // dd("data mau di inser");
             DB::table("accesses")->insert($insertData);
         }
 
@@ -173,7 +172,7 @@ class AccessController extends Controller
             ->update($data);
         }
             
-        return redirect()->back()->with("message", "Data Berhasil Diubah");
+        return redirect(route("permission.index"))->with("message", "Data Berhasil Diubah");
 
     }
 

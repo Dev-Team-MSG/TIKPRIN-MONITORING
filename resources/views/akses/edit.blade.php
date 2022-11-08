@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <form action="{{ route('konfigurasi.update', $role->id) }}" method="post">
+        <form action="{{ route('permission.update', $role->id) }}" method="post">
             @csrf
             @method('PUT')
             <table class="table table-striped table-bordered table-sm">

@@ -18,6 +18,7 @@
                                 @foreach ($sub_menu as $sm)
                                     @if ($sm->main_menu == $mm->kode_menu)
                                         @if ($sm->akses == 1)
+                                            
                                             <li>
                                                 @if ($sm->nama_menu == 'Open')
                                                     <div class="row">
@@ -38,7 +39,8 @@
                                                             </a>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <span class="badge badge-warning">{{ $count_progress }}</span>
+                                                            <span
+                                                                class="badge badge-warning">{{ $count_progress }}</span>
                                                         </div>
                                                     </div>
                                                 @elseif ($sm->nama_menu == 'Close')
@@ -49,8 +51,7 @@
                                                             </a>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <span
-                                                                class="badge badge-danger">{{ $count_close }}</span>
+                                                            <span class="badge badge-danger">{{ $count_close }}</span>
                                                         </div>
                                                     </div>
                                                 @else

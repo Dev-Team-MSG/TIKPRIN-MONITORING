@@ -52,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
                     $count_close = Ticket::where("status", "close")->count();
                 }
 
+                
                 $view->with([
                     'main_menu' => $main_menu,
                     "sub_menu" => $sub_menu,

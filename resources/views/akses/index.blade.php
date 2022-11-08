@@ -31,9 +31,9 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->name }}</td>
                     <td>
-                        <form action="{{ route('konfigurasi.destroy', $item->id) }}" method="POST"
+                        <form action="{{ route('permission.destroy', $item->id) }}" method="POST"
                             class="inline">
-                            <a href="{{ route('konfigurasi.edit', $item->id) }}"
+                            <a href="{{ route('permission.edit', $item->id) }}"
                                 class="btn btn-warning edit-role" {{-- data-target="#formEditModal"  --}}>Edit</a>
                             @csrf
                             @method('delete')
