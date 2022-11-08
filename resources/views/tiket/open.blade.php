@@ -52,7 +52,7 @@
                 ajax: "{{ route('list-open-ticket') }}",
                 columns: [{
                         data: 'Tanggal Pengaduan',
-                        name: 'Tanggal Penhaduan'
+                        name: 'Tanggal Pengaduan'
                     },
                     {
                         data: 'no_ticket',

@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource("roles",RoleController::class);
     Route::resource("permission", AccessController::class);
     Route::resource("reports", ReportController::class);
+    Route::post("reports-tiket", [ReportController::class, "reportTiket"])->name("reports.tiket");
+    Route::post("reports-relokasi-printer", [ReportController::class, "reportRelokasiPrinter"])->name("reports.relokasi-printer");
     // Route::get("konfigurasi/akses", [AccessController::class, "create"]);
 });
 Route::resource("menus", MenuController::class);

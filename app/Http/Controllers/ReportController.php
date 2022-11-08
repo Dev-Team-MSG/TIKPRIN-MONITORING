@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
+use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -82,5 +83,12 @@ class ReportController extends Controller
     public function destroy()
     {
         //
+    }
+
+    public function reportTiket(Request $request) {
+        dd($request);
+    }
+    public function reportRelokasiPrinter(Request $request) {
+        dd($request);
     }
 }
