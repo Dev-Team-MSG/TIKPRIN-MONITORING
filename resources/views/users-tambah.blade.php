@@ -11,8 +11,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>Tambah User</h4>
-                        </div>
-
+                        </div>      
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
@@ -134,7 +133,7 @@
                                         <input onchange="collapseKanim()" type="radio" name="roles" value="2"
                                             @if (isset($user->roles[0]) && $user->roles[0]->name == 'kanim') checked @endif> Kanim<br>
                                         <input onchange="collapseKanim()" type="radio" name="roles" value="3"
-                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'eos') checked @endif> EOS<br>
+                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'engineer') checked @endif> EOS<br>
                                         <div class="invalid-feedback">
                                             {{ $errors->first('roles') }}
                                         </div>
@@ -184,7 +183,7 @@
         function collapseKanim() {
             // console.log($("input[name='privilege']:checked").val());
 
-            if ($("input[name='roles']:checked").val() == 'kanim') {
+            if ($("input[name='roles']:checked").val() == 2) {
                 $("#kanim").show();
             } else {
                 $("#kanim").hide();

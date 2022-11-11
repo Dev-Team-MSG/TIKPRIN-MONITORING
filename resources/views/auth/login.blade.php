@@ -7,17 +7,17 @@
     <title>Login &mdash; Msgdesk</title>
 
     <!-- General CSS Files -->
-    <link rel="stylesheet" href="http://pms.test/library/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('login/library/bootstrap/dist/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- CSS Libraries -->
-    <link rel="stylesheet" href="http://pms.test/library/bootstrap-social/bootstrap-social.css">
+    <link rel="stylesheet" href="{{asset('login/library/bootstrap-social/bootstrap-social.css')}}">
 
     <!-- Template CSS -->
-    <link rel="stylesheet" href="http://pms.test/css/style.css">
-    <link rel="stylesheet" href="http://pms.test/css/components.css">
+    <link rel="stylesheet" href="{{asset('login/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('login/css/components.css')}}">
 </head>
 
 <body>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-12 order-lg-2 min-vh-100 background-walk-y position-relative overlay-gradient-bottom order-1"
-                    data-background="http://pms.test/img/unsplash/login-bg.jpg">
+                    data-background="{{asset('login/img/unsplash/login-bg.jpg')}}">
                     <div class="absolute-bottom-left index-2">
                         <div class="text-light p-5 pb-2">
                             <div class="mb-5 pb-3">
@@ -117,21 +117,21 @@
     </div>
 
     <!-- General JS Scripts -->
-    <script src="http://pms.test/library/jquery/dist/jquery.min.js"></script>
-    <script src="http://pms.test/library/popper.js/dist/umd/popper.js"></script>
-    <script src="http://pms.test/library/tooltip.js/dist/umd/tooltip.js"></script>
-    <script src="http://pms.test/library/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="http://pms.test/library/jquery.nicescroll/dist/jquery.nicescroll.min.js"></script>
-    <script src="http://pms.test/library/moment/min/moment.min.js"></script>
-    <script src="http://pms.test/js/stisla.js"></script>
+    <script src="{{asset('login/library/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{asset('login/library/popper.js/dist/umd/popper.js')}}"></script>
+    <script src="{{asset('login/library/tooltip.js/dist/umd/tooltip.js')}}"></script>
+    <script src="{{asset('login/library/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('login/library/jquery.nicescroll/dist/jquery.nicescroll.min.js')}}"></script>
+    <script src="{{asset('login/library/moment/min/moment.min.js')}}"></script>
+    <script src="{{asset('login/js/stisla.js')}}"></script>
 
     <!-- JS Libraies -->
 
     <!-- Page Specific JS File -->
 
     <!-- Template JS File -->
-    <script src="http://pms.test/js/scripts.js"></script>
-    <script src="http://pms.test/js/custom.js"></script>
+    <script src="{{asset('login/js/scripts.js')}}"></script>
+    <script src="{{asset('login/js/custom.js')}}"></script>
 </body>
 
 </html>

@@ -22,19 +22,21 @@
                       @endcan
                   </ul> --}}
               </li>
+              <li>
+                <a href="{{ route('kanims.index') }}" class="nav-link"><i class="far fa-building"></i> <span>Kanim</span></a>
+            </li>
           {{-- @endcan --}}
           {{-- @can('access printer') --}}
               <li class="dropdown">
                   <a href="#" class="nav-link has-dropdown"><i class="fas fa-plug"></i> <span>Printer</span></a>
                   <ul class="dropdown-menu">
                       <li><a href="{{ route('printers.index') }}">Lihat Printer</a></li>
-                      @can('create printer')
+                      {{-- @can('create printer') --}}
                           <li><a class="nav-link" href="{{ route('printers.create') }}">Tambah Printer</a></li>
-                      @endcan
+                      {{-- @endcan --}}
 
-                      @can('relokasi printer')
-                          <li><a href="#">Relokasi Printer</a></li>
-                      @endcan
+                      {{-- @can('relokasi printer') --}}
+                          <li><a href="{{ route('printerkanims.index') }}">Relokasi Printer</a></li>
                   </ul>
               </li>
           {{-- @endcan --}}

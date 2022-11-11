@@ -10,6 +10,8 @@ use App\Imports\PrintersImport;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
+use App\Models\Printer;
+use App\DataTables\PrinterDataTable;
 
 class PrinterController extends Controller
 {
@@ -25,7 +27,7 @@ class PrinterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(PrinterDataTable $dataTable)
     {
         // if(Auth::user()->roles[0]->name == "engineer"){
         //     $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
@@ -43,12 +45,14 @@ class PrinterController extends Controller
         //     $count_progress = Ticket::where("status", "progress")->count();
         //     $count_close = Ticket::where("status", "close")->count();
         // }
-        $printers = \App\Models\Printer::paginate(10);
-        $filterKeyword = $request->get('keyword');
-        if($filterKeyword){
-            $printers = \App\Models\Printer::where('serial_number', 'LIKE', "%$filterKeyword%")->paginate(10);
-        }
-        return view('printers.index', ['printers' => $printers]);
+        return $dataTable->render('printers.index');
+
+        // $printers = \App\Models\Printer::paginate(10);
+        // $filterKeyword = $request->get('keyword');
+        // if($filterKeyword){
+        //     $printers = \App\Models\Printer::where('serial_number', 'LIKE', "%$filterKeyword%")->paginate(10);
+        // }
+        // return view('printers.index', ['printers' => $printers]);
 
     }
     private function _validation(Request $request)
@@ -131,7 +135,7 @@ class PrinterController extends Controller
         $new_printer->mac_address = $request->get('mac_address');
         $new_printer->created_by = \Auth::user()->id;
         $new_printer->save();
-        return redirect()->route('printers.create')->with('message', 'Printer Berhasil ditambahkan');
+        return redirect()->route('printers.index')->with('message', 'Printer Berhasil ditambahkan');
         
     
     }
@@ -211,9 +215,9 @@ class PrinterController extends Controller
      */
     public function destroy($id)
     {
-        $printer = \App\Models\Printer::findOrFail($id);
+        $printer = Printer::findOrFail($id);
         $printer->delete();
-        return redirect()->route('printers.index')->with('message', 'Printer Berhasil diHapus ke Trash');
+        return redirect()->back()->with('message', 'Printer Berhasil dihapus');
 
     }
 }
