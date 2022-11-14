@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::table('accesses', function (Blueprint $table) {
             //
-            $table->foreign("kode_menu")->references("kode_menu")->on("menus")->onDelete("cascade");
-            $table->foreign("role_id")->references("id")->on("roles")->onDelete("cascade");
+            $table->foreign("kode_menu")->references("kode_menu")->on("menus")->onDelete("restrict");
+            $table->foreign("role_id")->references("id")->on("roles")->onDelete("restrict");
         });
     }
 

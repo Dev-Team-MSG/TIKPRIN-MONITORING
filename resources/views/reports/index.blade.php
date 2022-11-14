@@ -37,7 +37,7 @@
                                         </label>
                                         <div class="col-sm-10">
                                             <input type="date" class="form-control form-control-sm" id="colFormLabelSm"
-                                                placeholder="col-form-label-sm" name="tanggal-dari">
+                                                placeholder="col-form-label-sm" name="tanggal_dari">
                                         </div>
                                     </div>
                                 </div>
@@ -48,7 +48,7 @@
                                         </label>
                                         <div class="col-sm-10">
                                             <input type="date" class="form-control form-control-sm" id="colFormLabelSm"
-                                                placeholder="col-form-label-sm" name="tanggal-sampai">
+                                                placeholder="col-form-label-sm" name="tanggal_sampai">
                                         </div>
                                     </div>
                                 </div>
@@ -57,8 +57,8 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupSelect01">Status</label>
                                 </div>
-                                <select class="custom-select" id="inputGroupSelect01" name="lokasi">
-                                    <option selected>Choose...</option>
+                                <select class="custom-select" id="inputGroupSelect01" name="status">
+                                    <option selected value="all">Semua</option>
                                     <option value="open">Open</option>
                                     <option value="progress">Progress</option>
                                     <option value="close">Close</option>
@@ -77,7 +77,7 @@
                                             Tanggal
                                         </label>
                                         <div class="col-sm-10">
-                                            <input type="date" name="tanggal-dari" class="form-control form-control-sm" id="colFormLabelSm"
+                                            <input type="date" name="tanggal_dari" class="form-control form-control-sm" id="colFormLabelSm"
                                                 placeholder="col-form-label-sm">
                                         </div>
                                     </div>
@@ -88,7 +88,7 @@
                                             Tanggal
                                         </label>
                                         <div class="col-sm-10">
-                                            <input type="date" name="tanggal-sampai" class="form-control form-control-sm" id="colFormLabelSm"
+                                            <input type="date" name="tanggal_sampai" class="form-control form-control-sm" id="colFormLabelSm"
                                                 placeholder="col-form-label-sm">
                                         </div>
                                     </div>

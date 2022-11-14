@@ -16,7 +16,7 @@ return new class extends Migration
         //
         Schema::table('tickets', function (Blueprint $table) {
             //
-            $table->foreign("owner_id")->references("id")->on("users")->onDelete("cascade");
+            $table->foreign("owner_id")->references("id")->on("users")->onDelete("restrict");
         });
     }
 

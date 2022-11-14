@@ -19,7 +19,6 @@ class RoleController extends Controller
             if (Auth::check()) {
                 $this->cek = cek_akses_user();
             }
-            //     // $this->sub_menu = sub_menu();
             return $next($request);
         });
     }
@@ -55,6 +54,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        
         //
         try {
             if($this->cek->tambah != 1) {
@@ -64,7 +64,8 @@ class RoleController extends Controller
             $request->validate(['role' => 'required']);
 
             $role = Role::create(['name' => $request->role]);
-            return redirect(route("konfigurasi.index"))->with("message", "Data berhasil disimpan");
+            // return response()->json($role);
+            return redirect(route("permission.index"))->with("message", "Data berhasil disimpan");
         } catch (\Throwable $th) {
             //throw $th;
             dd($th);

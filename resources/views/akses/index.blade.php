@@ -80,6 +80,60 @@
     </div>
 @endsection
 
-@push('page-scripts')
-@endpush
+{{-- @push('page-scripts')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $("#btn-save").click(function(e) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        e.preventDefault();
+        var permit = []
+        $("input:checkbox[name=permissions]:checked").each(function() {
+            permit.push($(this).val());
+        });
+        var formData = {
+            name: jQuery('#inputrole').val(),
+            permissions: permit
+        };
+        var state = $('#btn-save').val();
+        var type = "POST";
+        var ajaxurl = "roles";
+
+        $.ajax({
+            type: type,
+            url: ajaxurl,
+            data: formData,
+            dataType: 'json',
+            success: function(data) {
+                console.log()
+                Swal.fire({
+                    icon: 'success',
+                    title: "Data berhasil ditambahkan",
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Yes'
+                }).then((_) => {
+                    // console.log("result : " + result.role)
+                    window.location.reload()
+
+
+                })
+
+            },
+            error: function(data) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: data.responseJSON.message,
+                    showCancelButton: true,
+                })
+
+            }
+        });
+    });
+</script>
+@endpush --}}
 @section('scripts')

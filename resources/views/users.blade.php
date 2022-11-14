@@ -59,6 +59,16 @@
                 </div>
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
         <table class="table table-striped table-bordered table-sm">
             <tr>
                 <th>No</th>
@@ -67,16 +77,16 @@
                 <th>Role User</th>
                 <th>Action</th>
             </tr>
-            
+
             @foreach ($users as $no => $data)
                 <tr>
                     <td>{{ $users->firstItem() + $no }}</td>
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->email }}</td>
 
-                    @if ($data->roles != null)
+                    @if (sizeof($data->roles) == 1)
                         <td>
-                            @if ($data->roles[0]->name == 'admin')
+                            @if ($data->roles[0]->name == "admin")
                                 <span class="badge badge-primary">
                                     {{ $data->roles[0]->name }}
                                 </span>
@@ -91,9 +101,15 @@
                             @endif
                         </td>
                     @else
-                        <td></td>
+                        <td>
+                            <span class="badge badge-danger">
+                                undefined
+                            </span> 
+                        </td>
                     @endif
-
+                    {{-- @php
+                    dd($data->roles[0]);
+                @endphp --}}
                     <td><a href="{{ route('users.edit', $data->id) }}" class="badge badge-success">Edit</a>
                         <a href="#" data-id="{{ $data->id }}" class="badge badge-danger swal-confirm">Delete
                             <form action="{{ route('users.hapus', $data->id) }}" id="hapus{{ $data->id }}"

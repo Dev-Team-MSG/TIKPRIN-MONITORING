@@ -8,7 +8,10 @@
         <div class="section-body">
             <div class="card">
                 <div class="card-header">
-                    <h4>Simple Table</h4>
+                    <h4>Tiket</h4>
+                    <div class="card-header-form">
+                        <a href="{{route("view-create-ticket")}}" class="btn btn-success">Buat Tiket</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -72,7 +75,7 @@
                         name: 'permasalahan'
                     },
                     {
-                        data: 'luarbiasa',
+                        data: 'Status',
                         name: 'status tiket'
                     },
                     {
