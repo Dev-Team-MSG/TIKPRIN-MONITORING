@@ -71,6 +71,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::resource("roles", RoleController::class);
     Route::post("roles", [RoleController::class, "store"])->name("roles.store");
     Route::resource("permission", AccessController::class);
+    Route::delete("permission/delete-permission/{id}", [AccessController::class, "destroyAccess"])->name("delete-access");
     Route::resource("reports", ReportController::class);
     Route::post("reports-tiket", [ReportController::class, "reportTiket"])->name("reports.tiket");
     Route::post("reports-relokasi-printer", [ReportController::class, "reportRelokasiPrinter"])->name("reports.relokasi-printer");
