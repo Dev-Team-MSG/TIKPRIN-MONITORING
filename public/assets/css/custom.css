@@ -6,6 +6,13 @@
  */
 
 /*# sourceMappingURL=custom.css.map */
+.table-responsive {
+    overflow-x: hidden !important;
+}
+
+.main-sidebar .sidebar-menu li a  {
+    
+}
 
 .main-sidebar .sidebar-menu li a .badge {
     margin-left: 50px;

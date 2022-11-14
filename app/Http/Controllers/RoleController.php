@@ -8,14 +8,20 @@ use Spatie\Permission\Models\Permission;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 
+use function App\Helpers\cek_akses_user;
+
 class RoleController extends Controller
 {
-    public function __construct() 
+    protected $cek;
+    public function __construct()
     {
-        $this->middleware("can:access role")->only("index");
-        $this->middleware("can:create role")->only("store");
-        $this->middleware("can:edit role")->only("edit");
-        $this->middleware("can:delete role")->only("destroy");
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -25,26 +31,10 @@ class RoleController extends Controller
     public function index()
     {
         //
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        $role = Role::latest()->get();
-        $permissions = Permission::with("roles")->get();
-        return view("role.index", compact("role", "permissions", "count_open", "count_progress", "count_close"));
-
+        
+        // $role = Role::latest()->get();
+        // $permissions = Permission::with("roles")->get();
+        // return view("role.index", compact("role", "permissions"));
     }
 
     /**
@@ -66,13 +56,19 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate(['name'=>'required']);
+        try {
+            if($this->cek->tambah != 1) {
+                abort(403);
+            }
+            //code...
+            $request->validate(['role' => 'required']);
 
-        $role = Role::create(['name'=>$request->name]);
-// dd($request->permissions);
-        $role->syncPermissions($request->permissions);
-        
-        return response()->json($role);
+            $role = Role::create(['name' => $request->role]);
+            return redirect(route("konfigurasi.index"))->with("message", "Data berhasil disimpan");
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+        }
     }
 
     /**
@@ -83,9 +79,9 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
-        $roleDetail = Role::With("permissions")->find($id);
-        return response()->json($roleDetail);
+        
+        // $roleDetail = Role::With("permissions")->find($id);
+        // return response()->json($roleDetail);
     }
 
     /**
@@ -96,25 +92,9 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $permissions = Permission::get();
-        $role = Role::find($id);
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-       return view('role.edit',compact("role", "permissions", "count_open", "count_progress", "count_close"));
+        // $permissions = Permission::get();
+        // $role = Role::find($id);
+        // return view('role.edit', compact("role", "permissions"));
     }
 
     /**
@@ -127,9 +107,9 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $role = Role::find($id);
-        $role->syncPermissions($request->permissions);
-        return redirect(route("roles.index"))->withSuccess('Role updated !!!');
+        // $role = Role::find($id);
+        // $role->syncPermissions($request->permissions);
+        // return redirect(route("roles.index"))->withSuccess('Role updated !!!');
     }
 
     /**
@@ -141,7 +121,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
-        $role->delete();
-        return redirect()->back()->withSuccess('Role deleted !!!');
+        // $role->delete();
+        // return redirect()->back()->withSuccess('Role deleted !!!');
     }
 }

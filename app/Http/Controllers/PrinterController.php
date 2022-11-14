@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PrintersImport;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
 use App\Models\Printer;
@@ -94,7 +93,7 @@ class PrinterController extends Controller
 
         // import data
 
-        $import = Excel::import(new PrintersImport(), storage_path('app/public/excel/' . $nama_file));
+        $import = Excel::import(new PrinterImport(), storage_path('app/public/excel/' . $nama_file));
 
         //remove from server
         Storage::delete($path);
@@ -133,7 +132,7 @@ class PrinterController extends Controller
         $new_printer = new \App\Models\Printer;
         $new_printer->serial_number = $request->get('serial_number');
         $new_printer->mac_address = $request->get('mac_address');
-        $new_printer->created_by = \Auth::user()->id;
+        $new_printer->created_by = Auth::user()->id;
         $new_printer->save();
         return redirect()->route('printers.index')->with('message', 'Printer Berhasil ditambahkan');
         
@@ -201,7 +200,7 @@ class PrinterController extends Controller
 
         $printer->serial_number = $serial_number;
         $printer->mac_address = $mac_address;
-        $printer->updated_by = \Auth::user()->id;
+        $printer->updated_by = Auth::user()->id;
         $printer->save();
 
         return redirect()->route('printers.index', [$id])->with('message', 'Data Printer Berhasil diUpdate');

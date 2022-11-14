@@ -214,7 +214,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-            ])->toArray(),
-            
+        'Batch' => Mavinoo\Batch\BatchFacade::class,
+    ])->toArray(),
 
 ];

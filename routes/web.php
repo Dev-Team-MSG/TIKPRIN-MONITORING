@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
@@ -9,9 +10,11 @@ use App\Http\Controllers\KanimController;
 use App\Http\Controllers\PrinterKanimController;
 
 use App\Http\Controllers\CrudController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportController;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,23 +38,8 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 // Route::group(['middleware' => 'CekLoginMiddleware'], function(){
 Route::group(['middleware' => 'auth'], function(){
     Route::get('dashboard', function () {
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        return view('index', compact("count_open", "count_progress", "count_close"));});
+        return view('index');
+    });
 
     //Route User
     Route::get('users', [UserController::class, 'index'])->name('users');
@@ -77,19 +65,25 @@ Route::group(['middleware' => 'auth'], function(){
 
     //Route Tiket
     Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");
-
-    Route::get('crud', [CrudController::class, 'index']);
-    Route::get('crud/tambah', [CrudController::class, 'tambah']);
-    Route::get("/tiket", [TicketController::class, "buatTiket"])->name("view-create-ticket");
+    // Route::get("/tiket", [TicketController::class, "buatTiket"])->name("view-create-ticket");
     Route::post("/tiket", [TicketController::class, "simpanTiket"])->name("store-create-ticket");
     Route::get("/tiket/{no_ticket}",[TicketController::class, "detailTicket"])->name("detail-ticket");
     Route::post("/ticket/{no_ticket}/ambil", [TicketController::class, "take"])->name("ambil-tiket");
-    Route::get("/tikets/open", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
-    Route::get("/tikets/progress", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
-    Route::get("/tikets/close", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
-    Route::resource("permission",PermissionController::class);
+    Route::get("/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
+    Route::get("/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
+    Route::get("/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
+    
     Route::resource("roles",RoleController::class);
+    Route::resource("permission", AccessController::class);
+    Route::resource("reports", ReportController::class);
+    Route::post("reports-tiket", [ReportController::class, "reportTiket"])->name("reports.tiket");
+    Route::post("reports-relokasi-printer", [ReportController::class, "reportRelokasiPrinter"])->name("reports.relokasi-printer");
+    // Route::get("konfigurasi/akses", [AccessController::class, "create"]);
 });
+Route::resource("menus", MenuController::class);
+
+
+
 
 
 

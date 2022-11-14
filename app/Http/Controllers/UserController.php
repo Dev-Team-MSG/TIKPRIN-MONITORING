@@ -13,9 +13,23 @@ use App\Models\User;
 use App\DataTables\UserDataTable;
 
 
+use function App\Helpers\cek_akses_user;
+use function App\Helpers\main_menu;
+use function App\Helpers\sub_menu;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
+    
     //tampilkan data
     public function index(UserDataTable $dataTable)
     {
@@ -38,29 +52,6 @@ class UserController extends Controller
         // }
 
         return $dataTable->render('users');
-        // $users = \App\Models\User::paginate(5);
-        // $filterKeyword = $request->get('keyword');
-           
-        
-        // $roles = $request->get('roles');
-        // if($roles){
-        //     $users = \App\Models\User::role($roles)->paginate(10);
-        //     //$users = \App\Models\User::where('role', $roles)->paginate(10);
-        //    } else {
-        //     $users = \App\Models\User::orderBy('created_at', 'desc')->paginate(10);
-        //    }
-        //    if($filterKeyword){
-        //     if($roles){
-        //     $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
-        //         ->where('roles', $roles)
-        //         ->paginate(5);
-        //     } else {
-        //     $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
-        //         ->paginate(5);
-        //     }
-        //    }
-           
-        // return view('users', compact("users", "count_open", "count_progress", "count_close"));
     }
 
     //Method Validation
@@ -147,25 +138,13 @@ class UserController extends Controller
     //action untuk menampilkan form tambah data 
     public function tambah()
     {
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
+        if($this->cek->tambah != 1) {
+            abort(403);
         }
+        
         $kanims = \App\Models\Kanim::get();
         $roles = Role::get();
-        return view('users-tambah', compact("kanims", "roles", "count_open", "count_progress", "count_close"));
+        return view('users-tambah', compact("kanims", "roles"));
     }
 
     //method untuk simpan data 
@@ -196,6 +175,9 @@ class UserController extends Controller
     //method untuk edit data 
     public function edit($id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $user = \App\Models\User::findOrFail($id);
         $kanims = \App\Models\Kanim::get();
         if(Auth::user()->roles[0]->name == "engineer"){
@@ -222,6 +204,9 @@ class UserController extends Controller
 
     public function hapus($id)
     {
+        if($this->cek->hapus != 1) {
+            abort(403);
+        }
         // DB::table('users')->where('id',$id)->delete();
         $user = \App\Models\User::findOrFail($id);
         $user->delete();
@@ -232,6 +217,10 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
+        //$this->_validation($request);
         $validation = \Validator::make($request->all(),[
             "name" => "required|min:5|max:100",
             // "username" => "required|min:5|max:20|",
@@ -282,22 +271,7 @@ class UserController extends Controller
     public function detail($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        return view('users-detail',compact("user", "count_open", "count_progress", "count_close"));
+        
+        return view('users-detail',compact("user"));
     }
 }
