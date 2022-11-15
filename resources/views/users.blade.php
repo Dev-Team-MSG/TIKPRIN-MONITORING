@@ -5,9 +5,31 @@
 @section('content')
     @push('lib-styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/prism/prism.css') }}">
-    @endpush
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
     <div class="section-body">
         <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="button-action" style="margin-bottom: 20px">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
+                            class="far fa-user"></i>
+                        IMPORT
+                    </button>
+                    <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
+                            class="far fa-edit"></i> Tambah User</a>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="col-12">
+                <div class="card-body"> --}}
+                    
+                {{-- </div>
+            </div> --}}
+
+
+        {{-- Old Table --}}
+        {{-- <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="button-action" style="margin-bottom: 20px">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
@@ -24,9 +46,6 @@
                                     <input value="{{ Request::get('keyword') }}" name="keyword"
                                         class="form-control col-md-10" type="text"
                                         placeholder="Filter berdasarkan email" />
-                                    {{-- <div class="input-group-append">
-                                        <input type="submit" value="Filter" class="btn btn-primary">
-                                    </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -38,7 +57,7 @@
                                     type="radio" class="form-group" id="kanim">
                                 <label for="kanim">Kanim</label>
 
-                                <input {{ Request::get('roles') == 'eos' ? 'checked' : '' }} value="eos" name="roles"
+                                <input {{ Request::get('roles') == 'eos' ? 'checked' : '' }} value="engineer" name="roles"
                                     type="radio" class="form-group" id="eos">
                                 <label for="eos">EOS</label>
                                 <input type="submit" value="Filter" class="btn btn-primary">
@@ -47,7 +66,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         @if (session('message'))
             <div class="alert alert-success alert-dismissible show fade">
@@ -59,55 +78,9 @@
                 </div>
             </div>
         @endif
-        <table class="table table-striped table-bordered table-sm">
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Role User</th>
-                <th>Action</th>
-            </tr>
-            
-            @foreach ($users as $no => $data)
-                <tr>
-                    <td>{{ $users->firstItem() + $no }}</td>
-                    <td>{{ $data->name }}</td>
-                    <td>{{ $data->email }}</td>
-
-                    @if ($data->roles != null)
-                        <td>
-                            @if ($data->roles[0]->name == 'admin')
-                                <span class="badge badge-primary">
-                                    {{ $data->roles[0]->name }}
-                                </span>
-                            @elseif ($data->roles[0]->name == 'kanim')
-                                <span class="badge badge-secondary">
-                                    {{ $data->roles[0]->name }}
-                                </span>
-                            @else
-                                <span class="badge badge-light">
-                                    {{ $data->roles[0]->name }}
-                                </span>
-                            @endif
-                        </td>
-                    @else
-                        <td></td>
-                    @endif
-
-                    <td><a href="{{ route('users.edit', $data->id) }}" class="badge badge-success">Edit</a>
-                        <a href="#" data-id="{{ $data->id }}" class="badge badge-danger swal-confirm">Delete
-                            <form action="{{ route('users.hapus', $data->id) }}" id="hapus{{ $data->id }}"
-                                method="POST">
-                                @csrf
-                                @method('delete')
-                            </form>
-                        </a>
-                        <a href="{{ route('users.detail', [$data->id]) }}" class="badge badge-info">Detail</a>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
-        {{ $users->appends(Request::all())->links() }}
+        {{-- tabel --}}
+        {{$dataTable->table()}}
+        
     </div>
     </div>
     </div>
@@ -142,18 +115,17 @@
 @push('page-scripts')
     <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
-    <script src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#table').DataTable();
-        });
-    </script>
+    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
+    {{ $dataTable->scripts() }}
 @endpush
 @push('specific-scripts')
     <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
+    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
 @endpush
 @push('after-scripts')
-    <script>
+    {{-- <script>
         $(".swal-confirm").click(function(e) {
             id = e.target.dataset.id;
             swal({
@@ -174,7 +146,7 @@
                     }
                 });
         });
-    </script>
+    </script> --}}
     {{-- <script>
     $('#import').on('shown.bs.import', function() {
         $(document).off('focusin.import');

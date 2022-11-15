@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\KanimController;
+use App\Http\Controllers\PrinterKanimController;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\MenuController;
@@ -53,6 +55,13 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('printers', PrinterController::class);
     Route::post('printers/import', [PrinterController::class, 'import'])->name('printers.import');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+    //Route Kanim
+    Route::resource('kanims', KanimController::class);
+    Route::post('kanims/import', [KanimController::class, 'import'])->name('kanims.import');
+
+    //Route PrinterKanim
+    Route::resource('printerkanims', PrinterKanimController::class);
 
     //Route Tiket
     Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");
