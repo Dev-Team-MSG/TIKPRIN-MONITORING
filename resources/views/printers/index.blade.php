@@ -5,6 +5,8 @@
 @section('content')
     @push('lib-styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/prism/prism.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
     @endpush
     <div class="section-body">
         <div class="row">
@@ -17,20 +19,6 @@
                     <a href="{{ route('printers.create') }}" class="btn btn-icon icon-left btn-primary"><i
                             class="far fa-edit"></i> Tambah Printer</a>
                     <hr>
-                    <form action="{{ route('printers.index') }}">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group mb-3">
-                                    <input value="{{ Request::get('keyword') }}" name="keyword"
-                                        class="form-control col-md-10" type="text" placeholder="Cari berdasarkan SN" />
-                                    <input type="submit" value="Filter" class="btn btn-primary">
-                                    {{-- <div class="input-group-append">
-                                        <input type="submit" value="Filter" class="btn btn-primary">
-                                    </div> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -45,7 +33,10 @@
                 </div>
             </div>
         @endif
-        <table class="table table-striped table-bordered table-sm">
+        
+                {{$dataTable->table()}}
+
+        {{-- <table class="table table-striped table-bordered table-sm">
             <tr>
                 <th>No</th>
                 <th>Serial Number</th>
@@ -70,9 +61,7 @@
                 </tr>
             @endforeach
         </table>
-        {{ $printers->appends(Request::all())->links() }}
-    </div>
-    </div>
+        {{ $printers->appends(Request::all())->links() }} --}}
     </div>
 @endsection
 @section('modal')
@@ -101,24 +90,36 @@
             </div>
         </div>
     </div>
+
+    {{-- modal edit --}}
+    <div class="modal fade" id="edit-data" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">EDIT DATA Printer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{-- content --}}
+            </div>
+        </div>
+    </div>
 @endsection
 @push('page-scripts')
     <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
-    <script src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#table').DataTable();
-        });
-    </script>
+    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
 @endpush
 @push('specific-scripts')
     <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
-@endpush
-@push('after-scripts')
-    <script>
-        $(".swal-confirm").click(function(e) {
-            id = e.target.dataset.id;
+    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+    {{ $dataTable->scripts() }}
+    {{-- <script>
+        $(".swal-confirm").click(function(action) {
+            id = action.target.dataset.id;
             swal({
                     title: 'Yakin akan menghapus Data?',
                     text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
@@ -137,7 +138,34 @@
                     }
                 });
         });
-    </script>
+    </script> --}}
+    {{-- <script>
+        const modal = new bootstrap.Modal($('#modalAction'))
+        $('#printer-table').on('click', '.action', function(){
+            let data = $(this).data()
+            let id = data.id
+            let jenis = data.jenis
+            modal.show()
+            console.log(data);
+            
+
+        })
+    </script> --}}
+@endpush
+@push('after-scripts')
+<script>
+    // const modal = new bootstrap.Modal($('#modalAction'))
+    // $('#printer-table').on('click', '.action', function(){
+    //     let data = $(this).data()
+    //     let id = data.id
+    //     let jenis = data.jenis
+    //     modal.show()
+    //     console.log(data);
+        
+
+    // })
+</script>
+
     {{-- <script>
     $('#import').on('shown.bs.import', function() {
         $(document).off('focusin.import');

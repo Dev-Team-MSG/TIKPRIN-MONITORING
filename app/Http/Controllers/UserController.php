@@ -9,7 +9,10 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Ticket;
 use App\Models\User;
+use App\DataTables\UserDataTable;
+
 
 use function App\Helpers\cek_akses_user;
 use function App\Helpers\main_menu;
@@ -29,30 +32,10 @@ class UserController extends Controller
     }
 
     //tampilkan data
-    public function index(Request $request)
+    public function index(UserDataTable $dataTable)
     {
-        $users = \App\Models\User::paginate(5);
-        $filterKeyword = $request->get('keyword');
 
-        // $users = DB::table('users')->paginate(5);
-        $roles = $request->get('roles');
-        if ($roles) {
-            $users = User::role($roles)->paginate(5);
-
-            // $users = \App\Models\User::where('roles', $roles)->paginate(5);
-        } else {
-            $users = \App\Models\User::paginate(5);
-        }
-        if ($filterKeyword) {
-            if ($roles) {
-                $users = User::role($roles)->where('email', 'LIKE', "%$filterKeyword%")->paginate(5);
-            } else {
-                $users = \App\Models\User::where('email', 'LIKE', "%$filterKeyword%")
-                    ->paginate(5);
-            }
-        }
-
-        return view('users', compact("users"));
+        return $dataTable->render('users');
     }
 
     //Method Validation
@@ -155,7 +138,7 @@ class UserController extends Controller
     {
 
         $this->_validation($request);
-
+        
         $new_user = new \App\Models\User;
         $new_user->name = $request->get('name');
         $new_user->username = $request->get('username');

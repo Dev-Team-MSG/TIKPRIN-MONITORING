@@ -43,7 +43,7 @@ function cek_akses_user()
         ->select("*")
         ->leftJoin("menus", "menus.kode_menu", "=", "accesses.kode_menu")
         ->where("accesses.role_id", "=", Auth::user()->roles[0]->id)
-        ->where("menus.url", "LIKE", "%" . $path[0] . "%")
+        ->where("menus.url", "LIKE" , $path[0] . "%")
         ->first();
     if (!$cek) {
         redirect(abort(404));

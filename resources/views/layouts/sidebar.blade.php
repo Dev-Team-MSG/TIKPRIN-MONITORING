@@ -128,6 +128,5 @@
                     @endif
                 @endif
             @endforeach
-
-    </aside>
+  </aside>
 </div>

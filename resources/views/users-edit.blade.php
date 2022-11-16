@@ -6,7 +6,10 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
+<<<<<<< HEAD
 
+=======
+>>>>>>> ce55b7e0b0afe2ab0bcea84ec901d5735e70463f
                 <form enctype="multipart/form-data" action="{{ route('users.update', [$user->id]) }}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
@@ -67,9 +70,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label @error('roles')
-            
-        @enderror class="d-block">Roles
+                                        <label class="d-block">Roles
                                             @error('roles')
                                                 {{ $message }}
                                             @enderror
@@ -136,8 +137,7 @@
         function collapseKanim() {
             // console.log($("input[name='privilege']:checked").val());
 
-            if ($("input[name='roles']:checked").val() == 'kanim') {
-                console.log($("#kanim"))
+            if ($("input[name='roles']:checked").val() == 2) {
                 $("#kanim").show();
             } else {
                 $("#kanim").hide();

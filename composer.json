@@ -16,7 +16,8 @@
         "mavinoo/laravel-batch": "^2.3",
         "psr/simple-cache": "^2.0",
         "spatie/laravel-permission": "^5.5",
-        "yajra/laravel-datatables-oracle": "^10.1"
+        "yajra/laravel-datatables": "^9.0",
+        "yajra/laravel-datatables-oracle": "^10.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
