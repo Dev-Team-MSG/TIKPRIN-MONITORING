@@ -17,16 +17,18 @@ class PrinterKanim extends Model
     //     return $this->belongsTo('App\Models\Printer', 'printer_id', 'id');
     // }
     public function printers(){
-        return $this->belongsTo(Printer::class, 'printer_id');
+        return $this->belongsTo(Printer::class, 'printer_id', 'id');
     }
 
     public function kanims(){
-        return $this->belongsTo(Kanim::class, 'kanim_id');
+        return $this->belongsTo(Kanim::class, 'kanim_id', 'id');
     }
 
     // public function kanims() {
     //     return $this->belongsTo('App\Models\Kanim', 'kanim_id', 'id');
     // }
+
+    
 
     public function printeronkanim(){
         $printermapping = PrinterKanim::select('printer_id')->get();

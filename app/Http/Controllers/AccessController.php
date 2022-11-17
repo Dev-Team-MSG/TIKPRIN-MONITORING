@@ -20,17 +20,17 @@ class AccessController extends Controller
 {
     // protected $main_menu;
     // protected $sub_menu;
-    protected $cek;
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (Auth::check()) {
-                $this->cek = cek_akses_user();
-            }
-            //     // $this->sub_menu = sub_menu();
-            return $next($request);
-        });
-    }
+    // protected $cek;
+    // public function __construct()
+    // {
+    //     $this->middleware(function ($request, $next) {
+    //         if (Auth::check()) {
+    //             $this->cek = cek_akses_user();
+    //         }
+    //         //     // $this->sub_menu = sub_menu();
+    //         return $next($request);
+    //     });
+    // }
     /**
      * Display a listing of the resource.
      *

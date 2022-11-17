@@ -31,13 +31,12 @@ class KanimDataTable extends DataTable
                 return $row->updated_at->format('d-m-Y H:i:s');
             })
             ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                $action = '<form action=' . route('kanims.destroy', $row->id) . ' id=hapus' . $row->id . ' method="POST">';
-                $action .= '<a href=' . route('kanims.edit', $row->id) . ' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
-                    ' . csrf_field() . '
-                    ' . method_field('delete') . '  
-                <button type="submit" data-id=' . $row->id . ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i></button>
-
+            ->addColumn('action', function($row){
+                $action = '<form action='.route('kanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">';
+                $action .= '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
+                <button type="submit" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i></button>
+                    '.csrf_field().'
+                    '.method_field('delete').'   
                 </form>';
                 // $action .= '<a href='.route('kanims.show', $row->id).' class="btn btn-icon btn-info"><i class="far fas fa-info-circle"></i></a>';
                 $action .= '<script>
@@ -54,10 +53,12 @@ class KanimDataTable extends DataTable
                         })
                         .then((willDelete) => {
                             if (willDelete) {
-                                window.locator.reload()
+                                $(`#hapus${id}`).submit();
+                                console.log(willDelete)
+                                
                             } else {
                                 swal("Batal Hapus, Data Anda Aman!");
-                            }
+                            }$(`#kanim-table`).datatable().ajax.reload();
                         });
 
                 });

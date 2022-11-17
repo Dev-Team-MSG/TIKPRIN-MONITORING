@@ -29,7 +29,7 @@ class UserDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function($row){
                 $action = '<a href='.route('users.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
-                $action .= '<a href="#" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i>
+                $action .= '<a href="javascript:void(0)" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i>
                 <form action='.route('users.hapus', $row->id).' id=hapus'.$row->id.' method="POST">
                     '.csrf_field().'
                     '.method_field('delete').'   
@@ -38,7 +38,9 @@ class UserDataTable extends DataTable
                 $action .= '<a href='.route('users.detail', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>';
                 $action .= '<script>
                 $(".swal-confirm").click(function(e) {
+                    
                     id = e.target.dataset.id;
+                    
                     swal({
                             title: "Yakin akan menghapus Data?",
                             text: "Data yang sudah dihapus tidak dapat dikembalikan!",
@@ -47,7 +49,9 @@ class UserDataTable extends DataTable
                             dangerMode: true,
                         })
                         .then((willDelete) => {
+                            
                             if (willDelete) {
+                                "X-CSRF-TOKEN": $(`meta[name="csrf-token"]`).attr("content");
                                 $(`#hapus${id}`).submit();
                             } else {
                                 swal("Batal Hapus, Data Anda Aman!");
