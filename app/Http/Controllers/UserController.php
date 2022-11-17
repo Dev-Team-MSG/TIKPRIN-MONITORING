@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -29,27 +30,10 @@ class UserController extends Controller
             return $next($request);
         });
     }
-    
+
     //tampilkan data
     public function index(UserDataTable $dataTable)
     {
-        // $sort = $request->input('sort', 'asc');
-        // if(Auth::user()->roles[0]->name == "engineer"){
-        //     $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-        //     $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-        //     $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-        // }else if(Auth::user()->roles[0]->name == "kanim"){
-        //     $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-        //     $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-        //     $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        // }else {
-        //     $count_open = Ticket::where("status", "open")->count();
-        //     $count_progress = Ticket::where("status", "progress")->count();
-        //     $count_close = Ticket::where("status", "close")->count();
-        // }
 
         return $dataTable->render('users');
     }
@@ -58,49 +42,51 @@ class UserController extends Controller
 
     private function _validation(Request $request)
     {
-        $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100",
-            "username" => "required|min:5|max:20|unique:users",
-            "email" => "required|email|unique:users",
-            "phone" => "required|digits_between:10,12|unique:users",
-            "password" => "required",
-            "password_confirmation" => "required|same:password",
-            "roles" => "required",
-            "image" => "mimes:jpg,png,jpeg"
-            
-        ],
-        [
-            //message nama
-            'name.required' => 'Nama harus diisi',
-            'name.max' => 'Maximal 100 Digit',
-            'name.min' => 'Minimal 5 Digit',
-            // 'name.unique' => 'Minimal 5 Digit',
-            //message username
-            'username.required' => 'username harus diisi',
-            'username.max' => 'Maksimal 20 Digit',
-            'username.min' => 'Minimal 5 Digit',
-            'username.unique' => 'Username sudah terdaftar, ganti dengan yang lain',
-             //message email
-             'email.required' => 'Email harus diisi',
-             'email.email' => 'Gunakan Format Email yang benar',
-             'email.unique' => 'Email sudah terdaftar, ganti dengan yang lain',
-             //message password
-             'phone.required' => 'Telephone Harus diisi',
-             'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
-             'phone.unique' => 'Nomer Telephone sudah terdaftar, gunakan nomer yang lain',
-             //message password
-             'password.required' => 'password harus diisi',
-             'password_confirmation.required' => 'password harus diisi',
-             'password_confirmation.same' => 'Konfirmasi Password tidak cocok',
-             //message roles
-             'roles.required' => 'Roles Wajib dipilih',
-             //message image
-             'image.mimes' => 'Jenis File harus JPG atau PNG'
+        $validation = \Validator::make(
+            $request->all(),
+            [
+                "name" => "required|min:5|max:100",
+                "username" => "required|min:5|max:20|unique:users",
+                "email" => "required|email|unique:users",
+                "phone" => "required|digits_between:10,12|unique:users",
+                "password" => "required",
+                "password_confirmation" => "required|same:password",
+                "roles" => "required",
+                "image" => "mimes:jpg,png,jpeg"
 
-        ]
+            ],
+            [
+                //message nama
+                'name.required' => 'Nama harus diisi',
+                'name.max' => 'Maximal 100 Digit',
+                'name.min' => 'Minimal 5 Digit',
+                // 'name.unique' => 'Minimal 5 Digit',
+                //message username
+                'username.required' => 'username harus diisi',
+                'username.max' => 'Maksimal 20 Digit',
+                'username.min' => 'Minimal 5 Digit',
+                'username.unique' => 'Username sudah terdaftar, ganti dengan yang lain',
+                //message email
+                'email.required' => 'Email harus diisi',
+                'email.email' => 'Gunakan Format Email yang benar',
+                'email.unique' => 'Email sudah terdaftar, ganti dengan yang lain',
+                //message password
+                'phone.required' => 'Telephone Harus diisi',
+                'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
+                'phone.unique' => 'Nomer Telephone sudah terdaftar, gunakan nomer yang lain',
+                //message password
+                'password.required' => 'password harus diisi',
+                'password_confirmation.required' => 'password harus diisi',
+                'password_confirmation.same' => 'Konfirmasi Password tidak cocok',
+                //message roles
+                'roles.required' => 'Roles Wajib dipilih',
+                //message image
+                'image.mimes' => 'Jenis File harus JPG atau PNG'
+
+            ]
         )->validate();
     }
-    
+
     //Method Import Excel
 
     public function import(Request $request)
@@ -130,18 +116,17 @@ class UserController extends Controller
         } else {
             //redirect
             return redirect()->route('users')->with(['message' => 'Data User Gagal Diimport!']);
-
         }
     }
-    
+
 
     //action untuk menampilkan form tambah data 
     public function tambah()
     {
-        if($this->cek->tambah != 1) {
+        if ($this->cek->tambah != 1) {
             abort(403);
         }
-        
+
         $kanims = \App\Models\Kanim::get();
         $roles = Role::get();
         return view('users-tambah', compact("kanims", "roles"));
@@ -175,79 +160,81 @@ class UserController extends Controller
     //method untuk edit data 
     public function edit($id)
     {
-        if($this->cek->edit != 1) {
+        if ($this->cek->edit != 1) {
             abort(403);
         }
+        $roles = Role::get();
         $user = \App\Models\User::findOrFail($id);
         $kanims = \App\Models\Kanim::get();
-        if(Auth::user()->roles[0]->name == "engineer"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", null)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
 
-        }else if(Auth::user()->roles[0]->name == "kanim"){
-            $count_open = Ticket::where("status", "open")->where("assign_id", Auth::user()->id)->count();
-            $count_progress = Ticket::where("status", "progress")->where("assign_id", Auth::user()->id)->count();
-            $count_close = Ticket::where("status", "close")->where("assign_id", Auth::user()->id)->count();
-
-
-        }else {
-            $count_open = Ticket::where("status", "open")->count();
-            $count_progress = Ticket::where("status", "progress")->count();
-            $count_close = Ticket::where("status", "close")->count();
-        }
-        $roles = Role::get();
-        return view('users-edit', compact("user", "kanims", "count_open", "count_progress", "count_close"));
+        return view('users-edit', compact("user", "kanims", "roles"));
     }
 
     //method untuk hapus data
 
     public function hapus($id)
     {
-        if($this->cek->hapus != 1) {
+
+        if ($this->cek->hapus != 1) {
             abort(403);
         }
+        try {
+            //code...
+            DB::beginTransaction();
+            $user = \App\Models\User::findOrFail($id);
+            if (count($user->roles) > 0) {
+                $user->removeRole($user->roles[0]->name);
+            }
+            $user->delete();
+            DB::commit();
+            return redirect()->back()->with('message', 'Data Berhasil dihapus');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            dd($th);
+            //throw $th;
+            return redirect()->back()->with("error", "Data user tidak bisa dihapus, karena memiliki transaksi");
+        }
         // DB::table('users')->where('id',$id)->delete();
-        $user = \App\Models\User::findOrFail($id);
-        $user->delete();
-        return redirect()->back()->with('message', 'Data Berhasil dihapus');
+
     }
 
     //method untuk update data
 
     public function update(Request $request, $id)
     {
-        if($this->cek->edit != 1) {
+        if ($this->cek->edit != 1) {
             abort(403);
         }
         //$this->_validation($request);
-        $validation = \Validator::make($request->all(),[
-            "name" => "required|min:5|max:100",
-            // "username" => "required|min:5|max:20|",
-            // "email" => "required|email|unique:users",
-            "phone" => "required|digits_between:10,12",
-            // "password" => "required",
-            // "password_confirmation" => "required|same:password",
-            "roles" => "required",
-            "image" => "mimes:jpg,png,jpeg"
-            
-        ],
-        [
-            //message nama
-            'name.required' => 'Nama harus diisi',
-            'name.max' => 'Maximal 100 Digit',
-            'name.min' => 'Minimal 5 Digit',
-             
-             //message password
-             'phone.required' => 'Telephone Harus diisi',
-             'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
-             
-             //message password
-             'roles.required' => 'Roles Wajib dipilih',
-             //message image
-             'image.mimes' => 'Jenis File harus JPG atau PNG'
+        $validation = \Validator::make(
+            $request->all(),
+            [
+                "name" => "required|min:5|max:100",
+                // "username" => "required|min:5|max:20|",
+                // "email" => "required|email|unique:users",
+                "phone" => "required|digits_between:10,12",
+                // "password" => "required",
+                // "password_confirmation" => "required|same:password",
+                "roles" => "required",
+                "image" => "mimes:jpg,png,jpeg"
 
-        ]
+            ],
+            [
+                //message nama
+                'name.required' => 'Nama harus diisi',
+                'name.max' => 'Maximal 100 Digit',
+                'name.min' => 'Minimal 5 Digit',
+
+                //message password
+                'phone.required' => 'Telephone Harus diisi',
+                'phone.digits_between' => 'Nomer Telephone harus diantara 10 sampai 12 Digit',
+
+                //message password
+                'roles.required' => 'Roles Wajib dipilih',
+                //message image
+                'image.mimes' => 'Jenis File harus JPG atau PNG'
+
+            ]
         )->validate();
 
         $user = \App\Models\User::findOrFail($id);
@@ -271,7 +258,7 @@ class UserController extends Controller
     public function detail($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        
-        return view('users-detail',compact("user"));
+
+        return view('users-detail', compact("user"));
     }
 }

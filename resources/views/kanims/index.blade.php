@@ -34,6 +34,16 @@
                 </div>
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-warning alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
         
             {{$dataTable->table()}}
         {{-- <table class="table table-striped table-bordered table-sm">

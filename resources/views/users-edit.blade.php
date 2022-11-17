@@ -6,6 +6,10 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
+<<<<<<< HEAD
+
+=======
+>>>>>>> ce55b7e0b0afe2ab0bcea84ec901d5735e70463f
                 <form enctype="multipart/form-data" action="{{ route('users.update', [$user->id]) }}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
@@ -71,20 +75,21 @@
                                                 {{ $message }}
                                             @enderror
                                         </label>
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="1"
-                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'admin') checked @endif> Admin<br>
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="2"
-                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'kanim') checked @endif> Kanim<br>
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="3"
-                                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'engineer') checked @endif> EOS<br>
-                                            <div class="invalid-feedback">
-                                                {{ $errors->first('roles') }}
-                                            </div>
-                                        </div>
-                                    <div class="form-group" id="kanim">
+                                        @foreach ($roles as $role)
+                                            <input onchange="collapseKanim()" type="radio" name="roles"
+                                                value="{{ $role->id }}"> {{ $role->name }}<br>
+                                        @endforeach
+                                        {{-- <input onchange="collapseKanim()" type="radio" name="roles" value="1"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'admin') checked @endif> Admin<br>
+                        <input onclick="collapseKanim()" type="radio" name="roles" value="2"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'kanim') checked @endif> Kanim<br>
+                        <input onchange="collapseKanim()" type="radio" name="roles" value="3"
+                            @if (isset($user->roles[0]) && $user->roles[0]->name == 'eos') checked @endif> EOS<br> --}}
+                                    </div>
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Kanim </label>
                                         <br>
-                                        <select class="form-control" name="kanim_id">
+                                        <select class="form-control" name="kanim_id" id="kanim">
                                             @foreach ($kanims as $kanim)
                                                 <option value="{{ $kanim->id }}"
                                                     @if (isset($user->kanim_id) && $user->kanim_id == $kanim->id) selected @endif>{{ $kanim->name }}

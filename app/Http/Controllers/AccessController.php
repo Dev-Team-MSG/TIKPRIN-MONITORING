@@ -108,7 +108,7 @@ class AccessController extends Controller
             }
         }
         if (isset($insertData)) {
-            DB::table("accesses")->insert($insertData);
+             DB::table("accesses")->insert($insertData);
         }
 
 
@@ -129,9 +129,9 @@ class AccessController extends Controller
     public function edit($role_id)
     {
         //
-        if($this->cek->edit != 1) {
-            abort(403);
-        }
+        // if($this->cek->edit != 1) {
+        //     abort(403);
+        // }
         $list_menu = $this->list_menu($role_id);
         $role = Role::findById($role_id);
         return view("akses.edit", compact("list_menu", "role"));
@@ -147,9 +147,9 @@ class AccessController extends Controller
     public function update(Request $request, $role_id)
     {
         //
-        if($this->cek->edit != 1) {
-            abort(403);
-        }
+        // if($this->cek->edit != 1) {
+        //     abort(403);
+        // }
         $access = Access::where("role_id", "=", $role_id)->get();
         $list = $this->list_akses($role_id);
         $no = 1;
@@ -167,13 +167,12 @@ class AccessController extends Controller
             // $access[$no-1]->kode_menu = $data["kode_menu"];
             // dd($access);
             DB::table("accesses")
-            ->where("kode_menu", "=", $a->kode_menu)
-            ->where("role_id", "=",$role_id)
-            ->update($data);
+                ->where("kode_menu", "=", $a->kode_menu)
+                ->where("role_id", "=", $role_id)
+                ->update($data);
         }
-            
-        return redirect(route("permission.index"))->with("message", "Data Berhasil Diubah");
 
+        return redirect(route("permission.index"))->with("message", "Data Berhasil Diubah");
     }
 
     /**
@@ -184,11 +183,34 @@ class AccessController extends Controller
      */
     public function destroy($id)
     {
-        if($this->cek->hapus != 1) {
+        if ($this->cek->hapus != 1) {
             abort(403);
         }
+        try {
+            //code...
+            DB::beginTransaction();
+            DB::table("roles")->where("id", $id)->delete();
+            DB::commit();
+            return redirect()->back()->with("message", "Berhasil menghapus data");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return redirect()->back()->with("error", "Role tidak bisa dihapus karena sedang telah di assign ke user atau sudah memiliki permission");
+        }
         //
-        DB::table("roles")->where("id", $id)->delete();
-        return redirect()->back()->with("message", "Berhasil menghapus data");
+
+    }
+
+    function destroyAccess(Request $request , $id) {
+        try {
+            DB::beginTransaction();
+            DB::table("accesses")->where("role_id", $id)->delete();
+            DB::commit();
+            return redirect(route("permission.index"))->with("message", "Access berhasil dihapus");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with("error", $th);
+        }
     }
 }

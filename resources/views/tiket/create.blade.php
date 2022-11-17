@@ -17,31 +17,36 @@
                             <div class="form-group col-md">
                                 <label for="inputEmail4">Pengaduan</label>
                                 <input type="text" class="form-control" id="inputEmail4" placeholder="pengaduan"
-                                    name="title">
+                                    name="title" required>
+                                    {{ $errors->first('title') }}
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputState">Kategori</label>
-                            <select id="inputState" class="form-control" name="category_ticket_id">
-                                <option selected>Choose...</option>
+                            <select id="inputState" class="form-control" name="category_ticket_id" required>
+                                <option disabled>Choose...</option>
                                 @foreach ($category as $item)
                                     <option value="{{ $item->id }}">{{ $item->category }}</option>
                                 @endforeach
                             </select>
+                            {{ $errors->first('category_ticket_id') }}
                         </div>
                         <div class="form-group">
                             <label for="inputState">Severity</label>
-                            <select id="inputState" class="form-control" name="severity_id">
-                                <option selected>Choose...</option>
+                            <select id="inputState" class="form-control" name="severity_id" required>
+                                <option disabled>Choose...</option>
                                 @foreach ($severity as $item)
                                     <option value="{{ $item->id }}">{{ $item->severity }}</option>
                                 @endforeach
                             </select>
+                            <span class="text-danger">{{ $errors->first('severity_id') }}</span>
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                            {{ $errors->first('user_id') }}
                             <label for="">Deskripsi Pengaduan</label>
-                            <textarea class="form-control" id="summary-ckeditor" name="description"></textarea>
+                            <textarea class="form-control" id="summary-ckeditor" name="description" required></textarea>
+                            <p class="text-danger">{{ $errors->first('description') }}</p>
                             <label class="mt-4">File Browser</label>
                             <div class="custom-file mb-4">
                                 <input type="file" class="custom-file-input" id="customFile" name="fileName[]" multiple>

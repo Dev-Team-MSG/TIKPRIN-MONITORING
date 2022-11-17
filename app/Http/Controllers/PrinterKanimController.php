@@ -16,8 +16,21 @@ use App\Models\Printer;
 use App\DataTables\PrinterKanimDataTable;
 use Illuminate\Database\Eloquent\Builder;
 
+use function App\Helpers\cek_akses_user;
+
 class PrinterKanimController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
+
     
     /**
      * Display a listing of the resource.
@@ -49,6 +62,9 @@ class PrinterKanimController extends Controller
      */
     public function create()
     {
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         // $printers = \App\Models\Printer::get();
         // $kanimId = 1;
         // $printers = Printer::whereDoesntHave('kanims.id', function (Builder $query) {
@@ -69,6 +85,9 @@ class PrinterKanimController extends Controller
      */
     public function store(Request $request)
     {
+        if($this->cek->tambah() != 1) {
+            abort(403);
+        }
         $new_printerkanim = new \App\Models\PrinterKanim;
         $new_printerkanim->printer_id = $request->get('printer_id');
         $new_printerkanim->kanim_id = $request->get('kanim_id');
@@ -119,6 +138,9 @@ class PrinterKanimController extends Controller
      */
     public function destroy($id)
     {
+        if($this->cek->hapus != 1) {
+            abort(403);
+        }
         $printeronkanim = \App\Models\PrinterKanim::findOrFail($id);
         $printeronkanim->delete();
         return redirect()->back()->with('message', 'Relokasi Berhasil dihapus');
