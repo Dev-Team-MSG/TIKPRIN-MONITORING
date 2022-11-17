@@ -7,7 +7,8 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/prism/prism.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-    <div class="section-body">
+    @endpush
+        <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="button-action" style="margin-bottom: 20px">

@@ -32,31 +32,35 @@ class KanimDataTable extends DataTable
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $action = '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
-                $action .= '<a href="#" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i>
-                <form action='.route('kanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">
+                $action = '<form action='.route('kanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">';
+                $action .= '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
+                <button type="submit" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i></button>
                     '.csrf_field().'
                     '.method_field('delete').'   
-                </form>
-            </a>';
+                </form>';
                 // $action .= '<a href='.route('kanims.show', $row->id).' class="btn btn-icon btn-info"><i class="far fas fa-info-circle"></i></a>';
                 $action .= '<script>
                 $(".swal-confirm").click(function(e) {
+                    e.preventDefault()
                     id = e.target.dataset.id;
                     swal({
                             title: "Yakin akan menghapus Data?",
                             text: "Data yang sudah dihapus tidak dapat dikembalikan!",
                             icon: "warning",
                             buttons: true,
+                            showCancelButton: true,
                             dangerMode: true,
                         })
                         .then((willDelete) => {
                             if (willDelete) {
                                 $(`#hapus${id}`).submit();
+                                console.log(willDelete)
+                                
                             } else {
                                 swal("Batal Hapus, Data Anda Aman!");
-                            }
+                            }$(`#kanim-table`).datatable().ajax.reload();
                         });
+
                 });
             </script>';
                 return $action;
