@@ -24,36 +24,37 @@ class KanimDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('created_at', function($row){
+            ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d-m-Y H:i:s');
             })
-            ->editColumn('updated_at', function($row){
+            ->editColumn('updated_at', function ($row) {
                 return $row->updated_at->format('d-m-Y H:i:s');
             })
             ->addIndexColumn()
-            ->addColumn('action', function($row){
-                $action = '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
-                $action .= '<a href="#" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i>
-                <form action='.route('kanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">
-                    '.csrf_field().'
-                    '.method_field('delete').'   
-                </form>
-            </a>';
+            ->addColumn('action', function ($row) {
+                $action = '<form action=' . route('kanims.destroy', $row->id) . ' id=hapus' . $row->id . ' method="POST">';
+                $action .= '<a href=' . route('kanims.edit', $row->id) . ' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
+                    ' . csrf_field() . '
+                    ' . method_field('delete') . '  
+                <button type="submit" data-id=' . $row->id . ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i></button>
+
+                </form>';
                 // $action .= '<a href='.route('kanims.show', $row->id).' class="btn btn-icon btn-info"><i class="far fas fa-info-circle"></i></a>';
                 $action .= '<script>
                 $(".swal-confirm").click(function(e) {
+                    e.preventDefault()
                     id = e.target.dataset.id;
                     swal({
                             title: "Yakin akan menghapus Data?",
                             text: "Data yang sudah dihapus tidak dapat dikembalikan!",
                             icon: "warning",
                             buttons: true,
+                            showCancelButton: true,
                             dangerMode: true,
                         })
                         .then((willDelete) => {
                             if (willDelete) {
-                                $(`#hapus${id}`).submit();
-                                console.log(willDelete)
+                                window.locator.reload()
                             } else {
                                 swal("Batal Hapus, Data Anda Aman!");
                             }
@@ -84,13 +85,13 @@ class KanimDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->parameters(['searchDelay' => 1000])
-                    ->setTableId('kanim-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1);
-                    // ->selectStyleSingle();
+            ->parameters(['searchDelay' => 1000])
+            ->setTableId('kanim-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            //->dom('Bfrtip')
+            ->orderBy(1);
+        // ->selectStyleSingle();
     }
 
     /**
@@ -101,7 +102,7 @@ class KanimDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            
+
             // Column::make('id'),
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('name'),
@@ -109,10 +110,10 @@ class KanimDataTable extends DataTable
             Column::make('created_at')->title('Dibuat Pada'),
             Column::make('updated_at')->title('Diperbaharui Pada'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(150)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(150)
+                ->addClass('text-center'),
         ];
     }
 

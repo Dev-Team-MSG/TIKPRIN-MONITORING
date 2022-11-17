@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\TicketCloseDataTable;
 use App\Http\Resources\TicketResource;
 use App\Models\CategoryTicket;
 use App\Models\Comment;
@@ -12,7 +13,9 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\DataTables;
+use App\DataTables\TicketOpenDataTable;
+use App\DataTables\TicketProgressDataTable;
+use Yajra\DataTables\Facades\DataTables;
 
 use function App\Helpers\cek_akses_user;
 
@@ -41,67 +44,68 @@ class TicketController extends Controller
     }
 
 
-    public function showCloseTicket(Request $request)
+    public function showCloseTicket(Request $request, TicketCloseDataTable $dataTable)
     {
         try {
-            //code...
-            if (Auth::user()->roles[0]->name == "engineer") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("assign_id", Auth::user()->id)->get();
-            } else if (Auth::user()->roles[0]->name == "kanim") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("owner_id", Auth::user()->id)->get();
-            } else {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
-            }
-            // $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
-            // dd($data);
-            if ($request->ajax()) {
-                return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
-                        $cat = $ticket->category->category;
-                        $span = '';
-                        if ($cat == "Request ink/print-head") {
-                            $span = '<span class="badge badge-primary">' . strtoupper($cat) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-secondary">' . strtoupper($cat) . '</span>';
-                        }
-                        return $span;
-                    })
-                    ->addColumn("pelapor", function (Ticket $ticket) {
-                        return $ticket->owner;
-                    })
-                    ->addColumn("permasalahan", function (Ticket $ticket) {
-                        if (strlen($ticket->description) > 50) {
-                            $str = substr($ticket->description, 0, 7) . '...';
-                            return $str;
-                        }
-                        return $ticket->description;
-                    })
-                    ->addColumn("luarbiasa", function (Ticket $ticket) {
-                        $status = $ticket->status;
-                        $span = '';
-                        if ($status == "open") {
-                            $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
-                        } else if ($status == "progress") {
-                            $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        }
-                        return $span;
-                    })->escapeColumns([])
-                    ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
-                        return $ticket->created_at->format('d/m/y h:m:s');
-                    })
-                    ->addColumn('action', function ($row) {
-                        // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        // return $btn;
-                    })
-                    ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
-                    ->make(true);
-            }
+            // //code...
+            // if (Auth::user()->roles[0]->name == "engineer") {
+            //     $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("assign_id", Auth::user()->id)->get();
+            // } else if (Auth::user()->roles[0]->name == "kanim") {
+            //     $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->where("owner_id", Auth::user()->id)->get();
+            // } else {
+            //     $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
+            // }
+            // // $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "close")->get();
+            // // dd($data);
+            // if ($request->ajax()) {
+            //     return DataTables::of($data)
+            //         ->addIndexColumn()
+            //         ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
+            //             $cat = $ticket->category->category;
+            //             $span = '';
+            //             if ($cat == "Request ink/print-head") {
+            //                 $span = '<span class="badge badge-primary">' . strtoupper($cat) . '</span>';
+            //             } else {
+            //                 $span = '<span class="badge badge-secondary">' . strtoupper($cat) . '</span>';
+            //             }
+            //             return $span;
+            //         })
+            //         ->addColumn("pelapor", function (Ticket $ticket) {
+            //             return $ticket->owner;
+            //         })
+            //         ->addColumn("permasalahan", function (Ticket $ticket) {
+            //             if (strlen($ticket->description) > 50) {
+            //                 $str = substr($ticket->description, 0, 7) . '...';
+            //                 return $str;
+            //             }
+            //             return $ticket->description;
+            //         })
+            //         ->addColumn("luarbiasa", function (Ticket $ticket) {
+            //             $status = $ticket->status;
+            //             $span = '';
+            //             if ($status == "open") {
+            //                 $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
+            //             } else if ($status == "progress") {
+            //                 $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
+            //             } else {
+            //                 $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
+            //             }
+            //             return $span;
+            //         })->escapeColumns([])
+            //         ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
+            //             return $ticket->created_at->format('d/m/y h:m:s');
+            //         })
+            //         ->addColumn('action', function ($row) {
+            //             // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+            //             return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
+            //             // return $btn;
+            //         })
+            //         ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
+            //         ->make(true);
+            // }
 
-            return view("tiket.close");
+            // return view("tiket.close");
+            return $dataTable->render("tiket.close");
         } catch (\Throwable $th) {
             //throw $th;
             abort(500);
@@ -110,136 +114,22 @@ class TicketController extends Controller
 
     }
 
-    public function showProgressTicket(Request $request)
+    public function showProgressTicket(TicketProgressDataTable $dataTable)
     {
         try {
-            //code...
-            if (Auth::user()->roles[0]->name == "engineer") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->where("assign_id", Auth::user()->id)->get();
-            } else if (Auth::user()->roles[0]->name == "kanim") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->where("owner_id", Auth::user()->id)->get();
-            } else {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "progress")->get();
-            }
-            // dd($data);
-            if ($request->ajax()) {
-                return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
-                        $cat = $ticket->category->category;
-                        $span = '';
-                        if ($cat == "Request ink/print-head") {
-                            $span = '<span class="badge badge-primary">' . strtoupper($cat) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-secondary">' . strtoupper($cat) . '</span>';
-                        }
-                        return $span;
-                    })
-                    ->addColumn("pelapor", function (Ticket $ticket) {
-                        return $ticket->owner;
-                    })
-                    ->addColumn("permasalahan", function (Ticket $ticket) {
-                        if (strlen($ticket->description) > 50) {
-                            $str = substr($ticket->description, 0, 7) . '...';
-                            return $str;
-                        }
-                        return $ticket->description;
-                    })
-                    ->addColumn("luarbiasa", function (Ticket $ticket) {
-                        $status = $ticket->status;
-                        $span = '';
-                        if ($status == "open") {
-                            $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
-                        } else if ($status == "progress") {
-                            $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        }
-                        return $span;
-                    })->escapeColumns([])
-                    ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
-                        return $ticket->created_at->format('d/m/y h:m:s');
-                    })
-                    ->addColumn('action', function ($row) {
-                        // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        // return $btn;
-                    })
-                    ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
-                    ->make(true);
-            }
-            return view("tiket.progress");
+            return $dataTable->render("tiket.progress");
         } catch (\Throwable $th) {
-            //throw $th;
             abort(500);
         }
         // dd(Auth::user()->roles[0]->name);
 
     }
 
-    public function showOpenTicket(Request $request)
+    public function showOpenTicket(Request $request, TicketOpenDataTable $dataTable)
     {
         try {
-            //code...
-            if (Auth::user()->roles[0]->name == "engineer") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
-            } else if (Auth::user()->roles[0]->name == "kanim") {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->where("owner_id", Auth::user()->id)->get();
-            } else {
-                $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
-            }
-            // $data = Ticket::with(["category", "owner"])->select("created_at", "no_ticket", "owner_id", "title", "status", "description", "category_ticket_id")->where("status", "open")->get();
-            // dd($data);
-            if ($request->ajax()) {
-                return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn("Jenis Pengaduan", function (Ticket $ticket) {
-                        $cat = $ticket->category;
-
-                        $span = '';
-                        if ($cat->id == 1) {
-                            $span = '<span class="badge badge-primary">' . strtoupper($cat->category) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-secondary">' . strtoupper($cat->category) . '</span>';
-                        }
-                        return $span;
-                    })
-                    ->addColumn("pelapor", function (Ticket $ticket) {
-                        return $ticket->owner;
-                    })
-                    ->addColumn("permasalahan", function (Ticket $ticket) {
-                        if (strlen($ticket->description) > 50) {
-                            $str = substr($ticket->description, 0, 7) . '...';
-                            return $str;
-                        }
-                        return $ticket->description;
-                    })
-                    ->addColumn("Status", function (Ticket $ticket) {
-                        $status = $ticket->status;
-                        $span = '';
-                        if ($status == "open") {
-                            $span = '<span class="badge badge-success">' . strtoupper($status)  . '</span>';
-                        } else if ($status == "progress") {
-                            $span = '<span class="badge badge-warning">' . strtoupper($status) . '</span>';
-                        } else {
-                            $span = '<span class="badge badge-danger">' . strtoupper($status) . '</span>';
-                        }
-                        return $span;
-                    })->escapeColumns([])
-                    ->addColumn("Tanggal Pengaduan", function (Ticket $ticket) {
-                        return $ticket->created_at->format('d/m/y h:m:s');
-                    })
-                    ->addColumn('action', function ($row) {
-                        // $btn = '<a href="javascript:void(0)" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        return '<a href="' . route("detail-ticket", [$row->no_ticket]) . '" class="edit btn btn-light"><i class="fa-regular fa-comments"></i></a>';
-                        // return $btn;
-                    })
-                    ->rawColumns(['action', "Jenis Pengaduan", "created_at"])
-                    ->make(true);
-            }
-            return view("tiket.open");
+            return $dataTable->render("tiket.open");
         } catch (\Throwable $th) {
-            //throw $th;
             abort(500);
         }
     }

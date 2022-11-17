@@ -108,7 +108,7 @@ class AccessController extends Controller
             }
         }
         if (isset($insertData)) {
-            DB::table("accesses")->insert($insertData);
+             DB::table("accesses")->insert($insertData);
         }
 
 

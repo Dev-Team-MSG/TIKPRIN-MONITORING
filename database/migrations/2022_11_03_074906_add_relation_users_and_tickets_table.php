@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::table('tickets', function (Blueprint $table) {
             //
             $table->foreign("owner_id")->references("id")->on("users")->onDelete("restrict");
+            $table->foreign("assign_id")->references("id")->on("users")->onDelete("restrict");
         });
     }
 
@@ -28,9 +29,9 @@ return new class extends Migration
     public function down()
     {
         //
-        Schema::table('accesses', function (Blueprint $table) {
+        Schema::table('tickets', function (Blueprint $table) {
 
-            $table->dropColumn("owner_id");
+            $table->dropForeign(["owner_id", "assign_id"]);
         });
     }
 };
