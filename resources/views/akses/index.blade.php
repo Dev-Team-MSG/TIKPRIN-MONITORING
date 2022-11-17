@@ -7,13 +7,34 @@
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <button type="button" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#formModal">
+                    <button type="button" class="btn btn-icon icon-left btn-primary" data-toggle="modal"
+                        data-target="#formModal">
                         Tambah Role
                     </button>
                     <hr>
                 </div>
             </div>
         </div>
+        @if (session('message'))
+            <div class="alert alert-success alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('message') }}
+                </div>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
 
         <table class="table table-striped table-bordered table-sm">
             <tr>
@@ -31,10 +52,9 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->name }}</td>
                     <td>
-                        <form action="{{ route('permission.destroy', $item->id) }}" method="POST"
-                            class="inline">
-                            <a href="{{ route('permission.edit', $item->id) }}"
-                                class="btn btn-warning edit-role" {{-- data-target="#formEditModal"  --}}>Edit</a>
+                        <form action="{{ route('permission.destroy', $item->id) }}" method="POST" class="inline">
+                            <a href="{{ route('permission.edit', $item->id) }}" class="btn btn-warning edit-role"
+                                {{-- data-target="#formEditModal"  --}}>Edit</a>
                             @csrf
                             @method('delete')
                             <button class="btn btn-danger">Delete</button>
@@ -61,7 +81,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="myForm" name="myForm" method="POST" class="form-horizontal" novalidate action="{{route("roles.store")}}">
+                    <form id="myForm" name="myForm" method="POST" class="form-horizontal" novalidate
+                        action="{{ route('roles.store') }}">
                         @csrf
                         <div class="form-group
                     col-md">
@@ -80,6 +101,60 @@
     </div>
 @endsection
 
-@push('page-scripts')
-@endpush
+{{-- @push('page-scripts')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $("#btn-save").click(function(e) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        e.preventDefault();
+        var permit = []
+        $("input:checkbox[name=permissions]:checked").each(function() {
+            permit.push($(this).val());
+        });
+        var formData = {
+            name: jQuery('#inputrole').val(),
+            permissions: permit
+        };
+        var state = $('#btn-save').val();
+        var type = "POST";
+        var ajaxurl = "roles";
+
+        $.ajax({
+            type: type,
+            url: ajaxurl,
+            data: formData,
+            dataType: 'json',
+            success: function(data) {
+                console.log()
+                Swal.fire({
+                    icon: 'success',
+                    title: "Data berhasil ditambahkan",
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Yes'
+                }).then((_) => {
+                    // console.log("result : " + result.role)
+                    window.location.reload()
+
+
+                })
+
+            },
+            error: function(data) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: data.responseJSON.message,
+                    showCancelButton: true,
+                })
+
+            }
+        });
+    });
+</script>
+@endpush --}}
 @section('scripts')

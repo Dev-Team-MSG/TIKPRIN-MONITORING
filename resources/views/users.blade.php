@@ -22,53 +22,6 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="col-12">
-                <div class="card-body"> --}}
-                    
-                {{-- </div>
-            </div> --}}
-
-
-        {{-- Old Table --}}
-        {{-- <div class="row">
-            <div class="col-12 col-md-12 col-lg-12">
-                <div class="button-action" style="margin-bottom: 20px">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
-                            class="far fa-user"></i>
-                        IMPORT
-                    </button>
-                    <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
-                            class="far fa-edit"></i> Tambah User</a>
-                    <hr>
-                    <form action="{{ route('users') }}">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group mb-3">
-                                    <input value="{{ Request::get('keyword') }}" name="keyword"
-                                        class="form-control col-md-10" type="text"
-                                        placeholder="Filter berdasarkan email" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <input {{ Request::get('roles') == 'admin' ? 'checked' : '' }} value="admin" name="roles"
-                                    type="radio" class="form-group" id="admin">
-                                <label for="admin">Admin</label>
-
-                                <input {{ Request::get('roles') == 'kanim' ? 'checked' : '' }} value="kanim" name="roles"
-                                    type="radio" class="form-group" id="kanim">
-                                <label for="kanim">Kanim</label>
-
-                                <input {{ Request::get('roles') == 'eos' ? 'checked' : '' }} value="engineer" name="roles"
-                                    type="radio" class="form-group" id="eos">
-                                <label for="eos">EOS</label>
-                                <input type="submit" value="Filter" class="btn btn-primary">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div> --}}
-
         @if (session('message'))
             <div class="alert alert-success alert-dismissible show fade">
                 <div class="alert-body">
@@ -82,8 +35,6 @@
         {{-- tabel --}}
         {{$dataTable->table()}}
         
-    </div>
-    </div>
     </div>
 @endsection
 @section('modal')
@@ -126,31 +77,5 @@
     <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
 @endpush
 @push('after-scripts')
-    {{-- <script>
-        $(".swal-confirm").click(function(e) {
-            id = e.target.dataset.id;
-            swal({
-                    title: 'Yakin akan menghapus Data?',
-                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        // swal('Berhasil! Data Anda telah terhapus!', {
-                        //   icon: 'success',
-                        // });
-                        $(`#hapus${id}`).submit();
-                    } else {
-                        swal('Batal Hapus, Data Anda Aman!');
-                    }
-                });
-        });
-    </script> --}}
-    {{-- <script>
-    $('#import').on('shown.bs.import', function() {
-        $(document).off('focusin.import');
-    });
-    </script> --}}
+   
 @endpush

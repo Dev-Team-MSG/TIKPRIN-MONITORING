@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TicketsExport;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -86,7 +88,7 @@ class ReportController extends Controller
     }
 
     public function reportTiket(Request $request) {
-        dd($request);
+        return (new TicketsExport($request->tanggal_dari, $request->tanggal_sampai, $request->status))->download('tickets.xlsx');
     }
     public function reportRelokasiPrinter(Request $request) {
         dd($request);

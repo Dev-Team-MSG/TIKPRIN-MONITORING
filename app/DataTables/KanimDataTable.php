@@ -24,10 +24,10 @@ class KanimDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('created_at', function($row){
+            ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d-m-Y H:i:s');
             })
-            ->editColumn('updated_at', function($row){
+            ->editColumn('updated_at', function ($row) {
                 return $row->updated_at->format('d-m-Y H:i:s');
             })
             ->addIndexColumn()
@@ -86,13 +86,13 @@ class KanimDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->parameters(['searchDelay' => 1000])
-                    ->setTableId('kanim-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1);
-                    // ->selectStyleSingle();
+            ->parameters(['searchDelay' => 1000])
+            ->setTableId('kanim-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            //->dom('Bfrtip')
+            ->orderBy(1);
+        // ->selectStyleSingle();
     }
 
     /**
@@ -103,7 +103,7 @@ class KanimDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            
+
             // Column::make('id'),
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('name'),
@@ -111,10 +111,10 @@ class KanimDataTable extends DataTable
             Column::make('created_at')->title('Dibuat Pada'),
             Column::make('updated_at')->title('Diperbaharui Pada'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(150)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(150)
+                ->addClass('text-center'),
         ];
     }
 

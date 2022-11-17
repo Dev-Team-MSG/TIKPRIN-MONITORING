@@ -23,7 +23,12 @@ class AuthController extends Controller
         //         return redirect('dashboard');
         //     }
         // }
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+        $user = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+        if($user){
+            if(count(Auth::user()->roles) == 0) {
+                Auth::logout();
+                return redirect()->back()->with("message", "anda tidak memiliki role untuk mengakses dashboard");
+            }
             return redirect('dashboard');
         }
         return redirect('/')->with('message','Email atau Password Salah');

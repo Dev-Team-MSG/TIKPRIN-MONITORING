@@ -28,25 +28,29 @@ class PrinterDataTable extends DataTable
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $action = '<a href='.route('printers.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
-                $action .= '<a href="#" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i>
-                <form action='.route('printers.destroy', $row->id).' id=hapus'.$row->id.' method="POST">
+                $action = '<form action='.route('printers.destroy', $row->id).' id=hapus'.$row->id.' method="POST">';
+                $action .= '
+                <a href='.route('printers.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
                     '.csrf_field().'
-                    '.method_field('delete').'   
-                </form>
-            </a>';
-                $action .= '<a href='.route('printers.show', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>';
+                    '.method_field('delete').' 
+                    <button type="submit" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i></button>
+                    <a href='.route('printers.show', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>
+                </form>';
+                // $action .= '';
                 $action .= '<script>
                 $(".swal-confirm").click(function(e) {
-                    id = e.target.dataset.id;
+                    e.preventDefault()
+                    id = e.target.dataset.id
                     swal({
                             title: "Yakin akan menghapus Data?",
                             text: "Data yang sudah dihapus tidak dapat dikembalikan!",
                             icon: "warning",
                             buttons: true,
+                            showCancelButton: true,
                             dangerMode: true,
                         })
                         .then((willDelete) => {
+
                             if (willDelete) {
                                 $(`#hapus${id}`).submit();
                             } else {

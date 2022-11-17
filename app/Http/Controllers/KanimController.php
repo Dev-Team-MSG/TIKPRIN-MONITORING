@@ -13,10 +13,24 @@ use App\Models\Ticket;
 use Illuminate\Support\Facades\Validator;
 use App\DataTables\KanimDataTable;
 use Spatie\Permission\Models\Kanim;
+
+use function App\Helpers\cek_akses_user;
+
 // use Yajra\Datatables\Datatables;
 
 class KanimController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,16 +40,6 @@ class KanimController extends Controller
     {
         // dd($data);    
         return $dataTable->render('kanims.index');
-
-        // $kanims = \App\Models\Kanim::paginate(10);
-        // $filterKeyword = $request->get('keyword');
-        // if($filterKeyword){
-        //     $kanims = \App\Models\Kanim::where('name', 'LIKE', "%$filterKeyword%")->paginate(10);
-        // }
-        // return view('kanims.index', ['kanims' => $kanims]);
-
-
-
     }
 
     public function import(Request $request)
@@ -76,6 +80,9 @@ class KanimController extends Controller
      */
     public function create()
     {
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         return view('kanims.create');
     }
 
@@ -87,7 +94,9 @@ class KanimController extends Controller
      */
     public function store(Request $request)
     {
-        
+        if($this->cek->tambah != 1) {
+            abort(403);
+        }
         $validation = \Validator::make($request->all(),[
             "name" => "required|min:5|max:35",
             "network" => "required|min:5|max:15|unique:kanims|ip"
@@ -124,6 +133,9 @@ class KanimController extends Controller
      */
     public function show($id)
     {
+        if($this->cek->akses != 1) {
+            abort(403);
+        }
         $kanim = \App\Models\kanim::findOrFail($id);
         
         return view('kanims.show', ['kanim' => $kanim]);
@@ -137,6 +149,9 @@ class KanimController extends Controller
      */
     public function edit($id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $kanim_to_edit = \App\Models\Kanim::findOrFail($id);
         return view('kanims.edit', ['kanim' => $kanim_to_edit]);
     }
@@ -150,6 +165,9 @@ class KanimController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($this->cek->edit != 1) {
+            abort(403);
+        }
         $validation = \Validator::make($request->all(),[
             "name" => "required|min:5|max:35",
             "network" => "required|min:7|max:15|ip"
@@ -190,6 +208,11 @@ class KanimController extends Controller
      */
     public function destroy($id)
     {
+        if($this->cek->hapus != 1) {
+            // abort(403);
+            return redirect()->back()->with("error", "Anda tidak memiliki akses untuk menghapus data");
+            // return response()->json("error");
+        }
         $kanim = \App\Models\Kanim::findOrFail($id);
         $kanim->delete();
         return redirect()->route('kanims.index')->with('message', 'Kanim Berhasil diHapus');

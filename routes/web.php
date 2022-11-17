@@ -12,6 +12,7 @@ use App\Http\Controllers\PrinterKanimController;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ReportController;
@@ -36,7 +37,7 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 
 
 // Route::group(['middleware' => 'CekLoginMiddleware'], function(){
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', function () {
         return view('index');
     });
@@ -66,24 +67,23 @@ Route::group(['middleware' => 'auth'], function(){
     //Route Tiket
     Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");
     // Route::get("/tiket", [TicketController::class, "buatTiket"])->name("view-create-ticket");
+    Route::get("/tiket/create", [TicketController::class, "buatTiket"])->name("view-create-ticket");
     Route::post("/tiket", [TicketController::class, "simpanTiket"])->name("store-create-ticket");
-    Route::get("/tiket/{no_ticket}",[TicketController::class, "detailTicket"])->name("detail-ticket");
-    Route::post("/ticket/{no_ticket}/ambil", [TicketController::class, "take"])->name("ambil-tiket");
-    Route::get("/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
-    Route::get("/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
-    Route::get("/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
-    
-    Route::resource("roles",RoleController::class);
+    Route::post("/ticket/{no_ticket}/comment", [CommentController::class, "storeComment"])->name("store-comment");
+
+    Route::get("/tiket/detail/{no_ticket}", [TicketController::class, "detailTicket"])->name("detail-ticket");
+    Route::post("/tiket/ambil/{no_ticket}", [TicketController::class, "take"])->name("ambil-tiket");
+    Route::get("/tiket/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
+    Route::get("/tiket/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
+    Route::get("/tiket/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
+
+    // Route::resource("roles", RoleController::class);
+    Route::post("roles", [RoleController::class, "store"])->name("roles.store");
     Route::resource("permission", AccessController::class);
+    Route::delete("permission/delete-permission/{id}", [AccessController::class, "destroyAccess"])->name("delete-access");
     Route::resource("reports", ReportController::class);
     Route::post("reports-tiket", [ReportController::class, "reportTiket"])->name("reports.tiket");
     Route::post("reports-relokasi-printer", [ReportController::class, "reportRelokasiPrinter"])->name("reports.relokasi-printer");
     // Route::get("konfigurasi/akses", [AccessController::class, "create"]);
 });
 Route::resource("menus", MenuController::class);
-
-
-
-
-
-

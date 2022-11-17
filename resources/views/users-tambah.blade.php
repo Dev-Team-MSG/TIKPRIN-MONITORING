@@ -123,8 +123,7 @@
                                         <label class="d-block">Roles
                                         </label>
                                         @foreach ($roles as $role)
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="{{$role->id}}"
-                                       > {{$role->name}}<br>
+                                        <input onchange="collapseKanim()" type="radio" name="roles" value="{{$role->id}}"> {{$role->name}}<br>
                                         @endforeach
                                         
                                         {{-- <input onchange="collapseKanim()" type="radio" name="roles" value="1"
@@ -135,7 +134,7 @@
                                             @if (isset($user->roles[0]) && $user->roles[0]->name == 'engineer') checked @endif> EOS<br>
                                         <div class="invalid-feedback">
                                             {{ $errors->first('roles') }}
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="form-group" id="kanim">
                                         <label for="exampleInputEmail1">Kanim </label>
