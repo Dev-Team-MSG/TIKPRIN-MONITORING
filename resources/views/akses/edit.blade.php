@@ -22,16 +22,28 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="button-action" style="margin-bottom: 20px">
                     <div class="row">
-                        <a href="#" class="btn btn-icon icon-left btn-primary mr-2"></i> Role:
+                        <<<<<<< HEAD <a href="#" class="btn btn-icon icon-left btn-primary mr-2"></i> Role:
                             {{ $role->name }}</a>
 
-                        <button class="btn btn-danger btn-flat btn-sm remove-access" data-id="{{ request()->permission }}"
-                            data-action="{{ route('delete-access', request()->permission) }}"> Delete</button>
-                        {{-- <form action="{{ route('delete-access', request()->permission) }}" method="POST" class="inline">
+                            <button class="btn btn-danger btn-flat btn-sm remove-access"
+                                data-id="{{ request()->permission }}"
+                                data-action="{{ route('delete-access', request()->permission) }}"> Delete</button>
+                            {{-- <form action="{{ route('delete-access', request()->permission) }}" method="POST" class="inline">
                             @csrf
                             @method('delete')
                             <button class="btn btn-danger">Delete</button>
                         </form> --}}
+                            =======
+                            <a href="" class="btn btn-icon icon-left btn-primary mr-2"><i class="far fa-edit"></i>
+                                Role:
+                                {{ $role->name }}</a>
+                            <form action="{{ route('delete-access', request()->permission) }}" method="POST"
+                                class="inline">
+                                @csrf
+                                @method('delete')
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                            >>>>>>> 6db67e3c3943f0c3e6b28d3b8cf15543d62b8daf
                     </div>
                     <hr>
                 </div>

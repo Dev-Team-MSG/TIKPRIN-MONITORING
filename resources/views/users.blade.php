@@ -8,18 +8,18 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
         <link rel="stylesheet"
             href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-        <div class="section-body">
-            <div class="row">
-                <div class="col-12 col-md-12 col-lg-12">
-                    <div class="button-action" style="margin-bottom: 20px">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
-                                class="far fa-user"></i>
-                            IMPORT
-                        </button>
-                        <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
-                                class="far fa-edit"></i> Tambah User</a>
-                        <hr>
-                    </div>
+    @endpush
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="button-action" style="margin-bottom: 20px">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
+                            class="far fa-user"></i>
+                        IMPORT
+                    </button>
+                    <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
+                            class="far fa-edit"></i> Tambah User</a>
+                    <hr>
                 </div>
             </div>
             @if (session('message'))
@@ -37,7 +37,21 @@
             {{ $dataTable->table() }}
 
         </div>
-    @endsection
+        @if (session('message'))
+            <div class="alert alert-success alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('message') }}
+                </div>
+            </div>
+        @endif
+        {{-- tabel --}}
+        {{ $dataTable->table() }}
+
+    </div>
+@endsection
 @section('modal')
     <div class="modal fade" id="import" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -98,5 +112,4 @@
     </script>
 @endpush
 @push('after-scripts')
-
 @endpush

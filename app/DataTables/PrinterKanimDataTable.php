@@ -28,7 +28,7 @@ class PrinterKanimDataTable extends DataTable
         })
         ->addIndexColumn()
         ->addColumn('action', function($row){
-            $action = '<a href='.route('printerkanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
+            $action = '<a href='.route('printerkanims.edit', $row->printers->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
             $action .= '<a href="#" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i>
             <form action='.route('printerkanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">
                 '.csrf_field().'
@@ -106,8 +106,8 @@ class PrinterKanimDataTable extends DataTable
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             // Column::make('printer_id')->printers('serial_number')->title('SN Printer'),
-            'serial_number' => new Column(['title'=>"SN Printer", 'data'=>'printers.serial_number', 'name'=>'printers.serial_number']),
-            'kanim_name' => new Column(['title'=>"Kantor Imigrasi", 'data'=>'kanims.name', 'name'=>'kanims.name']),
+            'serial_number' => new Column(['title'=>"SN Printer", 'data'=>'printers.serial_number', 'name'=>'printers.serial_number', 'id'=>'printers.id']),
+            'kanim_name' => new Column(['title'=>"Kantor Imigrasi", 'data'=>'kanims.name', 'name'=>'kanims.name', 'id'=>'printers.id']),
             Column::make('created_at')->title('Di Relokasi Pada'),
             // Column::make('updated_at'),
             Column::computed('action')

@@ -20,17 +20,17 @@ class AccessController extends Controller
 {
     // protected $main_menu;
     // protected $sub_menu;
-    protected $cek;
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (Auth::check()) {
-                $this->cek = cek_akses_user();
-            }
-            //     // $this->sub_menu = sub_menu();
-            return $next($request);
-        });
-    }
+    // protected $cek;
+    // public function __construct()
+    // {
+    //     $this->middleware(function ($request, $next) {
+    //         if (Auth::check()) {
+    //             $this->cek = cek_akses_user();
+    //         }
+    //         //     // $this->sub_menu = sub_menu();
+    //         return $next($request);
+    //     });
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -129,7 +129,7 @@ class AccessController extends Controller
      */
     public function edit($role_id)
     {
-        
+        //
         // if($this->cek->edit != 1) {
         //     abort(403);
         // }
@@ -147,7 +147,7 @@ class AccessController extends Controller
      */
     public function update(Request $request, $role_id)
     {
-        
+        //
         // if($this->cek->edit != 1) {
         //     abort(403);
         // }
@@ -185,14 +185,14 @@ class AccessController extends Controller
     public function destroy($id)
     {
         if ($this->cek->hapus != 1) {
-            return redirect()->back()->with("error", "Anda tidak memiliki akses ke fitur ini");
+            abort(403);
         }
         try {
             //code...
             DB::beginTransaction();
             DB::table("roles")->where("id", $id)->delete();
             DB::commit();
-            return redirect()->back()->with("message", "Data berhasil dihapus !");
+            return redirect()->back()->with("message", "Berhasil menghapus data");
         } catch (\Throwable $th) {
             DB::rollBack();
             //throw $th;
