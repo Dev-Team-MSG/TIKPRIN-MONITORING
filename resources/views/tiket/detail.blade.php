@@ -36,7 +36,7 @@
                                     @endforeach
                                     @if ($permission->edit == 1)
                                         @if ($data->status == 'progress')
-                                            @if (Auth::user()->roles[0]->name == "kanim")
+                                            @if (Auth::user()->roles[0]->name == 'kanim')
                                                 <div class="row mt-5">
                                                     <div class="col-md">
                                                         <button class="btn btn-danger btn-flat btn-sm close-tiket"
@@ -347,81 +347,7 @@
         })
     });
 
-    // function ambilTiket(link) {
-    //     swal({
-    //         icon: 'warning',
-    //         title: 'Benar Ingin Hapus data?',
-    //         text: 'data tidak dapat dikembalikan',
-    //         buttons: ["No", "Yes"],
-    //         dangerMode: true,
-    //     }).then(data => {
-    //         console.log(data);
-    //         if (data) {
-    //             // window.location = $(link).attr("action")
-    //         } else {
-    //             swal("Tiket gagal diambil")
-    //         }
-    //     })
-    // }
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
-    // $("#status_id").on("change", function() {
-    //     console.log("berubah")
-    //     let field = $(this).attr("name");
-    //     let value = this.value;
-    //     let ticket_id = $(this).attr("data-id");
-    //     let message = `Changed ${field} to ${value}`;
-    //     let data = {
-    //         _token: '{{ csrf_token() }}',
-    //         id: ticket_id,
-    //         user_id: {{ Auth::user()->id }},
-    //         message: message,
-    //     };
-    //     data["status"] = value;
 
-
-    //     Swal.fire({
-    //         icon: 'warning',
-    //         title: "Anda yakin ingin mengubah status tiket ?",
-    //         showCancelButton: true,
-    //         showDenyButton: false,
-    //         confirmButtonText: 'Yes'
-    //     }).then((res) => {
-    //         $.ajax({
-    //             type: "POST",
-    //             data: data,
-    //             url: "{{ route('update-tiket') }}",
-    //             dataType: 'json',
-    //             success: function(result) {
-    //                 console.log(result)
-    //                 Swal.fire({
-    //                     icon: 'success',
-    //                     title: `Status tiket berhasil di ubah menjadi ${data["status"]}`,
-    //                     showDenyButton: false,
-    //                     showCancelButton: false,
-    //                     confirmButtonText: 'Yes'
-    //                 }).then(() => {
-    //                     window.location.reload()
-    //                 })
-
-    //             },
-    //             error: function(data) {
-    //                 Swal.fire({
-    //                     icon: 'warning',
-    //                     title: data.responseJSON.message,
-    //                     showCancelButton: true,
-    //                 })
-
-    //             }
-    //         });
-    //     })
-
-    //     // // Send data using ajax
-
-    // });
     CKEDITOR.replace('summary-ckeditor', {
         filebrowserUploadMethod: 'form',
         toolbar: [{
