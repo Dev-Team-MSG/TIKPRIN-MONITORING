@@ -198,7 +198,7 @@ class TicketController extends Controller
     public function buatTiket()
     {
         if($this->cek->tambah != 1) {
-            abort(403);
+            return redirect()->back()->with("error", "anda Tidak memiliki akses");
         }
         try {
 

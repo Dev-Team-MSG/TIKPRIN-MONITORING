@@ -68,7 +68,7 @@ class RoleController extends Controller
             return redirect(route("permission.index"))->with("message", "Data berhasil disimpan");
         } catch (\Throwable $th) {
             //throw $th;
-            dd($th);
+            abort(500);
         }
     }
 

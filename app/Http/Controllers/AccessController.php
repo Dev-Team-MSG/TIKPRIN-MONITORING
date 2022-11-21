@@ -40,6 +40,7 @@ class AccessController extends Controller
     {
 
         $role = Role::get();
+        
         return view("akses.index", compact("role"));
     }
 
@@ -128,7 +129,7 @@ class AccessController extends Controller
      */
     public function edit($role_id)
     {
-        //
+        
         // if($this->cek->edit != 1) {
         //     abort(403);
         // }
@@ -146,7 +147,7 @@ class AccessController extends Controller
      */
     public function update(Request $request, $role_id)
     {
-        //
+        
         // if($this->cek->edit != 1) {
         //     abort(403);
         // }
@@ -184,14 +185,14 @@ class AccessController extends Controller
     public function destroy($id)
     {
         if ($this->cek->hapus != 1) {
-            abort(403);
+            return redirect()->back()->with("error", "Anda tidak memiliki akses ke fitur ini");
         }
         try {
             //code...
             DB::beginTransaction();
             DB::table("roles")->where("id", $id)->delete();
             DB::commit();
-            return redirect()->back()->with("message", "Berhasil menghapus data");
+            return redirect()->back()->with("message", "Data berhasil dihapus !");
         } catch (\Throwable $th) {
             DB::rollBack();
             //throw $th;
