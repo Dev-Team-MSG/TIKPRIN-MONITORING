@@ -179,6 +179,10 @@ class UserController extends Controller
             abort(403);
         }
         try {
+            $ada = Ticket::where("assign_id", "=", $id)->get();
+            if($ada) {
+                return redirect()->back()->with("error", "Terdapat tiket yang ditugaskan ke user ini");
+            }
             //code...
             DB::beginTransaction();
             $user = \App\Models\User::findOrFail($id);
@@ -190,7 +194,6 @@ class UserController extends Controller
             return redirect()->back()->with('message', 'Data Berhasil dihapus');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             //throw $th;
             return redirect()->back()->with("error", "Data user tidak bisa dihapus, karena memiliki transaksi");
         }

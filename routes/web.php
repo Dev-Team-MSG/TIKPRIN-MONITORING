@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get("/tiket/detail/{no_ticket}", [TicketController::class, "detailTicket"])->name("detail-ticket");
     Route::post("/tiket/ambil/{no_ticket}", [TicketController::class, "take"])->name("ambil-tiket");
+    Route::post("/tiket/close/{no_ticket}", [TicketController::class, "close"])->name("close-tiket");
     Route::get("/tiket/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
     Route::get("/tiket/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
     Route::get("/tiket/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");

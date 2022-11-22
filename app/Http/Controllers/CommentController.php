@@ -18,7 +18,6 @@ class CommentController extends Controller
         $comment->user_id = $request->user_id;
         $comment->no_ticket = $no_ticket;
         $comment->body = $request->body;
-        $comment->save();
         if ($request->hasFile("fileName")) {
             // return response()->json(['upload_file_not_found'], 400);
             $allowedfileExtension = ['pdf', 'jpg', 'png'];
@@ -30,8 +29,8 @@ class CommentController extends Controller
                 $extension = $file->getClientOriginalExtension();
 
                 $check = in_array($extension, $allowedfileExtension);
-
                 if ($check) {
+                    $comment->save();
                     foreach ($request->fileName as $mediaFiles) {
 
                         $path = $mediaFiles->store('public/images');
@@ -44,8 +43,12 @@ class CommentController extends Controller
                         $save->path = $filepath;
                         $comment->files()->save($save);
                     }
+                } else {
+                    return redirect()->back()->with("error", "Tipe file yang diupload tidak sesuai, anda hanya bisa mengirimkan file bertipe [pdf, jpg, png]");
                 }
             }
+        } else {
+            $comment->save();
         }
 
         // dd($comment->id);

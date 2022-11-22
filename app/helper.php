@@ -45,8 +45,9 @@ function cek_akses_user()
         ->where("accesses.role_id", "=", Auth::user()->roles[0]->id)
         ->where("menus.url", "LIKE" , $path[0] . "%")
         ->first();
+        
     if (!$cek) {
-        redirect(abort(404));
+        redirect(abort(403));
     } else {
         if ($cek->akses != 1) {
             redirect(abort(403));

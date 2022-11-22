@@ -40,6 +40,7 @@ class AccessController extends Controller
     {
 
         $role = Role::get();
+        
         return view("akses.index", compact("role"));
     }
 

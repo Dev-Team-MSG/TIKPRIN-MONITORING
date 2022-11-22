@@ -18,7 +18,7 @@
                                 <label for="inputEmail4">Pengaduan</label>
                                 <input type="text" class="form-control" id="inputEmail4" placeholder="pengaduan"
                                     name="title" required>
-                                    {{ $errors->first('title') }}
+                                {{ $errors->first('title') }}
                             </div>
                         </div>
                         <div class="form-group">
@@ -49,7 +49,7 @@
                             <p class="text-danger">{{ $errors->first('description') }}</p>
                             <label class="mt-4">File Browser</label>
                             <div class="custom-file mb-4">
-                                <input type="file" class="custom-file-input" id="customFile" name="fileName[]" multiple>
+                                <input type="file" class="custom-file-input" id="customFile" name="fileName[]">
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
@@ -61,9 +61,20 @@
     </section>
 @endsection
 @push('page-scripts')
+    <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
     <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
 
     <script>
+        @if (session('error'))
+            swal({
+                title: "Gagal Menghapus !",
+                text: "User memiliki tiket yang ditugaskan !",
+                icon: "error",
+                dangerMode: true,
+            })
+        @endif
         CKEDITOR.replace('summary-ckeditor', {
             filebrowserUploadMethod: 'form',
             toolbar: [{
