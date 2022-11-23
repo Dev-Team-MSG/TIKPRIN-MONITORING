@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\TicketOpenDataTable;
 use App\DataTables\TicketProgressDataTable;
+use App\Notifications\TicketNotification;
+use App\Notifications\TicketUpdateNotification;
+use Illuminate\Notifications\Notification;
 use Yajra\DataTables\Facades\DataTables;
 
 use function App\Helpers\cek_akses_user;
@@ -197,13 +200,13 @@ class TicketController extends Controller
 
     public function buatTiket()
     {
-        if($this->cek->tambah != 1) {
-            abort(403);
+        if ($this->cek->tambah != 1) {
+            return redirect()->back()->with("error", "anda Tidak memiliki akses");
         }
         try {
 
             // dd($this->cek);
-            
+
             //code...
             $category = CategoryTicket::all();
             $severity = Severity::all();
@@ -261,10 +264,10 @@ class TicketController extends Controller
             $ticket->status = "open";
             $ticket->due_datetime = Carbon::now()->addDays(7);
             // $ticket->close_datetime = $result;
-            $ticket->save();
             if ($request->hasFile("fileName")) {
+                // dd($request->hasFile("fileName"));
                 // return response()->json(['upload_file_not_found'], 400);
-                $allowedfileExtension = ['pdf', 'jpg', 'png'];
+                $allowedfileExtension = ['pdf', 'jpg', 'png', 'gif'];
                 $files = $request->file('fileName');
                 // dd($files);
                 $errors = [];
@@ -275,6 +278,7 @@ class TicketController extends Controller
                     $check = in_array($extension, $allowedfileExtension);
 
                     if ($check) {
+                        $ticket->save();
                         foreach ($request->fileName as $mediaFiles) {
 
                             $name = $mediaFiles->getClientOriginalName();
@@ -287,44 +291,24 @@ class TicketController extends Controller
                             $save = new File();
                             $save->filename = $name;
                             $save->path = $filepath;
+                            // dd($save->path);
                             $ticket->files()->save($save);
                         }
+                    }else {
+                        return redirect()->back()->with("error", "Format File tidak sesuai, anda hanya bisa mengupload file berformat [ pdf, jpg, png]");
                     }
                 }
+            }else {
+                $ticket->save();
             }
             // dd($request->filename);
-
+            
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketNotification($ticket));
             return redirect(route("detail-ticket", $ticket->no_ticket));
         } catch (\Throwable $th) {
             dd($request);
             abort(500);
-        }
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            //code...
-            if ($this->cek->tambah != 1) {
-                abort(403);
-            }
-            $ticket = new Ticket();
-            $ticket->owner = $request->user_id;
-            $ticket->no_ticket = "tiket" . $ticket->id;
-            // $ticket->assign_to = $request->assign_to;
-            $ticket->category_ticket_id = $request->category_ticket_id;
-            $ticket->severity_id = $request->severity_id;
-            $ticket->title = $request->title;
-            $ticket->description = $request->description;
-            $ticket->status = "open";
-            $result = date('d.m.Y', strtotime('+7 day', time()));
-            $ticket->due_datetime = $result;
-            // $ticket->close_datetime = $result;
-            $ticket->save();
-            return request()->json("data berhasil ditambahkan");
-        } catch (\Throwable $th) {
-            //throw $th;
-            return request()->json("Server Error", 500);
         }
     }
 
@@ -338,39 +322,45 @@ class TicketController extends Controller
             $ticket = Ticket::with(["category", "comments", "assign_to"])->where("no_ticket", $no_ticket)->first();
             $ticket->status = "progress";
             $ticket->assign_id = $request->user_id;
-            $ticket->save();
             $comment = new Comment();
             $comment->user_id = $request->user_id;
-            $comment->no_ticket = $ticket->no_ticket;
+            $comment->no_ticket = $no_ticket;
             $comment->body = "Tiket sedang di proses";
             $comment->save();
-            return redirect()->back();
+            $ticket->save();
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketUpdateNotification($ticket));
+            return redirect()->back()->with("success", "sukses mengambil tiket");
         } catch (\Throwable $th) {
             //throw $th;
+            dd($th);
             abort(500);
         }
     }
 
-    public function close($id, Request $request)
+    public function close($no_ticket, Request $request)
     {
         try {
 
             if ($this->cek->edit != 1) {
                 abort(403);
             }
-            $ticket = Ticket::find($id);
+            $ticket = Ticket::with(["category", "comments", "assign_to"])->where("no_ticket", $no_ticket)->first();
             $ticket->status = "close";
             $ticket->close_datetime = Carbon::now();
-            $ticket->save();
             $comment = new Comment();
             $comment->user_id = $request->user_id;
             $comment->no_ticket = $ticket->no_ticket;
-            $comment->body = "Tiket sedang sudah di close / sudah selesai";
+            $comment->body = "Tiket sudah di close / sudah selesai";
+            $ticket->save();
             $comment->save();
-            $ticket = Ticket::with(["category", "comments"])->find($id);
-            return response()->json(
-                $ticket
-            );
+            // $ticket = Ticket::with(["category", "comments"])->find($id);
+            // return response()->json(
+            //     $ticket
+            // );
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketUpdateNotification($ticket, isClose: true));
+            return redirect()->back()->with("success", "Tiket berhasil di close");
         } catch (\Throwable $th) {
             //throw $th;
             abort(500);
@@ -399,7 +389,7 @@ class TicketController extends Controller
                     $comment = new Comment();
                     $comment->no_ticket = $ticket->no_ticket;
                     $comment->user_id = $user_id;
-                    $comment->body = "Tiket sedang sudah di close / sudah selesai";
+                    $comment->body = "Tiket sudah di close / sudah selesai";
                     $comment->save();
                 }
                 return response()->json($request["update_data"], 200);
@@ -407,7 +397,6 @@ class TicketController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json($request["update_data"], 500);
-            
         }
     }
 }

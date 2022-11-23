@@ -52,21 +52,21 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->name }}</td>
                     <td>
-                        <form action="{{ route('permission.destroy', $item->id) }}" method="POST" class="inline">
-                            <a href="{{ route('permission.edit', $item->id) }}" class="btn btn-warning edit-role"
-                                {{-- data-target="#formEditModal"  --}}>Edit</a>
-                            @csrf
-                            @method('delete')
-                            <button class="btn btn-danger">Delete</button>
+                        {{-- <form action="{{ route('permission.destroy', $item->id) }}" method="POST" class="inline"> --}}
+                        <a href="{{ route('permission.edit', $item->id) }}"
+                            class="btn-flat btn-sm btn btn-warning edit-role">Edit</a>
+                        {{-- @csrf
+                            @method('delete') --}}
+                        <button class="btn btn-danger btn-flat btn-sm remove-role" data-id="{{ $item->id }}"
+                            data-action="{{ route('permission.destroy', $item->id) }}"> Delete</button>
+                        {{-- <button class="btn btn-danger show_confirm" data-toggle="tooltip" title='Delete'
+                                >Delete</button> --}}
                         </form>
                     </td>
                 </tr>
             @endforeach
 
         </table>
-
-    </div>
-    </div>
     </div>
 @endsection
 @section('modal')
@@ -101,60 +101,55 @@
     </div>
 @endsection
 
-{{-- @push('page-scripts')
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    $("#btn-save").click(function(e) {
+@push('page-scripts')
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        @if (session('error'))
+            swal({
+                title: "Gagal Menghapus Data",
+                text: "{{ session('error') }}",
+                icon:"error",
+                // buttons: true,
+                // showCancelButton: true,
+                dangerMode: true,
+            })
+        @endif
+        @if (session('message'))
+            swal({
+                title: "Success",
+                text: "{{ session('message') }}",
+                icon:"success",
+                // buttons: true,
+                // showCancelButton: true,
+                // dangerMode: true,
+            })
+        @endif
+        $("body").on("click", ".remove-role", function() {
+            var current_object = $(this);
+            swal({
+                title: "Anda yakin ingin ?",
+                icon:"warning",
+                buttons: true,
+                showCancelButton: true,
+                dangerMode: true,
+            }).then((data) => {
+                if (data) {
+                    var action = current_object.attr('data-action');
+                    var token = jQuery('meta[name="csrf-token"]').attr('content');
+                    var id = current_object.attr('data-id');
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
+                    $('body').html("<form class='form-inline remove-form' method='post' action='" + action +
+                        "'></form>");
+                    $('body').find('.remove-form').append(
+                        '<input name="_method" type="hidden" value="delete">');
+                    $('body').find('.remove-form').append('<input name="_token" type="hidden" value="' +
+                        token + '">');
+                    $('body').find('.remove-form').append('<input name="id" type="hidden" value="' + id +
+                        '">');
+                    $('body').find('.remove-form').submit();
+                }
+            })
         });
-        e.preventDefault();
-        var permit = []
-        $("input:checkbox[name=permissions]:checked").each(function() {
-            permit.push($(this).val());
-        });
-        var formData = {
-            name: jQuery('#inputrole').val(),
-            permissions: permit
-        };
-        var state = $('#btn-save').val();
-        var type = "POST";
-        var ajaxurl = "roles";
-
-        $.ajax({
-            type: type,
-            url: ajaxurl,
-            data: formData,
-            dataType: 'json',
-            success: function(data) {
-                console.log()
-                Swal.fire({
-                    icon: 'success',
-                    title: "Data berhasil ditambahkan",
-                    showDenyButton: false,
-                    showCancelButton: false,
-                    confirmButtonText: 'Yes'
-                }).then((_) => {
-                    // console.log("result : " + result.role)
-                    window.location.reload()
-
-
-                })
-
-            },
-            error: function(data) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: data.responseJSON.message,
-                    showCancelButton: true,
-                })
-
-            }
-        });
-    });
-</script>
-@endpush --}}
+    </script>
+@endpush
 @section('scripts')

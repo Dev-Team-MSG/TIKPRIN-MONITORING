@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Comment;
+use App\Notifications\TicketUpdateNotification;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -18,7 +19,6 @@ class CommentController extends Controller
         $comment->user_id = $request->user_id;
         $comment->no_ticket = $no_ticket;
         $comment->body = $request->body;
-        $comment->save();
         if ($request->hasFile("fileName")) {
             // return response()->json(['upload_file_not_found'], 400);
             $allowedfileExtension = ['pdf', 'jpg', 'png'];
@@ -30,8 +30,8 @@ class CommentController extends Controller
                 $extension = $file->getClientOriginalExtension();
 
                 $check = in_array($extension, $allowedfileExtension);
-
                 if ($check) {
+                    $comment->save();
                     foreach ($request->fileName as $mediaFiles) {
 
                         $path = $mediaFiles->store('public/images');
@@ -44,25 +44,19 @@ class CommentController extends Controller
                         $save->path = $filepath;
                         $comment->files()->save($save);
                     }
+                } else {
+                    return redirect()->back()->with("error", "Tipe file yang diupload tidak sesuai, anda hanya bisa mengirimkan file bertipe [pdf, jpg, png]");
                 }
             }
+        } else {
+            $comment->save();
         }
-
-        // dd($comment->id);
-        // $ticket = Ticket::with(["category", "severity", "assign_to", "owner", "comments"])->where("no_ticket", "=", $no_ticket)->firstOrFail();
-        // $comment = Comment::with(['user'])->where("no_ticket", "=", $ticket->no_ticket)->get();
-        // $this->storeFile($request, $comment->id);
-        // $this->storeFile($request, $comment->id){};                                                    {{ $comment->body  }}
-
-
-
-        // $user = User::with(["comments"])->get();
-        // dd($comments);
-
+        $ticket = Ticket::where("no_ticket", "=", $no_ticket)->first();
+        if ($ticket->owner_id != $comment->user_id) {
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketUpdateNotification($ticket));
+        }
         return redirect()->back();
-        // return response()->json(
-        //     $data
-        // );
     }
 
     public function attachfile()

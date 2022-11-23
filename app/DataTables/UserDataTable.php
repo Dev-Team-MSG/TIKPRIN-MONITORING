@@ -27,6 +27,10 @@ class UserDataTable extends DataTable
                 return $row->created_at->format('d-m-Y H:i:s');
             })
             ->addIndexColumn()
+            ->addColumn("role", function($row) {
+                
+                return strtoupper($row->roles[0]->name);
+            })
             ->addColumn('action', function($row){
                 $action = '<a href='.route('users.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>';
                 $action .= '<a href="javascript:void(0)" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i>
@@ -52,6 +56,7 @@ class UserDataTable extends DataTable
                         .then((willDelete) => {
                             
                             if (willDelete) {
+                                "X-CSRF-TOKEN": $(`meta[name="csrf-token"]`).attr("content");
                                 $(`#hapus${id}`).submit();
                                 console.log(willDelete)
                             } else {
@@ -72,7 +77,8 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery();
+        // dd($model);
+        return $model->newQuery()->with("roles");
     }
 
     /**
@@ -103,6 +109,7 @@ class UserDataTable extends DataTable
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('name'),
             Column::make('email'),
+            Column::make('role'),
             Column::make('created_at')->title('Dibuat Pada'),
             // Column::make('updated_at'),
             Column::computed('action')

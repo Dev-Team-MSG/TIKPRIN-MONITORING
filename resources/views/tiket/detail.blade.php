@@ -6,7 +6,6 @@
 @section('content')
 
     <section class="section">
-
         <div class="section-body">
             <div class="row">
                 <div class="col-md-8">
@@ -37,34 +36,39 @@
                                     @endforeach
                                     @if ($permission->edit == 1)
                                         @if ($data->status == 'open')
-                                            <div class="row mt-5">
-                                                <div class="col-md">
-                                                    <form action="{{ route('ambil-tiket', $data->no_ticket) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        <input type="text" hidden value="{{ Auth::user()->id }}"
-                                                            name="user_id" />
-                                                        <button class="btn btn-warning"type="submit">Ambil</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        @endif
-                                        @if ($data->status == 'progress')
-                                            @if (Auth::user()->roles[0] == 'kanim')
+                                            @if (Auth::user()->roles[0]->name == 'engineer')
                                                 <div class="row mt-5">
                                                     <div class="col-md">
-                                                        <form action="{{ route('ambil-tiket', $data->no_ticket) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            <input type="text" hidden value="{{ Auth::user()->id }}"
-                                                                name="user_id" />
-                                                            <button class="btn btn-danger"type="submit">Close</button>
-                                                        </form>
+                                                        <button class="btn btn-warning btn-flat btn-sm ambil-tiket"
+                                                            data-id="{{ $data->id }}"
+                                                            data-action="{{ route('ambil-tiket', $data->no_ticket) }}">
+                                                            Ambil</button>
                                                     </div>
 
                                                 </div>
                                             @endif
+                                        @endif
+                                        @if ($data->status == 'progress')
+                                            @if (Auth::user()->roles[0]->name == 'kanim')
+                                                <div class="row mt-5">
+                                                    <div class="col-md">
+                                                        <button class="btn btn-danger btn-flat btn-sm close-tiket"
+                                                            data-id="{{ $data->id }}"
+                                                            data-action="{{ route('close-tiket', $data->no_ticket) }}">
+                                                            Close</button>
+                                                    </div>
+
+                                                </div>
+                                            @endif
+                                            {{-- @if (Auth::user()->roles[0]->name == 'engineer')
+                                            @php
+                                                var_dump("Engineer : ", Auth::user()->roles[0]->name == 'engineer');
+                                            @endphp
+                                            @if ($data->status == 'open')
+                                               
+                                            @endif
+                                            @endif --}}
+
                                         @endif
                                     @endcan
 
@@ -74,7 +78,6 @@
                     <div class="col-md-12">
                         <div class="container py-5 mx-auto">
                             <div class="main-timeline">
-
                                 @foreach ($data->comments as $comment)
                                     @if ($comment->user_id != Auth::user()->id)
                                         <div class="timeline left">
@@ -187,8 +190,7 @@
                                         <td>
                                             <select name="status" id="status_id" data-id="{{ $data->no_ticket }}"
                                                 class="form-control" style="width: 10rem !important;" disabled>
-                                                <option value="open"
-                                                    {{ $data->status == 'open' ? 'selected' : '' }}>
+                                                <option value="open" {{ $data->status == 'open' ? 'selected' : '' }}>
                                                     Open
                                                 </option>
                                                 <option value="progress"
@@ -267,85 +269,79 @@
 
 @endsection
 @push('page-scripts')
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
 <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 
 <script>
-    function ambilTiket(link) {
+    @if (session('error'))
         swal({
-            icon: 'warning',
-            title: 'Benar Ingin Hapus data?',
-            text: 'data tidak dapat dikembalikan',
-            buttons: ["No", "Yes"],
+            title: "Gagal Menambahkan komentar !",
+            text: "{{ session('error') }} !",
+            icon: "error",
             dangerMode: true,
-        }).then(data => {
-            console.log(data);
+        })
+    @endif
+    @if (session('success'))
+        swal({
+            title: "Berhasil!",
+            text: "{{ session('success') }} !",
+            icon: "success",
+            dangerMode: true,
+        })
+    @endif
+    $("body").on("click", ".ambil-tiket", function() {
+        var current_object = $(this);
+        swal({
+            title: "Warning",
+            text: "Anda yakin ingin mengambil tiket ini ?",
+            icon: "warning",
+            buttons: true,
+            showCancelButton: true,
+            dangerMode: true,
+        }).then((data) => {
             if (data) {
-                // window.location = $(link).attr("action")
-            } else {
-                swal("Tiket gagal diambil")
+                var action = current_object.attr('data-action');
+                var token = jQuery('meta[name="csrf-token"]').attr('content');
+                var id = current_object.attr('data-id');
+
+                $('body').html("<form class='form-inline ambil-tiket' method='post' action='" + action +
+                    "'></form>");
+                $('body').find('.ambil-tiket').append('<input name="_token" type="hidden" value="' +
+                    token + '">');
+                $('body').find('.ambil-tiket').append(
+                    '<input type="text" hidden value="{{ Auth::user()->id }}" name="user_id" />');
+                $('body').find('.ambil-tiket').submit();
             }
         })
-    }
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
-    // $("#status_id").on("change", function() {
-    //     console.log("berubah")
-    //     let field = $(this).attr("name");
-    //     let value = this.value;
-    //     let ticket_id = $(this).attr("data-id");
-    //     let message = `Changed ${field} to ${value}`;
-    //     let data = {
-    //         _token: '{{ csrf_token() }}',
-    //         id: ticket_id,
-    //         user_id: {{ Auth::user()->id }},
-    //         message: message,
-    //     };
-    //     data["status"] = value;
+    });
+    $("body").on("click", ".close-tiket", function() {
+        var current_object = $(this);
+        swal({
+            title: "Warning",
+            text: "Anda yakin ingin mengclose tiket ini ?",
+            icon: "warning",
+            buttons: true,
+            showCancelButton: true,
+            dangerMode: true,
+        }).then((data) => {
+            if (data) {
+                var action = current_object.attr('data-action');
+                var token = jQuery('meta[name="csrf-token"]').attr('content');
+                var id = current_object.attr('data-id');
+
+                $('body').html("<form class='form-inline close-tiket' method='post' action='" + action +
+                    "'></form>");
+                $('body').find('.close-tiket').append('<input name="_token" type="hidden" value="' +
+                    token + '">');
+                $('body').find('.close-tiket').append(
+                    '<input type="text" hidden value="{{ Auth::user()->id }}" name="user_id" />');
+                $('body').find('.close-tiket').submit();
+            }
+        })
+    });
 
 
-    //     Swal.fire({
-    //         icon: 'warning',
-    //         title: "Anda yakin ingin mengubah status tiket ?",
-    //         showCancelButton: true,
-    //         showDenyButton: false,
-    //         confirmButtonText: 'Yes'
-    //     }).then((res) => {
-    //         $.ajax({
-    //             type: "POST",
-    //             data: data,
-    //             url: "{{ route('update-tiket') }}",
-    //             dataType: 'json',
-    //             success: function(result) {
-    //                 console.log(result)
-    //                 Swal.fire({
-    //                     icon: 'success',
-    //                     title: `Status tiket berhasil di ubah menjadi ${data["status"]}`,
-    //                     showDenyButton: false,
-    //                     showCancelButton: false,
-    //                     confirmButtonText: 'Yes'
-    //                 }).then(() => {
-    //                     window.location.reload()
-    //                 })
-
-    //             },
-    //             error: function(data) {
-    //                 Swal.fire({
-    //                     icon: 'warning',
-    //                     title: data.responseJSON.message,
-    //                     showCancelButton: true,
-    //                 })
-
-    //             }
-    //         });
-    //     })
-
-    //     // // Send data using ajax
-
-    // });
     CKEDITOR.replace('summary-ckeditor', {
         filebrowserUploadMethod: 'form',
         toolbar: [{
