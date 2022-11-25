@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\TicketOpenDataTable;
 use App\DataTables\TicketProgressDataTable;
+use App\Notifications\TicketNotification;
+use App\Notifications\TicketUpdateNotification;
+use Illuminate\Notifications\Notification;
 use Yajra\DataTables\Facades\DataTables;
 
 use function App\Helpers\cek_akses_user;
@@ -299,38 +302,13 @@ class TicketController extends Controller
                 $ticket->save();
             }
             // dd($request->filename);
-
+            
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketNotification($ticket));
             return redirect(route("detail-ticket", $ticket->no_ticket));
         } catch (\Throwable $th) {
             dd($request);
             abort(500);
-        }
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            //code...
-            if ($this->cek->tambah != 1) {
-                abort(403);
-            }
-            $ticket = new Ticket();
-            $ticket->owner = $request->user_id;
-            $ticket->no_ticket = "tiket" . $ticket->id;
-            // $ticket->assign_to = $request->assign_to;
-            $ticket->category_ticket_id = $request->category_ticket_id;
-            $ticket->severity_id = $request->severity_id;
-            $ticket->title = $request->title;
-            $ticket->description = $request->description;
-            $ticket->status = "open";
-            $result = date('d.m.Y', strtotime('+7 day', time()));
-            $ticket->due_datetime = $result;
-            // $ticket->close_datetime = $result;
-            $ticket->save();
-            return request()->json("data berhasil ditambahkan");
-        } catch (\Throwable $th) {
-            //throw $th;
-            return request()->json("Server Error", 500);
         }
     }
 
@@ -350,6 +328,8 @@ class TicketController extends Controller
             $comment->body = "Tiket sedang di proses";
             $comment->save();
             $ticket->save();
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketUpdateNotification($ticket));
             return redirect()->back()->with("success", "sukses mengambil tiket");
         } catch (\Throwable $th) {
             //throw $th;
@@ -371,13 +351,15 @@ class TicketController extends Controller
             $comment = new Comment();
             $comment->user_id = $request->user_id;
             $comment->no_ticket = $ticket->no_ticket;
-            $comment->body = "Tiket sedang sudah di close / sudah selesai";
+            $comment->body = "Tiket sudah di close / sudah selesai";
             $ticket->save();
             $comment->save();
             // $ticket = Ticket::with(["category", "comments"])->find($id);
             // return response()->json(
             //     $ticket
             // );
+            $user = User::where("id", $ticket->owner_id)->first();
+            $user->notify(new TicketUpdateNotification($ticket, isClose: true));
             return redirect()->back()->with("success", "Tiket berhasil di close");
         } catch (\Throwable $th) {
             //throw $th;

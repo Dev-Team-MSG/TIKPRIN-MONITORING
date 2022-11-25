@@ -35,21 +35,14 @@
                                         <a href="{{ asset("$item->path") }}" target="_blank">{{ $item->filename }}</a>
                                     @endforeach
                                     @if ($permission->edit == 1)
-                                        @if ($data->status == 'progress')
-                                            @if (Auth::user()->roles[0]->name == 'kanim')
+                                        @if ($data->status == 'open')
+                                            @if (Auth::user()->roles[0]->name == 'engineer')
                                                 <div class="row mt-5">
                                                     <div class="col-md">
-                                                        <button class="btn btn-danger btn-flat btn-sm close-tiket"
+                                                        <button class="btn btn-warning btn-flat btn-sm ambil-tiket"
                                                             data-id="{{ $data->id }}"
-                                                            data-action="{{ route('close-tiket', $data->no_ticket) }}">
-                                                            Close</button>
-                                                        {{-- <form action="{{ route('ambil-tiket', $data->no_ticket) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            <input type="text" hidden value="{{ Auth::user()->id }}"
-                                                                name="user_id" />
-                                                            <button class="btn btn-danger"type="submit">Close</button>
-                                                        </form> --}}
+                                                            data-action="{{ route('ambil-tiket', $data->no_ticket) }}">
+                                                            Ambil</button>
                                                     </div>
 
                                                 </div>
@@ -74,6 +67,28 @@
                                                     </div>
                                                 @endif
                                             @endif
+
+                                        @endif
+                                        @if ($data->status == 'progress')
+                                            @if (Auth::user()->roles[0]->name == 'kanim')
+                                                <div class="row mt-5">
+                                                    <div class="col-md">
+                                                        <button class="btn btn-danger btn-flat btn-sm close-tiket"
+                                                            data-id="{{ $data->id }}"
+                                                            data-action="{{ route('close-tiket', $data->no_ticket) }}">
+                                                            Close</button>
+                                                    </div>
+
+                                                </div>
+                                            @endif
+                                            {{-- @if (Auth::user()->roles[0]->name == 'engineer')
+                                            @php
+                                                var_dump("Engineer : ", Auth::user()->roles[0]->name == 'engineer');
+                                            @endphp
+                                            @if ($data->status == 'open')
+                                               
+                                            @endif
+                                            @endif --}}
 
                                         @endif
                                     @endcan
