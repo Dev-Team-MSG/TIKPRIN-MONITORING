@@ -16,8 +16,9 @@
                         </div>
                     </div>
                 @endif
-                <form action="{{ route('printerkanims.store') }}" method="POST">
+                <form action="{{ route('relokasiprinters.update', [$printer->id]) }}" method="POST">
                     @csrf
+                    <input type="hidden" value="PUT" name="_method">
                     <div class="card">
                         <div class="card-header">
                             <h4>Relokasi Printer</h4>
@@ -25,22 +26,29 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group" id="printer">
-                                        <label for="exampleInputEmail1">Printer </label>
-                                        <br>
-                                        <select class="form-control" name="printer_id">
-                                            @foreach ($printeronkanim as $printer)
-                                            @if(isset($post))
-                                            <option value="{{ $printer->id }}" {{ $post->printers->id == $printer->id? 'selected="selected"':'' }}>{{ $printer->serial_number }} - {{ $printer->mac_address }}</option>
-                                        @else
-                                            <option value="{{ $printer->id }}">{{ $printer->serial_number }} - {{ $printer->mac_address }}</option>
-                                            @endif
-                                            @endforeach
-                                        </select>
+                                    <div class="form-group">
+                                        <label>Serial Number</label>
+                                        <input type="text" class="form-control {{$errors->first('serial_number') ? "is-invalid" : ""}}" placeholder="Serial Number"
+                                            name="serial_number"
+                                            value="{{ old('serial_number') ? old('serial_number') : $printer->serial_number }}"disabled>
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('serial_number') }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group" id="kanim">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Kanim </label>
+                                        <br>
+                                        <select class="form-control" name="kanim_id" id="kanim">
+                                            @foreach ($kanims as $kanim)
+                                                <option value="{{ $kanim->id }}"
+                                                    @if (isset($printer->kanim_id) && $printer->kanim_id == $kanim->id) selected @endif>{{ $kanim->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    {{-- <div class="form-group" id="kanim">
                                         <label for="exampleInputEmail1">Kantor Imigrasi </label>
                                         <br>
                                         <select class="form-control" name="kanim_id">
@@ -52,7 +60,7 @@
                                             @endif
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

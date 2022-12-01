@@ -48,6 +48,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Tahun Pengadaan</label>
+                                        <input type="text"  class="form-control datepicker"
+                                            placeholder="2021" name="tahun_pengadaan"
+                                            value="{{ old('tahun_pengadaan') }}">
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('tahun_pengadaan') }}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,6 +74,8 @@
     </div>
 @endsection
 @push('page-scripts')
+@endpush
+@push('after-scripts')
 @endpush
 @push('specific-scripts')
     <script>

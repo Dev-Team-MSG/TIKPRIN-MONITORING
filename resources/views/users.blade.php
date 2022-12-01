@@ -14,7 +14,7 @@
                     <div class="button-action" style="margin-bottom: 20px">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
                                 class="far fa-user"></i>
-                            IMPORT
+                            IMPORT USER
                         </button>
                         <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
                                 class="far fa-edit"></i> Tambah User</a>

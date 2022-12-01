@@ -132,6 +132,7 @@ class PrinterController extends Controller
         $new_printer = new \App\Models\Printer;
         $new_printer->serial_number = $request->get('serial_number');
         $new_printer->mac_address = $request->get('mac_address');
+        $new_printer->tahun_pengadaan = $request->get('tahun_pengadaan');
         $new_printer->created_by = Auth::user()->id;
         $new_printer->save();
         return redirect()->route('printers.index')->with('message', 'Printer Berhasil ditambahkan');
