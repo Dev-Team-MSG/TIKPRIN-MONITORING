@@ -20,7 +20,7 @@
                         <h4>Total Users</h4>
                     </div>
                     <div class="card-body">
-                        10
+                        {{$countUser}}
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                         <h4>Total Of Ticket</h4>
                     </div>
                     <div class="card-body">
-                        42
+                        {{$countTicket}}
                     </div>
                 </div>
             </div>

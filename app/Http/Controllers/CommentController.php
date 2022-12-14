@@ -15,48 +15,53 @@ class CommentController extends Controller
     public function storeComment($no_ticket, Request $request)
     {
         // dd($request);
-        $comment = new Comment();
-        $comment->user_id = $request->user_id;
-        $comment->no_ticket = $no_ticket;
-        $comment->body = $request->body;
-        if ($request->hasFile("fileName")) {
-            // return response()->json(['upload_file_not_found'], 400);
-            $allowedfileExtension = ['pdf', 'jpg', 'png'];
-            $files = $request->file('fileName');
-            // dd($files);
-            $errors = [];
-            foreach ($files as $file) {
+        try {
+            $comment = new Comment();
+            $comment->user_id = $request->user_id;
+            $comment->no_ticket = $no_ticket;
+            $comment->body = isset($request->body) ? $request->body : "";
+            if ($request->hasFile("fileName")) {
+                // return response()->json(['upload_file_not_found'], 400);
+                $allowedfileExtension = ['pdf', 'jpg', 'png'];
+                $files = $request->file('fileName');
+                // dd($files);
+                $errors = [];
+                foreach ($files as $file) {
 
-                $extension = $file->getClientOriginalExtension();
+                    $extension = $file->getClientOriginalExtension();
 
-                $check = in_array($extension, $allowedfileExtension);
-                if ($check) {
-                    $comment->save();
-                    foreach ($request->fileName as $mediaFiles) {
+                    $check = in_array($extension, $allowedfileExtension);
+                    if ($check) {
+                        $comment->save();
+                        foreach ($request->fileName as $mediaFiles) {
 
-                        $path = $mediaFiles->store('public/images');
-                        $filepath = str_replace("public", "storage", $path);
-                        $name = $mediaFiles->getClientOriginalName();
+                            $path = $mediaFiles->store('public/images');
+                            $filepath = str_replace("public", "storage", $path);
+                            $name = $mediaFiles->getClientOriginalName();
 
-                        //store image file into directory and db
-                        $save = new File();
-                        $save->filename = $name;
-                        $save->path = $filepath;
-                        $comment->files()->save($save);
+                            //store image file into directory and db
+                            $save = new File();
+                            $save->filename = $name;
+                            $save->path = $filepath;
+                            $comment->files()->save($save);
+                        }
+                    } else {
+                        return redirect()->back()->with("error", "Tipe file yang diupload tidak sesuai, anda hanya bisa mengirimkan file bertipe [pdf, jpg, png]");
                     }
-                } else {
-                    return redirect()->back()->with("error", "Tipe file yang diupload tidak sesuai, anda hanya bisa mengirimkan file bertipe [pdf, jpg, png]");
                 }
+            } else {
+                $comment->save();
             }
-        } else {
-            $comment->save();
+            $ticket = Ticket::where("no_ticket", "=", $no_ticket)->first();
+            if ($ticket->owner_id != $comment->user_id) {
+                $user = User::where("id", $ticket->owner_id)->first();
+                $user->notify(new TicketUpdateNotification($ticket));
+            }
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("error",);
         }
-        $ticket = Ticket::where("no_ticket", "=", $no_ticket)->first();
-        if ($ticket->owner_id != $comment->user_id) {
-            $user = User::where("id", $ticket->owner_id)->first();
-            $user->notify(new TicketUpdateNotification($ticket));
-        }
-        return redirect()->back();
     }
 
     public function attachfile()

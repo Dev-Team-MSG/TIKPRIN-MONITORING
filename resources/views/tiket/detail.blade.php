@@ -47,27 +47,6 @@
 
                                                 </div>
                                             @endif
-                                            @if (Auth::user()->roles[0]->name != 'kanim')
-                                                @if ($data->status == 'open')
-                                                    <div class="row mt-5">
-                                                        <div class="col-md">
-                                                            <button class="btn btn-warning btn-flat btn-sm ambil-tiket"
-                                                                data-id="{{ $data->id }}"
-                                                                data-action="{{ route('ambil-tiket', $data->no_ticket) }}">
-                                                                Ambil</button>
-                                                            {{-- <form action="{{ route('ambil-tiket', $data->no_ticket) }}"
-                                                method="post">
-                                                @csrf
-                                                <input type="text" hidden value="{{ Auth::user()->id }}"
-                                                    name="user_id" />
-                                                <button class="btn btn-warning"type="submit">Ambil</button>
-                                            </form> --}}
-                                                        </div>
-
-                                                    </div>
-                                                @endif
-                                            @endif
-
                                         @endif
                                         @if ($data->status == 'progress')
                                             @if (Auth::user()->roles[0]->name == 'kanim')
