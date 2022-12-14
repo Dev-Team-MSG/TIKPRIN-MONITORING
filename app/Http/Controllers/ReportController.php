@@ -87,10 +87,20 @@ class ReportController extends Controller
         //
     }
 
-    public function reportTiket(Request $request) {
+    public function reportTiket(Request $request)
+    {
+        
+        if($request->tanggal_dari == null) {
+            return redirect()->back()->with("error", "Tanggal mulai tidak boleh kosong");
+        }
+
+        if($request->type_file == "pdf"){
+            return (new TicketsExport($request->tanggal_dari, $request->tanggal_sampai, $request->status))->download('invoices.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
         return (new TicketsExport($request->tanggal_dari, $request->tanggal_sampai, $request->status))->download('tickets.xlsx');
     }
-    public function reportRelokasiPrinter(Request $request) {
+    public function reportRelokasiPrinter(Request $request)
+    {
         dd($request);
     }
 }

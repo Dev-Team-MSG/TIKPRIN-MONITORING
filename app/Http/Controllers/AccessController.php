@@ -20,17 +20,17 @@ class AccessController extends Controller
 {
     // protected $main_menu;
     // protected $sub_menu;
-    // protected $cek;
-    // public function __construct()
-    // {
-    //     $this->middleware(function ($request, $next) {
-    //         if (Auth::check()) {
-    //             $this->cek = cek_akses_user();
-    //         }
-    //         //     // $this->sub_menu = sub_menu();
-    //         return $next($request);
-    //     });
-    // }
+    protected $cek;
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                $this->cek = cek_akses_user();
+            }
+            //     // $this->sub_menu = sub_menu();
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +40,7 @@ class AccessController extends Controller
     {
 
         $role = Role::get();
-        
+
         return view("akses.index", compact("role"));
     }
 
@@ -109,7 +109,7 @@ class AccessController extends Controller
             }
         }
         if (isset($insertData)) {
-             DB::table("accesses")->insert($insertData);
+            DB::table("accesses")->insert($insertData);
         }
 
 
@@ -190,19 +190,50 @@ class AccessController extends Controller
         try {
             //code...
             DB::beginTransaction();
-            DB::table("roles")->where("id", $id)->delete();
-            DB::commit();
-            return redirect()->back()->with("message", "Berhasil menghapus data");
+            $canDelete = true;
+            // DB::table("roles")->where("id", $id)->delete();
+            // DB::table("accesses")->where("role_id", $id)->delete();
+            $data = DB::table("accesses")->where("role_id", "=", $id)->get();
+            // dd($data);
+            foreach ($data as $value) {
+                # code...
+                // dd($value);
+                // var_dump($value->tambah);
+                if ($value->akses == 1) {
+                    $canDelete = false;
+                }
+                if ($value->tambah == 1) {
+                    $canDelete = false;
+                }
+                if ($value->edit == 1) {
+                    $canDelete = false;
+                }
+                if ($value->hapus == 1) {
+                    $canDelete = false;
+                }
+            }
+            // dd($data);
+            // dd($canDelete);
+            var_dump($canDelete);
+            if ($canDelete) {
+                DB::table("accesses")->where("role_id", "=", $id)->delete();
+                DB::table("roles")->where("id", "=", $id)->delete();
+                DB::commit();
+                return redirect()->back()->with("message", "Berhasil menghapus data");
+            } else {
+                return redirect()->back()->with("error", "Role tidak bisa dihapus karena telah di assign ke user atau sudah memiliki permission");
+            }
         } catch (\Throwable $th) {
-            DB::rollBack();
+            // DB::rollBack();
             //throw $th;
-            return redirect()->back()->with("error", "Role tidak bisa dihapus karena sedang telah di assign ke user atau sudah memiliki permission");
+            return redirect()->back()->with("error", $th);
         }
         //
 
     }
 
-    function destroyAccess(Request $request , $id) {
+    function destroyAccess(Request $request, $id)
+    {
         try {
             DB::beginTransaction();
             DB::table("accesses")->where("role_id", $id)->delete();

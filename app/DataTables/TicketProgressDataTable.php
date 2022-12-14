@@ -105,7 +105,7 @@ class TicketProgressDataTable extends DataTable
             Column::make('no_ticket'),
             Column::make("assign_id")->title("Ditugaskan Ke"),
             Column::make("category_ticket_id")->title("Kategori"),
-            Column::make('title'),
+            Column::make('title')->searchable(),
             Column::make("owner_id")->title("Pembuat"),
             Column::make('created_at'),
             Column::make('action'),
