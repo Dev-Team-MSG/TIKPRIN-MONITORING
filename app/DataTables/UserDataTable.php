@@ -42,7 +42,7 @@ class UserDataTable extends DataTable
                 $action .= '<a href='.route('users.detail', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>';
                 $action .= '<script>
                 $(".swal-confirm").click(function(e) {
-                    
+                    e.preventDefault()
                     id = e.target.dataset.id;
                     
                     swal({
@@ -50,6 +50,7 @@ class UserDataTable extends DataTable
                             text: "Data yang sudah dihapus tidak dapat dikembalikan!",
                             icon: "warning",
                             buttons: true,
+                            showCancelButton: true,
                             dangerMode: true,
                         })
                         .then((willDelete) => {
@@ -57,9 +58,10 @@ class UserDataTable extends DataTable
                             if (willDelete) {
                                 "X-CSRF-TOKEN": $(`meta[name="csrf-token"]`).attr("content");
                                 $(`#hapus${id}`).submit();
+                                console.log(willDelete)
                             } else {
                                 swal("Batal Hapus, Data Anda Aman!");
-                            }
+                            }$(`#user-table`).datatable().ajax.reload();
                         });
                 });
             </script>';

@@ -18,7 +18,7 @@
                                     <div class="form-group">
                                         <label>Nama</label>
                                         <input type="text"
-                                            class="form-control {{ $errors->first('name') ? 'is-invalid' : '' }}"
+                                            class="form-control  {{ $errors->first('name') ? 'is-invalid' : '' }}" required=""
                                             placeholder="Name Lengkap" name="name" value="{{ old('name') }}"
                                             id="name">
                                         <div class="invalid-feedback">
@@ -30,7 +30,7 @@
                                     <div class="form-group">
                                         <label>Username</label>
                                         <input type="text"
-                                            class="form-control {{ $errors->first('username') ? 'is-invalid' : '' }}"
+                                            class="form-control {{ $errors->first('username') ? 'is-invalid' : '' }}" required=""
                                             name="username" value="{{ old('username') }}" id="username">
                                         <div class="invalid-feedback">
                                             {{ $errors->first('username') }}
@@ -45,8 +45,8 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">@</div>
                                             </div>
-                                            <input type="text"
-                                                class="form-control {{ $errors->first('email') ? 'is-invalid' : '' }}"
+                                            <input type="email"
+                                                class="form-control {{ $errors->first('email') ? 'is-invalid' : '' }}" required=""
                                                 id="inlineFormInputGroup" placeholder="Email" name="email"
                                                 value="{{ old('email') }}">
                                             <div class="invalid-feedback">
@@ -64,8 +64,8 @@
                                                     <i class="fas fa-phone"></i>
                                                 </div>
                                             </div>
-                                            <input type="text"
-                                                class="form-control phone-number {{ $errors->first('phone') ? 'is-invalid' : '' }}"
+                                            <input type="phone"
+                                                class="form-control phone-number {{ $errors->first('phone') ? 'is-invalid' : '' }}" required=""
                                                 name="phone" value="{{ old('phone') }}">
                                             <div class="invalid-feedback">
                                                 {{ $errors->first('phone') }}
@@ -83,7 +83,7 @@
                                                 </div>
                                             </div>
                                             <input type="password"
-                                                class="form-control pwstrength {{ $errors->first('password') ? 'is-invalid' : '' }}"
+                                                class="form-control pwstrength {{ $errors->first('password') ? 'is-invalid' : '' }}" required=""
                                                 data-indicator="pwindicator" name="password" value="{{ old('password') }}">
                                             <div class="invalid-feedback">
                                                 {{ $errors->first('password') }}
@@ -105,7 +105,7 @@
                                                 </div>
                                             </div>
                                             <input type="password"
-                                                class="form-control pwstrength confirmation {{ $errors->first('password_confirmation') ? 'is-invalid' : '' }}"
+                                                class="form-control pwstrength confirmation {{ $errors->first('password_confirmation') ? 'is-invalid' : '' }}" required=""
                                                 data-indicator="pwindicator" name="password_confirmation"
                                                 value="{{ old('password_confirmation') }}">
                                             <div class="invalid-feedback">
@@ -123,7 +123,11 @@
                                         <label class="d-block">Roles
                                         </label>
                                         @foreach ($roles as $role)
-                                        <input onchange="collapseKanim()" type="radio" name="roles" value="{{$role->id}}"> {{$role->name}}<br>
+                                        <input onchange="collapseKanim()" type="radio" name="roles" 
+                                        @if ($role->name == "kanim")
+                                            checked
+                                        @endif 
+                                        value="{{$role->id}}"> {{$role->name}}<br>
                                         @endforeach
                                         
                                         {{-- <input onchange="collapseKanim()" type="radio" name="roles" value="1"

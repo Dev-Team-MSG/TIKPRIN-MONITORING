@@ -10,15 +10,15 @@ use App\Imports\PrintersImport;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
-use App\Models\PrinterKanim;
+// use App\Models\RelokasiPrinter;
 use App\Models\Kanim;
 use App\Models\Printer;
-use App\DataTables\PrinterKanimDataTable;
+use App\DataTables\RelokasiPrinterDataTable;
 use Illuminate\Database\Eloquent\Builder;
 
 use function App\Helpers\cek_akses_user;
 
-class PrinterKanimController extends Controller
+class RelokasiPrinterController extends Controller
 {
     public function __construct()
     {
@@ -37,22 +37,10 @@ class PrinterKanimController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(PrinterKanimDataTable $dataTable)
+    public function index(RelokasiPrinterDataTable $dataTable)
     {
 
-        return $dataTable->render('printerkanims.index');
-
-        // $printers = \App\Models\Printer::get();
-        // $kanims = \App\Models\Kanim::get();
-        // $printerkanims = \App\Models\PrinterKanim::paginate(10);
-        // $filterKeyword = $request->get('keyword');
-        // if($filterKeyword){
-        //     $printerkanims = \App\Models\PrinterKanim::where('printer_id', 'LIKE', "%$filterKeyword%")
-        //     ->paginate(10);
-        // }
-
-        // // return view('printerkanims');
-        // return view('printerkanims.index', ['printerkanims' => $printerkanims]);
+        return $dataTable->render('relokasiprinters.index');
     }
 
     /**
@@ -60,22 +48,22 @@ class PrinterKanimController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        if($this->cek->tambah != 1) {
-            abort(403);
-        }
-        // $printers = \App\Models\Printer::get();
-        // $kanimId = 1;
-        // $printers = Printer::whereDoesntHave('kanims.id', function (Builder $query) {
-        //     $query->where('banned', 0);
-        // })->get();
-        $new_printerkanim = new \App\Models\PrinterKanim;
-        $printeronkanim = $new_printerkanim->printeronkanim();
-        $kanims = \App\Models\Kanim::get();
+    // public function create()
+    // {
+    //     if($this->cek->tambah != 1) {
+    //         abort(403);
+    //     }
+    //     // $printers = \App\Models\Printer::get();
+    //     // $kanimId = 1;
+    //     // $printers = Printer::whereDoesntHave('kanims.id', function (Builder $query) {
+    //     //     $query->where('banned', 0);
+    //     // })->get();
+    //     $new_printerkanim = new \App\Models\PrinterKanim;
+    //     $printeronkanim = $new_printerkanim->printeronkanim();
+    //     $kanims = \App\Models\Kanim::get();
 
-        return view('printerkanims.create', compact("printeronkanim", "kanims"));
-    }
+    //     return view('printerkanims.create', compact("printeronkanim", "kanims"));
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -115,7 +103,9 @@ class PrinterKanimController extends Controller
      */
     public function edit($id)
     {
-        //
+        $printer = \App\Models\Printer::findOrFail($id);
+        $kanims = \App\Models\Kanim::get();
+        return view('relokasiprinters.edit', compact("printer", "kanims"));
     }
 
     /**
@@ -127,7 +117,11 @@ class PrinterKanimController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $printer = \App\Models\Printer::findOrFail($id);
+        $printer->kanim_id = $request->get('kanim_id');
+        $printer->updated_by = Auth::user()->id;
+        $printer->save();
+        return redirect()->route('relokasiprinters.index', [$id])->with('message', 'Relokasi Printer Berhasil');
     }
 
     /**
@@ -136,13 +130,13 @@ class PrinterKanimController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        if($this->cek->hapus != 1) {
-            abort(403);
-        }
-        $printeronkanim = \App\Models\PrinterKanim::findOrFail($id);
-        $printeronkanim->delete();
-        return redirect()->back()->with('message', 'Relokasi Berhasil dihapus');
-    }
+    // public function destroy($id)
+    // {
+    //     if($this->cek->hapus != 1) {
+    //         abort(403);
+    //     }
+    //     $printeronkanim = \App\Models\PrinterKanim::findOrFail($id);
+    //     $printeronkanim->delete();
+    //     return redirect()->back()->with('message', 'Relokasi Berhasil dihapus');
+    // }
 }
