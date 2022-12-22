@@ -1,14 +1,10 @@
 @extends('layouts.master')
-@section('title', 'Home')
-@section('content')
-    @push('lib-styles')
-        <link rel="stylesheet" href="{{ asset('assets/modules/jqvmap/dist/jqvmap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/weather-icon/css/weather-icons.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/weather-icon/css/weather-icons-wind.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-    @endpush
+@push('page-styles')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+@endpush
 
+@section('title', 'Report')
+@section('content')
     <div class="section-body">
         <div class="card">
             <div class="card-header">
@@ -18,7 +14,7 @@
             </div>
 
             <div class="card-body">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {{-- <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="tiket-tab" data-toggle="tab" data-target="#tiket" type="button"
                             role="tab" aria-controls="tiket" aria-selected="true">Tiket</button>
@@ -31,7 +27,7 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="tiket" role="tabpanel" aria-labelledby="home-tab">
-                        <form action="{{ route('reports.tiket') }}" method="post">
+                        <form action="{{route("reports.tiket")}}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-md">
@@ -68,11 +64,11 @@
                                     <option value="close">Close</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Download Excel</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
                     <div class="tab-pane fade" id="relokasi-printer" role="tabpanel" aria-labelledby="profile-tab">
-                        <form action="{{ route('reports.relokasi-printer') }}" method="post">
+                        <form action="{{route("reports.relokasi-printer")}}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-md">
@@ -81,8 +77,8 @@
                                             Tanggal
                                         </label>
                                         <div class="col-sm-10">
-                                            <input type="date" name="tanggal_dari" class="form-control form-control-sm"
-                                                id="colFormLabelSm" placeholder="col-form-label-sm">
+                                            <input type="date" name="tanggal_dari" class="form-control form-control-sm" id="colFormLabelSm"
+                                                placeholder="col-form-label-sm">
                                         </div>
                                     </div>
                                 </div>
@@ -92,8 +88,7 @@
                                             Tanggal
                                         </label>
                                         <div class="col-sm-10">
-                                            <input type="date" name="tanggal_sampai"
-                                                class="form-control form-control-sm" id="colFormLabelSm"
+                                            <input type="date" name="tanggal_sampai" class="form-control form-control-sm" id="colFormLabelSm"
                                                 placeholder="col-form-label-sm">
                                         </div>
                                     </div>
@@ -125,40 +120,30 @@
                                     <option value="washington">Kanim Washington</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Download Excel</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
 
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
-
 @endsection
 @push('page-scripts')
-    <script src="{{ asset('assets/modules/simple-weather/jquery.simpleWeather.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/chart.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-    <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
-    <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <script type="text/javascript">
-        date = $("[name=tanggal_dari]")
-        date.val = new Date()
-        @if (session('error'))
-            swal({
-                title: "Gagal Mengexport Data",
-                text: "{{ session('error') }}",
-                icon: "error",
-                // buttons: true,
-                // showCancelButton: true,
-                dangerMode: true,
-            })
-        @endif
-    </script>
+    <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
 @endpush
-@push('specific-scripts')
-    <script src="{{ asset('assets/js/page/index-0.js') }}"></script>
+@push('page-scripts')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                closeOnSelect: false
+            });
+        });
+    </script>
 @endpush

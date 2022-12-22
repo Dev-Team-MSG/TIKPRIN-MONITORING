@@ -14,6 +14,7 @@ use App\Http\Controllers\CrudController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ReportController;
@@ -39,9 +40,7 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 
 // Route::group(['middleware' => 'CekLoginMiddleware'], function(){
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('dashboard', function () {
-        return view('index');
-    });
+    Route::get('dashboard', [DashboardController::class, "index"])->name("dashboard");
 
     //Route User
     Route::get('users', [UserController::class, 'index'])->name('users');

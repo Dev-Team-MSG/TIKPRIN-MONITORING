@@ -28,7 +28,10 @@ class UserDataTable extends DataTable
         })
             ->addIndexColumn()
             ->addColumn("role", function($row) {
-                
+
+                if(empty($row->roles[0]->name)) {
+                    return strtoupper($row->roles[0]->name);
+                }
                 return strtoupper($row->roles[0]->name);
             })
             ->addIndexColumn()

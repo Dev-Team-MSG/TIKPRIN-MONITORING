@@ -20,7 +20,7 @@
                         <h4>Total Users</h4>
                     </div>
                     <div class="card-body">
-                        10
+                        {{$countUser}}
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                         <h4>Total Of Ticket</h4>
                     </div>
                     <div class="card-body">
-                        42
+                        {{$countTicket}}
                     </div>
                 </div>
             </div>
@@ -47,10 +47,10 @@
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
-                        <h4>Reports</h4>
+                        <h4>Total Close Ticket</h4>
                     </div>
                     <div class="card-body">
-                        1,201
+                        {{$countCloseTicket}}
                     </div>
                 </div>
             </div>
@@ -62,13 +62,13 @@
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
-                        <h4>Online Printers
+                        <h4>Total Printers
 
                             
                         </h4>
                     </div>
                     <div class="card-body">
-                        47
+                        {{$countPrinter}}
                     </div>
                 </div>
             </div>

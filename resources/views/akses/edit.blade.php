@@ -117,7 +117,6 @@
                         </div>
                     </tr>
                 @endforeach
-
             </table>
             <button class="btn btn-icon icon-left btn-primary mr-2" type="submit"> <i
                     class="far fa-edit"></i>Simpan</button>
@@ -132,8 +131,8 @@
             $("body").on("click", ".remove-access", function() {
                 var current_object = $(this);
                 swal({
-                    title: "Akses dibatasi",
-                    text: "Anda tidak memiliki akses ke fitur ini !",
+                    title: "Anda Yakin ?",
+                    text: "Apakah anda yakin mau menghapusnya ?",
                     icon: "warning",
                     buttons: true,
                     showCancelButton: true,
@@ -157,9 +156,6 @@
                         swal({
                             title: "Data anda aman",
                             text: "Data tidak terhapus !",
-                            // buttons: true,
-                            // showCancelButton: true,
-                            // dangerMode: true,
                         })
                     }
                 })

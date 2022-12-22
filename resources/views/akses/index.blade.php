@@ -127,7 +127,7 @@
         $("body").on("click", ".remove-role", function() {
             var current_object = $(this);
             swal({
-                title: "Anda yakin ingin ?",
+                title: "Anda yakin ingin mengahapus role ini?",
                 icon:"warning",
                 buttons: true,
                 showCancelButton: true,
