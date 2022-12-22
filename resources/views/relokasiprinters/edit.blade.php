@@ -38,7 +38,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Kanim </label>
+                                        <label for="exampleInputEmail1">Lokasi Saat ini :</label>
+                                        <br>
+                                        <select class="form-control" disabled>
+                                            @foreach ($kanims as $kanim)
+                                                <option value="{{ $kanim->id }}" 
+                                                    @if (isset($printer->kanim_id) && $printer->kanim_id == $kanim->id) selected @endif>{{ $kanim->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Pindah ke Kanim :</label>
                                         <br>
                                         <select class="form-control" name="kanim_id" id="kanim">
                                             @foreach ($kanims as $kanim)
@@ -48,19 +61,17 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group" id="kanim">
-                                        <label for="exampleInputEmail1">Kantor Imigrasi </label>
-                                        <br>
-                                        <select class="form-control" name="kanim_id">
-                                            @foreach ($kanims as $kanim)
-                                            @if(isset($post))
-                                            <option value="{{ $kanim->id }}" {{ $post->kanims->id == $kanim->id? 'selected="selected"':'' }}>{{ $kanim->name }} - {{ $kanim->network }}</option>
-                                        @else
-                                            <option value="{{ $kanim->id }}">{{ $kanim->name }} - {{ $kanim->network }}</option>
-                                            @endif
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Catatan</label>
+                                        <textarea class="form-control {{$errors->first('catatan') ? "is-invalid" : ""}}" placeholder="Catatan/Note Relokasi"
+                                            name="catatan"
+                                            value="{{ $printer->catatan }}"></textarea>
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('catatan') }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

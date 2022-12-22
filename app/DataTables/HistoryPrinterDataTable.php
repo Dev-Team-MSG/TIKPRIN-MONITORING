@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Printer;
+use App\Models\HistoryPrinter;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RelokasiPrinterDataTable extends DataTable
+class HistoryPrinterDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,26 +23,24 @@ class RelokasiPrinterDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-        ->editColumn('updated_at', function($row){
-            return $row->updated_at->format('d-m-Y H:i:s');
+        ->editColumn('created_at', function ($row) {
+            return showDateTime($row->created_at, 'l, d F Y');
         })
+        
         ->addIndexColumn()
-        ->addColumn('action', function($row){
-            $action = '
-            <a href='.route('relokasiprinters.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="fas fa-building"></i> Relokasi</a>';
-            return $action;
-        });
+            ->addColumn('action', 'historyprinter.action')
+            ->setRowId('id');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\PrinterKanim $model
+     * @param \App\Models\HistoryPrinter $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Printer $model): QueryBuilder
+    public function query(HistoryPrinter $model): QueryBuilder
     {
-        return $model->newQuery()->with('location');
+        return $model->newQuery()->with('location_lama', 'location_baru');
     }
 
     /**
@@ -54,20 +52,11 @@ class RelokasiPrinterDataTable extends DataTable
     {
         return $this->builder()
                     ->parameters(['searchDelay' => 1000])
-                    ->setTableId('relokasiprinter-table')
+                    ->setTableId('historyprinter-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(4, 'desc');
-                    // ->selectStyleSingle()
-                    // ->buttons([
-                    //     Button::make('excel'),
-                    //     Button::make('csv'),
-                    //     Button::make('pdf'),
-                    //     Button::make('print'),
-                    //     Button::make('reset'),
-                    //     Button::make('reload')
-                    // ]);
+                    ->dom('Bfrtip')
+                    ->orderBy(5, 'desc');
     }
 
     /**
@@ -77,16 +66,14 @@ class RelokasiPrinterDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('serial_number'),
-            Column::make('mac_address'),
-            'kanim_name' => new Column(['title'=>"Kantor Imigrasi", 'data'=>'location.name']),
-            Column::make('updated_at')->title('Di Relokasi Pada'),
-            // Column::make('updated_at'),
-            Column::computed('action')
-                  ->exportable(true)
+            'kanim_name' => new Column(['title'=>"Dari Kanim", 'data'=>'location_lama.name']),
+            'kanim_name2' => new Column(['title'=>"Ke Kanim", 'data'=>'location_baru.name']),  
+            Column::make('catatan'),
+            Column::make('created_at')->title('Direlokasi Pada')
+                  ->exportable(false)
                   ->printable(false)
                   ->width(150)
                   ->addClass('text-center'),
@@ -100,6 +87,6 @@ class RelokasiPrinterDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'RelokasiPrinter_' . date('YmdHis');
+        return 'HistoryPrinter_' . date('YmdHis');
     }
 }

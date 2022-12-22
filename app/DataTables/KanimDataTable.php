@@ -25,44 +25,22 @@ class KanimDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d-m-Y H:i:s');
+                return showDateTime($row->created_at, 'l, d F Y');
             })
             ->editColumn('updated_at', function ($row) {
-                return $row->updated_at->format('d-m-Y H:i:s');
+                return showDateTime($row->updated_at, 'l, d F Y');
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $action = '<form action='.route('kanims.destroy', $row->id).' id=hapus'.$row->id.' method="POST">';
-                $action .= '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
-                <button type="submit" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action" value="delete"><i class="fas fa-times"></i></button>
+                $action = '<a href='.route('kanims.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
+                <a href='.route('kanims.show', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>
+                <a href="javascript:;" class="btn btn-icon btn-danger btn-sm action" onclick="deleteData('. $row->id.')"><i class="fas fa-times"></i></a>
+                <form id="delete-form-'. $row->id .'"
+                    action='.route("kanims.destroy",$row->id).' method="POST"
+                    style="display: none;">
                     '.csrf_field().'
-                    '.method_field('delete').'   
+                    '.method_field('delete').'
                 </form>';
-                // $action .= '<a href='.route('kanims.show', $row->id).' class="btn btn-icon btn-info"><i class="far fas fa-info-circle"></i></a>';
-                $action .= '<script>
-                $(".swal-confirm").click(function(e) {
-                    e.preventDefault()
-                    id = e.target.dataset.id;
-                    swal({
-                            title: "Yakin akan menghapus Data?",
-                            text: "Data yang sudah dihapus tidak dapat dikembalikan!",
-                            icon: "warning",
-                            buttons: true,
-                            showCancelButton: true,
-                            dangerMode: true,
-                        })
-                        .then((willDelete) => {
-                            if (willDelete) {
-                                $(`#hapus${id}`).submit();
-                                console.log(willDelete)
-                                
-                            } else {
-                                swal("Batal Hapus, Data Anda Aman!");
-                            }$(`#kanim-table`).datatable().ajax.reload();
-                        });
-
-                });
-            </script>';
                 return $action;
             });
     }
@@ -91,7 +69,7 @@ class KanimDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             //->dom('Bfrtip')
-            ->orderBy(1);
+            ->orderBy(4, 'desc');
         // ->selectStyleSingle();
     }
 
@@ -106,14 +84,14 @@ class KanimDataTable extends DataTable
 
             // Column::make('id'),
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
-            Column::make('name'),
-            Column::make('network'),
+            Column::make('name')->title('Nama Kantor'),
+            Column::make('telp')->title('No Telp'),
             Column::make('created_at')->title('Dibuat Pada'),
             Column::make('updated_at')->title('Diperbaharui Pada'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
-                ->width(150)
+                ->width(160)
                 ->addClass('text-center'),
         ];
     }

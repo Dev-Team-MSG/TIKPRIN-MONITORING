@@ -34,7 +34,7 @@
                                 {{ $printer->mac_address }}
                                 <br><br>
                                 <b>Tahun Pengadaan</b> <br>
-                                {{ $printer->tahun_pengadaan }}
+                                {{ showDateTime($printer->created_at, 'l, d F Y') }}
                                 <br><br>
                             </div>
                             <div class="w-100 d-sm-none"></div>

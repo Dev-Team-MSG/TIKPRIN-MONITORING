@@ -46,6 +46,18 @@
                                             {{ $errors->first('mac_address') }}
                                         </div>
                                     </div>
+                                </div>.
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Tahun Pengadaan</label>
+                                        <input type="text" id="tahun_pengadaan"  class="form-control {{ $errors->first('tahun_pengadaan') ? 'is-invalid' : '' }}"
+                                            placeholder="2022" name="tahun_pengadaan"
+                                            value="{{ old('tahun_pengadaan') ? old('tahun_pengadaan') : $printer->tahun_pengadaan }}">
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('tahun_pengadaan') }}
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>

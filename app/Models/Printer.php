@@ -23,6 +23,10 @@ class Printer extends Model
         'serial_number',
         'mac_address',
         'tahun_pengadaan',
+        'kanim_id',
+        'created_by',
+        'created_at',
+        'updated_at'
     ];
 
     public function creator(){
@@ -36,4 +40,6 @@ class Printer extends Model
     public function location(){
         return $this->belongsTo('App\Models\Kanim','kanim_id');
     }
+
+    
 }

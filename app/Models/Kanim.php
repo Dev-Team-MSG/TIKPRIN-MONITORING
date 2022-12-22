@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Kanim extends Model
 {
     use HasFactory;
-    protected $table = 'kanims';
+    public $table = 'kanims';
     protected $fillable = [
-        'name', 'network'
+        'name', 'alamat', 'telp', 'longitude', 'latitude', 'network'
     ];
+
+    public function printer() {
+        return $this->hasMany(Printer::class);
+
+    }
 }

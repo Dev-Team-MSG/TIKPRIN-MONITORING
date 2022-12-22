@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 use function App\Helpers\main_menu;
 use function App\Helpers\sub_menu;
+use function App\Helpers\showDateTime;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
         // dd(Auth::guard("web")->check());
-
+        Carbon::setLocale('id');
         View::composer("*", function ($view) {
             if (Auth::check()) {
                 $main_menu = main_menu();

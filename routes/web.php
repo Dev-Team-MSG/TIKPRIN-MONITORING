@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\KanimController;
 use App\Http\Controllers\RelokasiPrinterController;
+use App\Http\Controllers\HistoryPrinterController;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\MenuController;
@@ -63,6 +64,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Route PrinterKanim
     Route::resource('relokasiprinters', RelokasiPrinterController::class);
+
+    //Route History
+    Route::resource('historyprinters', HistoryPrinterController::class);
 
     //Route Tiket
     Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");

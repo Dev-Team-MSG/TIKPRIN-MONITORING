@@ -28,7 +28,7 @@
                                     <div class="form-group">
                                         <label>Nama Kanim</label>
                                         <input type="text"
-                                            class="form-control {{ $errors->first('name') ? 'is-invalid' : '' }}"
+                                            class="form-control {{ $errors->first('name') ? 'is-invalid' : '' }}" placeholder="Jakarta Pusat"
                                             placeholder="" name="name"
                                             value="{{ old('name') }}">
                                         <div class="invalid-feedback">
@@ -38,16 +38,54 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Network Address</label>
-                                        <input type="text" id="mac"
-                                            class="form-control {{ $errors->first('network') ? 'is-invalid' : '' }}"
-                                            placeholder="192.168.2.1" name="network"
-                                            value="{{ old('network') }}">
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('network') }}
+                                        <label>Telp Kantor</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                            </div>
+                                            <input type="phone"
+                                                class="form-control phone-number {{ $errors->first('telp') ? 'is-invalid' : '' }}" placeholder="0216541213" required=""
+                                                name="telp" value="{{ old('telp') }}">
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('telp') }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Alamat Kantor</label>
+                                        <textarea class="form-control {{$errors->first('catatan') ? "is-invalid" : ""}}" placeholder="Jl. Merpati No.3, Gn. Sahari Utara, Kec. Kemayoran, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10720"
+                                            name="alamat"
+                                            value="{{ old('alamat') }}"></textarea>
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('alamat') }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group" id="mapCenterForm">
+                                    <label>Latitude</label>
+                                    <input type="text" id="latitude"
+                                        class="form-control {{ $errors->first('latitude') ? 'is-invalid' : '' }}" placeholder="-6.1776323"
+                                        placeholder="" name="latitude"
+                                        value="{{ old('latitude') }}">
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('latitude') }}
+                                    </div>
+                                    <label>Longitude</label>
+                                    <input type="text" id="longitude"
+                                        class="form-control {{ $errors->first('longitude') ? 'is-invalid' : '' }}" placeholder="106.8185349,16"
+                                        placeholder="" name="longitude"
+                                        value="{{ old('longitude') }}">
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('longitude') }}
+                                    </div>
+                                </div>
+                                </div>
+                
                             </div>
                         </div>
                     </div>
@@ -64,28 +102,4 @@
 @push('page-scripts')
 @endpush
 @push('specific-scripts')
-    {{-- <script>
-        $("#mac").on("keyup", function(event) {
-
-            var limitField = $(this).val().trim().length;
-            var limit = "17";
-
-            if (event.keyCode != 8) {
-                var mac_value = $(this).val().trim().concat(':');
-                switch (limitField) {
-                    case 2:
-                    case 5:
-                    case 8:
-                    case 11:
-                    case 14:
-                        $("#mac").val(mac_value);
-                        break;
-                }
-            }
-
-            if (limitField > limit) {
-                $("#mac").val($(this).val().trim().substring(0, limit));
-            }
-        });
-    </script> --}}
 @endpush

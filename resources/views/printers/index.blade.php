@@ -6,7 +6,8 @@
     @push('lib-styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/prism/prism.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet"
+            href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
     @endpush
     <div class="section-body">
         <div class="row">
@@ -33,8 +34,18 @@
                 </div>
             </div>
         @endif
-        
-                {{$dataTable->table()}}
+        @if (session('error'))
+            <div class="alert alert-warning alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
+        {{ $dataTable->table() }}
 
         {{-- <table class="table table-striped table-bordered table-sm">
             <tr>
@@ -153,22 +164,25 @@
     </script> --}}
 @endpush
 @push('after-scripts')
-<script>
-    // const modal = new bootstrap.Modal($('#modalAction'))
-    // $('#printer-table').on('click', '.action', function(){
-    //     let data = $(this).data()
-    //     let id = data.id
-    //     let jenis = data.jenis
-    //     modal.show()
-    //     console.log(data);
-        
+    <script>
+        function deleteData(id) {
+            swal({
+                title: "Yakin akan menghapus Data?",
+                text: "Data yang sudah dihapus tidak dapat dikembalikan!",
+                icon: "warning",
+                buttons: true,
+                showCancelButton: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                    console.log(willDelete)
 
-    // })
-</script>
-
-    {{-- <script>
-    $('#import').on('shown.bs.import', function() {
-        $(document).off('focusin.import');
-    });
-    </script> --}}
+                } else {
+                    swal("Batal Hapus, Data Anda Aman!");
+                }
+                $(`#printer-table`).datatable().ajax.reload();
+            });
+        }
+    </script>
 @endpush

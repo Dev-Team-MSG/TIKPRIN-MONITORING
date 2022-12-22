@@ -51,7 +51,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Tahun Pengadaan</label>
-                                        <input type="text"  class="form-control datepicker"
+                                        <input type="text" id="tahun_pengadaan"  class="form-control {{ $errors->first('tahun_pengadaan') ? 'is-invalid' : '' }}"
                                             placeholder="2021" name="tahun_pengadaan"
                                             value="{{ old('tahun_pengadaan') }}">
                                         <div class="invalid-feedback">

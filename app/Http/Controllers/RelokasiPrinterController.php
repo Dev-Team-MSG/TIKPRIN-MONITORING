@@ -10,7 +10,6 @@ use App\Imports\PrintersImport;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
-// use App\Models\RelokasiPrinter;
 use App\Models\Kanim;
 use App\Models\Printer;
 use App\DataTables\RelokasiPrinterDataTable;
@@ -79,6 +78,7 @@ class RelokasiPrinterController extends Controller
         $new_printerkanim = new \App\Models\PrinterKanim;
         $new_printerkanim->printer_id = $request->get('printer_id');
         $new_printerkanim->kanim_id = $request->get('kanim_id');
+        $new_printerkanim->catatan = $request->get('catatan');
         // $new_kanim->created_by = \Auth::user()->id;
         $new_printerkanim->save();
         return redirect()->route('printerkanims.index')->with('message', 'Relokasi Printer Berhasil Dilakukan');
@@ -119,6 +119,7 @@ class RelokasiPrinterController extends Controller
     {
         $printer = \App\Models\Printer::findOrFail($id);
         $printer->kanim_id = $request->get('kanim_id');
+        $printer->catatan = $request->get('catatan');
         $printer->updated_by = Auth::user()->id;
         $printer->save();
         return redirect()->route('relokasiprinters.index', [$id])->with('message', 'Relokasi Printer Berhasil');

@@ -28,7 +28,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('printers', function (Blueprint $table) {
-            $table->dropForeign('lists_user_id_foreign');
+            $table->dropForeign('lists_kanim_id_foreign');
+            $table->dropIndex('lists_kanim_id_index');
             $table->dropColumn('kanim_id');
         });
     }

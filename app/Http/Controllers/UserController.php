@@ -47,7 +47,7 @@ class UserController extends Controller
             [
                 "name" => "required|min:5|max:100",
                 "username" => "required|min:5|max:20|unique:users",
-                "email" => "required|email|unique:users",
+                "email" => "required|email|max:255|regex:/(.*)@gmail\.com/i|unique:users",
                 "phone" => "required|digits_between:10,12|unique:users",
                 "password" => "required",
                 "password_confirmation" => "required|same:password",
@@ -68,7 +68,7 @@ class UserController extends Controller
                 'username.unique' => 'Username sudah terdaftar, ganti dengan yang lain',
                 //message email
                 'email.required' => 'Email harus diisi',
-                'email.email' => 'Gunakan Format Email yang benar',
+                'email.email' => 'Gunakan Format Email yang benar dengan domain gmail.com',
                 'email.unique' => 'Email sudah terdaftar, ganti dengan yang lain',
                 //message password
                 'phone.required' => 'Telephone Harus diisi',
@@ -89,35 +89,90 @@ class UserController extends Controller
 
     //Method Import Excel
 
-    public function import(Request $request)
-    {
-        $this->validate($request, [
-            'file' => 'required|mimes:csv,xls,xlsx'
-        ]);
+    // public function import(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'file' => 'required|mimes:csv,xls,xlsx'
+    //     ]);
 
-        $file = $request->file('file');
+    //     $file = $request->file('file');
 
-        // membuat nama file unik
-        $nama_file = $file->hashName();
+    //     $parsed_array = Excel::toArray([], $file);
+    //     $imported_data = array_splice($parsed_array[0], 1);
+    //     if (empty($imported_data)) {
+    //         toastr()->error('File Excel tidak boleh kosong.');
+    //         return redirect()->back();
+    //     }
 
-        //temporary file
-        $path = $file->storeAs('public/excel/', $nama_file);
+    //     $formated_data = [];
+    //     $user_array = [];
+    //     $is_valid = true;
+    //     $error_msg = '';
+    //     DB::beginTransaction();
+        
+    //     try {
+        
+    //     foreach ($imported_data as $key => $value) {
 
-        // import data
-        $import = Excel::import(new UsersImport(), storage_path('app/public/excel/' . $nama_file));
+    //         $user_array['name']=$value[1];
+    //         //Row email
+    //         $user_email = trim($value[2]);
+    //         if(!empty($user_email)){
+    //             $cekemail = User::where('name', $user_email)->first();
+    //             if (empty($cekemail)) {
+    //                 $user_array['name'] = $user_email;
+    //             }else{
+    //                 $is_valid =  false;
+    //                 $error_msg = "Nama User [".$user_email."] sudah ada. Mohon Gunakan Lain.";
+    //                 break;
+    //             }
+    //         }else {
+    //             $is_valid = false;
+    //             $error_msg = "Nama Kosong, check Kembali Excel Nama tidak boleh kosong";
+    //             break;
+    //         }
 
-        //remove from server
-        Storage::delete($path);
+    //         //Row username 
+    //         $user_username = trim($value[2]);
+    //         if(!empty($user_username)){
+    //             $cekmac = Printer::where('mac_address', $printer_mac)->first();
+    //             if (empty($cekmac)) {
+    //                 $printer_array['mac_address'] = $printer_mac;
+    //             }else{
+    //                 $is_valid =  false;
+    //                 $error_msg = "Printer Mac Address [".$printer_mac."] sudah ada. Mohon Import Mac Address Lain.";
+    //                 break;
+    //             }
+    //         }else {
+    //             $is_valid = false;
+    //             $error_msg = "Mac Address Kosong, check Kembali Mac Address tidak boleh kosong";
+    //             break;
+    //         }
+    //         $printer_array['tahun_pengadaan']=$value[3];
+    //         $printer_array['created_by'] = auth()->user()->id;
+    //         $printer_array['created_at'] = date('Y-m-d H:i:s');
+    //         $printer_array['updated_at'] = date('Y-m-d H:i:s');
+    //         //Assign to formated array
+    //         $formated_data[]=$printer_array;
+    //     }
+    //     //dd($formated_data);
+    //     if (!empty($formated_data)) {
+    //         Printer::insert($formated_data);
+    //     }
+    //     DB::commit();
+    //     if ($is_valid) {
+    //         //redirect
+    //         return redirect()->route('printers.index')->with(['message' => 'Data Berhasil Diimport!']);
+    //     } else {
+    //         //redirect
+    //         return redirect()->route('printers.index')->with(['error' => $error_msg]);
 
-        if ($import) {
-            //redirect
-
-            return redirect()->route('users')->with(['message' => 'Data User Berhasil Diimport!']);
-        } else {
-            //redirect
-            return redirect()->route('users')->with(['message' => 'Data User Gagal Diimport!']);
-        }
-    }
+    //     }
+    // }catch (\Exception $e){
+    //     DB::rollBack();
+    //     return redirect()->route('printers.index')->with(['error' => $e->getMessage()]);
+    // }
+    // }
 
 
     //action untuk menampilkan form tambah data 
