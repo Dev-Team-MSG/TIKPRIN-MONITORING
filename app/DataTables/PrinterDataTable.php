@@ -24,41 +24,22 @@ class PrinterDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->editColumn('created_at', function($row){
-                return $row->created_at->format('d-m-Y H:i:s');
+                return showDateTime($row->created_at, 'l, d F Y');
+                // {{ showDateTime($printer->created_at, 'l, d F Y') }}
+                
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $action = '<form action='.route('printers.destroy', $row->id).' id=hapus'.$row->id.' method="POST">';
-                $action .= '
+                $action = '
                 <a href='.route('printers.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
+                <a href='.route('printers.show', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>
+                <a href="javascript:;" class="btn btn-icon btn-danger btn-sm action" onclick="deleteData('. $row->id.')"><i class="fas fa-times"></i></a>
+                <form id="delete-form-'. $row->id .'"
+                    action='.route("printers.destroy",$row->id).' method="POST"
+                    style="display: none;">
                     '.csrf_field().'
-                    '.method_field('delete').' 
-                    <button type="submit" data-id=' .$row->id. ' class="swal-confirm btn btn-icon btn-danger btn-sm action"><i class="fas fa-times"></i></button>
-                    <a href='.route('printers.show', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>
+                    '.method_field('delete').'
                 </form>';
-                // $action .= '';
-                $action .= '<script>
-                $(".swal-confirm").click(function(e) {
-                    e.preventDefault()
-                    id = e.target.dataset.id
-                    swal({
-                            title: "Yakin akan menghapus Data?",
-                            text: "Data yang sudah dihapus tidak dapat dikembalikan!",
-                            icon: "warning",
-                            buttons: true,
-                            showCancelButton: true,
-                            dangerMode: true,
-                        })
-                        .then((willDelete) => {
-
-                            if (willDelete) {
-                                $(`#hapus${id}`).submit();
-                            } else {
-                                swal("Batal Hapus, Data Anda Aman!");
-                            }
-                        });
-                });
-            </script>';
                 return $action;
             });
             // ->setRowId('id');
@@ -88,7 +69,7 @@ class PrinterDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     //->dom('Bfrtip')
-                    ->orderBy(1);
+                    ->orderBy(3, 'desc');
                     // ->selectStyleSingle()
                     // ->buttons([
                     //     Button::make('excel'),

@@ -22,6 +22,11 @@ class Printer extends Model
     protected $fillable = [
         'serial_number',
         'mac_address',
+        'tahun_pengadaan',
+        'kanim_id',
+        'created_by',
+        'created_at',
+        'updated_at'
     ];
 
     public function creator(){
@@ -31,4 +36,10 @@ class Printer extends Model
     public function editor(){
         return $this->belongsTo('App\Models\User','updated_by');
     }
+
+    public function location(){
+        return $this->belongsTo('App\Models\Kanim','kanim_id');
+    }
+
+    
 }

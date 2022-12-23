@@ -12,9 +12,9 @@
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <a href="{{ route('printerkanims.create') }}" class="btn btn-icon icon-left btn-primary"><i
+                    {{-- <a href="{{ route('printerkanims.create') }}" class="btn btn-icon icon-left btn-primary"><i
                             class="far fa-edit"></i> Relokasi Printer</a>
-                    <hr>
+                    <hr> --}}
                 </div>
             </div>
         </div>

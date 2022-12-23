@@ -14,7 +14,7 @@
                     <div class="button-action" style="margin-bottom: 20px">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import"><i
                                 class="far fa-user"></i>
-                            IMPORT
+                            IMPORT USER
                         </button>
                         <a href="{{ route('users.tambah') }}" class="btn btn-icon icon-left btn-primary"><i
                                 class="far fa-edit"></i> Tambah User</a>
@@ -32,6 +32,16 @@
                     </div>
                 </div>
             @endif
+            @if (session('error'))
+            <div class="alert alert-warning alert-dismissible show fade">
+                <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
 
             {{-- tabel --}}
             {{ $dataTable->table() }}
@@ -76,7 +86,7 @@
 @push('specific-scripts')
     <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
     <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
-    <script>
+    {{-- <script>
         @if (session('error'))
             swal({
                 title: "Gagal Menghapus !",
@@ -95,12 +105,28 @@
             //     </div>
             // </div>
         @endif
-    </script>
+    </script> --}}
 @endpush
 @push('after-scripts')
-<<<<<<< HEAD
+<script>
+    function deleteData(id) {
+            swal({
+                title: "Yakin akan menghapus Data?",
+                text: "Data yang sudah dihapus tidak dapat dikembalikan!",
+                icon: "warning",
+                buttons: true,
+                showCancelButton: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                    console.log(willDelete)
 
-=======
-   
->>>>>>> 6db67e3c3943f0c3e6b28d3b8cf15543d62b8daf
+                } else {
+                    swal("Batal Hapus, Data Anda Aman!");
+                }
+                $(`#printer-table`).datatable().ajax.reload();
+            });
+        }
+</script>
 @endpush

@@ -6,10 +6,6 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
-<<<<<<< HEAD
-
-=======
->>>>>>> ce55b7e0b0afe2ab0bcea84ec901d5735e70463f
                 <form enctype="multipart/form-data" action="{{ route('users.update', [$user->id]) }}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">

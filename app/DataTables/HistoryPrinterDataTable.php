@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\HistoryPrinter;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class UserDataTable extends DataTable
+class HistoryPrinterDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -26,39 +26,21 @@ class UserDataTable extends DataTable
         ->editColumn('created_at', function ($row) {
             return showDateTime($row->created_at, 'l, d F Y');
         })
-            ->addIndexColumn()
-            ->addColumn("role", function($row) {
-
-                if(empty($row->roles[0]->name)) {
-                    return strtoupper($row->roles[0]->name);
-                }
-                return strtoupper($row->roles[0]->name);
-            })
-            ->addIndexColumn()
-            ->addColumn('action', function($row){
-                $action = '<a href='.route('users.edit', $row->id).' class="btn btn-icon btn-primary btn-sm action"><i class="far fa-edit"></i></a>
-                <a href='.route('users.detail', $row->id).' class="btn btn-icon btn-info btn-sm action"><i class="far fas fa-info-circle"></i></a>
-                <a href="javascript:;" class="btn btn-icon btn-danger btn-sm action" onclick="deleteData('. $row->id.')"><i class="fas fa-times"></i></a>
-                <form id="delete-form-'. $row->id .'"
-                    action='.route("users.hapus",$row->id).' method="POST"
-                    style="display: none;">
-                    '.csrf_field().'
-                    '.method_field('delete').'
-                </form>';
-                return $action;
-            });
+        
+        ->addIndexColumn()
+            ->addColumn('action', 'historyprinter.action')
+            ->setRowId('id');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\HistoryPrinter $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model): QueryBuilder
+    public function query(HistoryPrinter $model): QueryBuilder
     {
-        // dd($model);
-        return $model->newQuery()->with("roles");
+        return $model->newQuery()->with('location_lama', 'location_baru');
     }
 
     /**
@@ -70,12 +52,11 @@ class UserDataTable extends DataTable
     {
         return $this->builder()
                     ->parameters(['searchDelay' => 1000])
-                    ->setTableId('user-table')
+                    ->setTableId('historyprinter-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1);
-                    // ->selectStyleSingle();
+                    ->dom('Bfrtip')
+                    ->orderBy(5, 'desc');
     }
 
     /**
@@ -87,12 +68,11 @@ class UserDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
-            Column::make('name'),
-            Column::make('email'),
-            Column::make('role'),
-            Column::make('created_at')->title('Dibuat Pada'),
-            // Column::make('updated_at'),
-            Column::computed('action')
+            Column::make('serial_number'),
+            'kanim_name' => new Column(['title'=>"Dari Kanim", 'data'=>'location_lama.name']),
+            'kanim_name2' => new Column(['title'=>"Ke Kanim", 'data'=>'location_baru.name']),  
+            Column::make('catatan'),
+            Column::make('created_at')->title('Direlokasi Pada')
                   ->exportable(false)
                   ->printable(false)
                   ->width(150)
@@ -107,6 +87,6 @@ class UserDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'User_' . date('YmdHis');
+        return 'HistoryPrinter_' . date('YmdHis');
     }
 }

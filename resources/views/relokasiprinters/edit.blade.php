@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    Edit Printer
+    Relokasi Printer
 @endsection
 @section('content')
     <div class="section-body">
@@ -16,12 +16,12 @@
                         </div>
                     </div>
                 @endif
-                <form enctype="multipart/form-data" action="{{ route('printers.update', [$printer->id]) }}" method="POST">
+                <form action="{{ route('relokasiprinters.update', [$printer->id]) }}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Edit Printer</h4>
+                            <h4>Relokasi Printer</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -30,7 +30,7 @@
                                         <label>Serial Number</label>
                                         <input type="text" class="form-control {{$errors->first('serial_number') ? "is-invalid" : ""}}" placeholder="Serial Number"
                                             name="serial_number"
-                                            value="{{ old('serial_number') ? old('serial_number') : $printer->serial_number }}">
+                                            value="{{ old('serial_number') ? old('serial_number') : $printer->serial_number }}"disabled>
                                         <div class="invalid-feedback">
                                             {{ $errors->first('serial_number') }}
                                         </div>
@@ -38,25 +38,39 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>MAC Address</label>
-                                        <input type="text" id="mac" class="form-control {{$errors->first('serial_number') ? "is-invalid" : ""}}"
-                                            placeholder="00:AA:11:BB:22:CC" name="mac_address"
-                                            value="{{ old('mac_address') ? old('mac_address') : $printer->mac_address }}">
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('mac_address') }}
-                                        </div>
+                                        <label for="exampleInputEmail1">Lokasi Saat ini :</label>
+                                        <br>
+                                        <select class="form-control" disabled>
+                                            @foreach ($kanims as $kanim)
+                                                <option value="{{ $kanim->id }}" 
+                                                    @if (isset($printer->kanim_id) && $printer->kanim_id == $kanim->id) selected @endif>{{ $kanim->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                </div>.
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Tahun Pengadaan</label>
-                                        <input type="text" id="tahun_pengadaan"  class="form-control {{ $errors->first('tahun_pengadaan') ? 'is-invalid' : '' }}"
-                                            placeholder="2022" name="tahun_pengadaan"
-                                            value="{{ old('tahun_pengadaan') ? old('tahun_pengadaan') : $printer->tahun_pengadaan }}">
+                                        <label for="exampleInputEmail1">Pindah ke Kanim :</label>
+                                        <br>
+                                        <select class="form-control" name="kanim_id" id="kanim">
+                                            @foreach ($kanims as $kanim)
+                                                <option value="{{ $kanim->id }}"
+                                                    @if (isset($printer->kanim_id) && $printer->kanim_id == $kanim->id) selected @endif>{{ $kanim->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Catatan</label>
+                                        <textarea class="form-control {{$errors->first('catatan') ? "is-invalid" : ""}}" placeholder="Catatan/Note Relokasi"
+                                            name="catatan"
+                                            value="{{ $printer->catatan }}"></textarea>
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('tahun_pengadaan') }}
+                                            {{ $errors->first('catatan') }}
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>
