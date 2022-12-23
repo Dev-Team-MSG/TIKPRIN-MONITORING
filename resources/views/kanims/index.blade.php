@@ -145,31 +145,25 @@
 @endpush
 @push('after-scripts')
 
-    {{-- <script>
-        $(".swal-confirm").click(function(e) {
-            id = e.target.dataset.id;
-            swal({
-                    title: 'Yakin akan menghapus Data?',
-                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        // swal('Berhasil! Data Anda telah terhapus!', {
-                        //   icon: 'success',
-                        // });
-                        $(`#hapus${id}`).submit();
-                    } else {
-                        swal('Batal Hapus, Data Anda Aman!');
-                    }
-                });
+<script>
+    function deleteData(id) {
+        swal({
+            title: "Yakin akan menghapus Data?",
+            text: "Data yang sudah dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            buttons: true,
+            showCancelButton: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                document.getElementById(`delete-form-${id}`).submit();
+                console.log(willDelete)
+
+            } else {
+                swal("Batal Hapus, Data Anda Aman!");
+            }
+            $(`#kanim-table`).datatable().ajax.reload();
         });
-    </script> --}}
-    {{-- <script>
-    $('#import').on('shown.bs.import', function() {
-        $(document).off('focusin.import');
-    });
-    </script> --}}
+    }
+</script>
 @endpush

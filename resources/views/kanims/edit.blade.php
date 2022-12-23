@@ -16,20 +16,21 @@
                         </div>
                     </div>
                 @endif
-                <form enctype="multipart/form-data" action="{{ route('kanims.update', [$kanim->id]) }}" method="POST">
+                <form action="{{ route('kanims.update', [$kanim->id]) }}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Edit Printer</h4>
+                            <h4>Edit Kanim</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Serial Number</label>
-                                        <input type="text" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" placeholder="Serial Number"
-                                            name="name"
+                                        <label>Nama Kanim</label>
+                                        <input type="text"
+                                            class="form-control {{ $errors->first('name') ? 'is-invalid' : '' }}" placeholder="Jakarta Pusat"
+                                            placeholder="" name="name"
                                             value="{{ old('name') ? old('name') : $kanim->name }}">
                                         <div class="invalid-feedback">
                                             {{ $errors->first('name') }}
@@ -38,15 +39,54 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>MAC Address</label>
-                                        <input type="text" id="mac" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}"
-                                            placeholder="00:AA:11:BB:22:CC" name="network"
-                                            value="{{ old('network') ? old('network') : $kanim->network }}">
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('network') }}
+                                        <label>Telp Kantor</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                            </div>
+                                            <input type="phone"
+                                                class="form-control phone-number {{ $errors->first('telp') ? 'is-invalid' : '' }}" placeholder="0216541213" required=""
+                                                name="telp" value="{{ old('telp') ? old('telp') : $kanim->telp }}">
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('telp') }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Alamat Kantor</label>
+                                        <textarea class="form-control {{$errors->first('alamat') ? "is-invalid" : ""}}" placeholder="Jl. Merpati No.3, Gn. Sahari Utara, Kec. Kemayoran, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10720"
+                                            name="alamat" id="alamat" required autocomplete="alamat"
+                                            autofocus>{{{ old('alamat',$kanim->alamat) }}}</textarea>
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('alamat') }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group" id="mapCenterForm">
+                                    <label>Latitude</label>
+                                    <input type="text" id="latitude"
+                                        class="form-control {{ $errors->first('latitude') ? 'is-invalid' : '' }}" placeholder="-6.1776323"
+                                        placeholder="" name="latitude"
+                                        value="{{ old('latitude') ? old('latitude') : $kanim->latitude }}">
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('latitude') }}
+                                    </div>
+                                    <label>Longitude</label>
+                                    <input type="text" id="longitude"
+                                        class="form-control {{ $errors->first('longitude') ? 'is-invalid' : '' }}" placeholder="106.8185349,16"
+                                        placeholder="" name="longitude"
+                                        value="{{ old('longitude') ? old('longitude') : $kanim->longitude }}">
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('longitude') }}
+                                    </div>
+                                </div>
+                                </div>
+                
                             </div>
                         </div>
                     </div>
@@ -63,28 +103,4 @@
 @push('page-scripts')
 @endpush
 @push('specific-scripts')
-    <script>
-        $("#mac").on("keyup", function(event) {
-
-            var limitField = $(this).val().trim().length;
-            var limit = "17";
-
-            if (event.keyCode != 8) {
-                var mac_value = $(this).val().trim().concat(':');
-                switch (limitField) {
-                    case 2:
-                    case 5:
-                    case 8:
-                    case 11:
-                    case 14:
-                        $("#mac").val(mac_value);
-                        break;
-                }
-            }
-
-            if (limitField > limit) {
-                $("#mac").val($(this).val().trim().substring(0, limit));
-            }
-        });
-    </script>
 @endpush
