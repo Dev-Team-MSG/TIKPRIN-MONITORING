@@ -23,11 +23,11 @@
                         <button class="nav-link active" id="tiket-tab" data-toggle="tab" data-target="#tiket" type="button"
                             role="tab" aria-controls="tiket" aria-selected="true">Tiket</button>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    {{-- <li class="nav-item" role="presentation">
                         <button class="nav-link" id="relokasi-printer-tab" data-toggle="tab" data-target="#relokasi-printer"
                             type="button" role="tab" aria-controls="relokasi-printer" aria-selected="false">Relokasi
                             Printer</button>
-                    </li>
+                    </li> --}}
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="tiket" role="tabpanel" aria-labelledby="home-tab">
@@ -71,7 +71,7 @@
                             <button type="submit" class="btn btn-primary">Download Excel</button>
                         </form>
                     </div>
-                    <div class="tab-pane fade" id="relokasi-printer" role="tabpanel" aria-labelledby="profile-tab">
+                    {{-- <div class="tab-pane fade" id="relokasi-printer" role="tabpanel" aria-labelledby="profile-tab">
                         <form action="{{ route('reports.relokasi-printer') }}" method="post">
                             @csrf
                             <div class="row">
@@ -127,7 +127,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Download Excel</button>
                         </form>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>

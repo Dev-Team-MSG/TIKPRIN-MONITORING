@@ -117,7 +117,7 @@ class TicketsExport implements WithColumnFormatting, FromQuery, WithHeadings, Wi
 
             $invoice->no_ticket,
             $assign_name,
-            $invoice->owner->name,
+            $invoice->owner == null ? "user tidak ditemukan" : $invoice->owner->name,
             $invoice->title,
             strip_tags($invoice->description),
             $invoice->status,
