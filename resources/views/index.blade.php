@@ -96,7 +96,7 @@
                             <div class="detail-name">Today's Sales</div>
                         </div>
                         <div class="statistic-details-item">
-                            <span class="text-muted"><span class="text-danger"><i class="fas fa-caret-down"></i></span>
+                            <span class="text-muted"><span class="text-danger"><i class="fas fa-caret-up"></i></span>
                                 23%</span>
                             <div class="detail-value">$2,902</div>
                             <div class="detail-name">This Week's Sales</div>

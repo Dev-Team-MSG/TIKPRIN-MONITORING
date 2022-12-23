@@ -31,13 +31,16 @@ class TicketProgressDataTable extends DataTable
                 return $row->created_at . " ( " . Carbon::parse($row['created_at'])->diffForHumans() . " )";
             })
             ->editColumn("owner_id", function ($row) {
-                return $row->owner->name;
+                if ($row->owner != null) {
+                    return $row->owner->name;
+                }
+                return "User Tidak ditemukan";
             })
             ->editColumn("assign_id", function ($row) {
-                if(!isset($row->assign_to)){
+                if (!isset($row->assign_to)) {
 
                     $data = "unassigned";
-                }else {
+                } else {
                     $data = $row->assign_to->name;
                 }
                 return $data;
