@@ -41,7 +41,7 @@
                                         </label>
                                         <div class="col-sm-10">
                                             <input type="date" class="form-control form-control-sm" id="colFormLabelSm"
-                                                placeholder="col-form-label-sm" name="tanggal_dari">
+                                                placeholder="col-form-label-sm" name="tanggal_dari" value={{date('Y-m-d H:i:s')}}>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                         </label>
                                         <div class="col-sm-10">
                                             <input type="date" class="form-control form-control-sm" id="colFormLabelSm"
-                                                placeholder="col-form-label-sm" name="tanggal_sampai">
+                                                placeholder="col-form-label-sm" name="tanggal_sampai" value={{date('Y-m-d H:i:s')}}>
                                         </div>
                                     </div>
                                 </div>
