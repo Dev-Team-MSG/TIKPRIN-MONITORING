@@ -63,8 +63,6 @@
                     <div class="card-wrap">
                         <div class="card-header">
                             <h4>Total Printers
-
-
                             </h4>
                         </div>
                         <div class="card-body">
@@ -75,14 +73,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-md-12 col-12 col-sm-12">
+            <div class="col-lg-12 col-md-12 col-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Statistics</h4>
                         <div class="card-header-action">
                             <div class="btn-group">
                                 <a href="#" class="btn btn-primary">Week</a>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -125,7 +123,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12 col-12 col-sm-12">
+            {{-- <div class="col-lg-4 col-md-12 col-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Recent Activities</h4>
@@ -184,16 +182,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-                <div class="card">
-                    <div class="card-body pt-2 pb-2">
-                        <div id="myWeather">Please wait</div>
-                    </div>
-                </div>
-            </div>
             <div class="col-lg-6 col-md-12 col-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
