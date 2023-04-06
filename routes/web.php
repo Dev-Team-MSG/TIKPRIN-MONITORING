@@ -1,7 +1,27 @@
 <?php
 
+use App\Http\Controllers\AccessController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\KanimController;
+use App\Http\Controllers\RelokasiPrinterController;
+use App\Http\Controllers\HistoryPrinterController;
+
 use App\Http\Controllers\CrudController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportController;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,9 +33,61 @@ use App\Http\Controllers\CrudController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
 
-Route::get('crud', [CrudController::class, 'index']);
-Route::get('crud/tambah', [CrudController::class, 'tambah']);
+Route::post('/', [AuthController::class, 'login'])->name('login');
+Route::get('/', [AuthController::class, 'index'])->name('login');
+
+
+// Route::group(['middleware' => 'CekLoginMiddleware'], function(){
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('dashboard', [DashboardController::class, "index"])->name("dashboard");
+
+    //Route User
+    Route::get('users', [UserController::class, 'index'])->name('users');
+    Route::get('users/tambah', [UserController::class, 'tambah'])->name('users.tambah');
+    Route::get('users/{id}/detail', [UserController::class, 'detail'])->name('users.detail');
+    Route::post('users/import', [UserController::class, 'import'])->name('users.import');
+    Route::post('users', [UserController::class, 'simpan'])->name('users.simpan');
+    Route::delete('users/{id}', [UserController::class, 'hapus'])->name('users.hapus');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+
+    //Route Printer
+    Route::resource('printers', PrinterController::class);
+    Route::post('printers/import', [PrinterController::class, 'import'])->name('printers.import');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+    //Route Kanim
+    Route::resource('kanims', KanimController::class);
+    Route::post('kanims/import', [KanimController::class, 'import'])->name('kanims.import');
+
+    //Route PrinterKanim
+    Route::resource('relokasiprinters', RelokasiPrinterController::class);
+
+    //Route History
+    Route::resource('historyprinters', HistoryPrinterController::class);
+
+    //Route Tiket
+    Route::get("/tiket", [TicketController::class, "showAllTicket"])->name("semua-tiket");
+    // Route::get("/tiket", [TicketController::class, "buatTiket"])->name("view-create-ticket");
+    Route::get("/tiket/create", [TicketController::class, "buatTiket"])->name("view-create-ticket");
+    Route::post("/tiket", [TicketController::class, "simpanTiket"])->name("store-create-ticket");
+    Route::post("/ticket/{no_ticket}/comment", [CommentController::class, "storeComment"])->name("store-comment");
+
+    Route::get("/tiket/detail/{no_ticket}", [TicketController::class, "detailTicket"])->name("detail-ticket");
+    Route::post("/tiket/ambil/{no_ticket}", [TicketController::class, "take"])->name("ambil-tiket");
+    Route::post("/tiket/close/{no_ticket}", [TicketController::class, "close"])->name("close-tiket");
+    Route::get("/tiket/open-tiket", [TicketController::class, "showOpenTicket"])->name("list-open-ticket");
+    Route::get("/tiket/progress-tiket", [TicketController::class, "showProgressTicket"])->name("list-progress-ticket");
+    Route::get("/tiket/close-tiket", [TicketController::class, "showCloseTicket"])->name("list-close-ticket");
+
+    // Route::resource("roles", RoleController::class);
+    Route::post("roles", [RoleController::class, "store"])->name("roles.store");
+    Route::resource("permission", AccessController::class);
+    Route::delete("permission/delete-permission/{id}", [AccessController::class, "destroyAccess"])->name("delete-access");
+    Route::resource("reports", ReportController::class);
+    Route::post("reports-tiket", [ReportController::class, "reportTiket"])->name("reports.tiket");
+    Route::post("reports-relokasi-printer", [ReportController::class, "reportRelokasiPrinter"])->name("reports.relokasi-printer");
+    // Route::get("konfigurasi/akses", [AccessController::class, "create"]);
+});
+Route::resource("menus", MenuController::class);

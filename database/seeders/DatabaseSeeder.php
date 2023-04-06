@@ -3,7 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Menu;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Database\Seeders\SeveritySeeder;
+use Database\Seeders\CategoryTicketSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,5 +24,27 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        // Menu::create([
+        //     "menu" => "printer",
+        // ]);
+
+        // Menu::create([
+        //     "menu" => "tiket",
+        // ]);
+
+        // Role::create([
+        //     "role" => "administrator"
+        // ]);
+        // Role::create([
+        //     "role" => "eos"
+        // ]);
+        // Role::create([
+        //     "role" => "admin_kanim"
+        // ]);
+        $this->call(CreateRoleSeeder::class);
+        $this->call(CreateMenuSeeder::class);
+        $this->call(CreateUserAccessSeeder::class);
+        $this->call(CategoryTicketSeeder::class);
+        $this->call(SeveritySeeder::class);
     }
 }
